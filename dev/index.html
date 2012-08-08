@@ -1,0 +1,178 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Documenation for llvmpy &mdash; llvmpy 0.8.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.8.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="llvmpy 0.8.2 documentation" href="#" />
+    <link rel="next" title="Introduction" href="doc/userguide.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="doc/userguide.html" title="Introduction"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="documenation-for-llvmpy">
+<h1>Documenation for llvmpy<a class="headerlink" href="#documenation-for-llvmpy" title="Permalink to this headline">¶</a></h1>
+<p>Contents:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="doc/userguide.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="doc/userguide.html#license">License</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doc/userguide.html#platforms">Platforms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doc/userguide.html#versions">Versions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="doc/userguide.html#installation">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="doc/userguide.html#llvm-and-enable-pic">LLVM and <tt class="docutils literal"><span class="pre">--enable-pic</span></tt></a></li>
+<li class="toctree-l2"><a class="reference internal" href="doc/userguide.html#llvm-config">llvm-config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doc/userguide.html#steps">Steps</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="doc/userguide.html#uninstall-uninstall">Uninstall # {#uninstall}</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/llvmpy_package.html">llvm</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/llvmpy_package.html#llvm-core">llvm.core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/llvmpy_package.html#llvm-ee">llvm.ee</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/llvmpy_package.html#llvm-passes">llvm.passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/llvmpy_package.html#a-note-on-the-importing-of-these-modules">A note on the importing of these modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/llvm_concepts.html">Intermediate Representation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/llvm_concepts.html#ssa-form-and-phi-nodes">SSA Form and PHI Nodes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/llvm_concepts.html#llvm-assembly-language">LLVM Assembly Language</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/llvm_concepts.html#modules">Modules</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/llvm_concepts.html#optimization-and-passes">Optimization and Passes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/llvm_concepts.html#bitcode">Bitcode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/llvm_concepts.html#execution-engine-jit-and-interpreter">Execution Engine, JIT and Interpreter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/types.html">An Example</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="doc/types.html#integers">integers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doc/types.html#floats">floats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doc/types.html#arrays-and-vectors">arrays and vectors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doc/types.html#structures">structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doc/types.html#pointers">pointers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doc/types.html#functions">functions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="doc/types.html#another-example-recursive-type">Another Example: Recursive Type</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial1.html">create a module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial1.html#create-a-function-type-taking-3-32-bit-integers-return-a-32-bit-integer">create a function type taking 3 32-bit integers, return a 32-bit integer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial1.html#create-a-function-of-that-type">create a function of that type</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial1.html#implement-the-function">implement the function</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial1.html#new-block">new block</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial1.html#ir-builder">IR builder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial2.html">create a module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial2.html#create-a-function-type-taking-2-integers-return-a-32-bit-integer">create a function type taking 2 integers, return a 32-bit integer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial2.html#create-a-function-of-that-type">create a function of that type</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial2.html#name-function-args">name function args</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial2.html#implement-the-function">implement the function</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial2.html#blocks">blocks...</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial2.html#create-a-llvm-irbuilder">create a llvm::IRBuilder</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/kaleidoscope/PythonLangImpl1.html">Tutorial Introduction and the Lexer</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/kaleidoscope/PythonLangImpl1.html#introduction">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/kaleidoscope/PythonLangImpl1.html#the-basic-language-language">The Basic Language # {#language}</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/kaleidoscope/PythonLangImpl1.html#this-expression-will-compute-the-40th-number">This expression will compute the 40th number.</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/kaleidoscope/PythonLangImpl1.html#the-lexer-lexer">The Lexer # {#lexer}</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/kaleidoscope/PythonLangImpl1.html#regular-expressions-that-tokens-and-comments-of-our-language">Regular expressions that tokens and comments of our language.</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Documenation for llvmpy</a><ul>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="doc/userguide.html"
+                        title="next chapter">Introduction</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="doc/userguide.html" title="Introduction"
+             >next</a> |</li>
+        <li><a href="#">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Mahadevan R (2008-2010), Continuum Analytics (2012).
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

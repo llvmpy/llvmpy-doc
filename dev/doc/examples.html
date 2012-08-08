@@ -1,0 +1,312 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Examples &mdash; llvmpy 0.8.2 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="llvmpy 0.8.2 documentation" href="../index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li><a href="../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <table border="1" class="docutils">
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>layout: page</td>
+</tr>
+<tr class="row-even"><td>title: Examples and LLVM Tutorials</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>This will become a table of contents (this text will be scraped).
+{:toc}</li>
+</ul>
+<div class="section" id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="a-simple-function">
+<h2>A Simple Function<a class="headerlink" href="#a-simple-function" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s create a (LLVM) module containing a single function, corresponding
+to the <tt class="docutils literal"><span class="pre">C</span></tt> function:</p>
+<p>{% highlight c %} int sum(int a, int b) { return a + b; } {%
+endhighlight %}</p>
+<p>Here&#8217;s how it looks like:</p>
+<p>{% highlight python %} #!/usr/bin/env python</p>
+</div>
+</div>
+<div class="section" id="import-the-llvm-py-modules">
+<h1>Import the llvm-py modules.<a class="headerlink" href="#import-the-llvm-py-modules" title="Permalink to this headline">¶</a></h1>
+<p>from llvm import * from llvm.core import *</p>
+</div>
+<div class="section" id="create-an-empty-module">
+<h1>Create an (empty) module.<a class="headerlink" href="#create-an-empty-module" title="Permalink to this headline">¶</a></h1>
+<p>my_module = Module.new(&#8216;my_module&#8217;)</p>
+</div>
+<div class="section" id="all-the-types-involved-here-are-int-s-this-type-is-represented">
+<h1>All the types involved here are &#8220;int&#8221;s. This type is represented<a class="headerlink" href="#all-the-types-involved-here-are-int-s-this-type-is-represented" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="by-an-object-of-the-llvm-core-type-class">
+<h1>by an object of the llvm.core.Type class:<a class="headerlink" href="#by-an-object-of-the-llvm-core-type-class" title="Permalink to this headline">¶</a></h1>
+<p>ty_int = Type.int() # by default 32 bits</p>
+</div>
+<div class="section" id="we-need-to-represent-the-class-of-functions-that-accept-two-integers">
+<h1>We need to represent the class of functions that accept two integers<a class="headerlink" href="#we-need-to-represent-the-class-of-functions-that-accept-two-integers" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="and-return-an-integer-this-is-represented-by-an-object-of-the">
+<h1>and return an integer. This is represented by an object of the<a class="headerlink" href="#and-return-an-integer-this-is-represented-by-an-object-of-the" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="function-type-llvm-core-functiontype">
+<h1>function type (llvm.core.FunctionType):<a class="headerlink" href="#function-type-llvm-core-functiontype" title="Permalink to this headline">¶</a></h1>
+<p>ty_func = Type.function(ty_int, [ty_int, ty_int])</p>
+</div>
+<div class="section" id="now-we-need-a-function-named-sum-of-this-type-functions-are-not">
+<h1>Now we need a function named &#8216;sum&#8217; of this type. Functions are not<a class="headerlink" href="#now-we-need-a-function-named-sum-of-this-type-functions-are-not" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="free-standing-in-llvm-py-it-needs-to-be-contained-in-a-module">
+<h1>free-standing (in llvm-py); it needs to be contained in a module.<a class="headerlink" href="#free-standing-in-llvm-py-it-needs-to-be-contained-in-a-module" title="Permalink to this headline">¶</a></h1>
+<p>f_sum = my_module.add_function(ty_func, &#8220;sum&#8221;)</p>
+</div>
+<div class="section" id="let-s-name-the-function-arguments-as-a-and-b">
+<h1>Let&#8217;s name the function arguments as &#8216;a&#8217; and &#8216;b&#8217;.<a class="headerlink" href="#let-s-name-the-function-arguments-as-a-and-b" title="Permalink to this headline">¶</a></h1>
+<p>f_sum.args[0].name = &#8220;a&#8221; f_sum.args[1].name = &#8220;b&#8221;</p>
+</div>
+<div class="section" id="our-function-needs-a-basic-block-a-set-of-instructions-that">
+<h1>Our function needs a &#8220;basic block&#8221; &#8211; a set of instructions that<a class="headerlink" href="#our-function-needs-a-basic-block-a-set-of-instructions-that" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="end-with-a-terminator-like-return-branch-etc-by-convention">
+<h1>end with a terminator (like return, branch etc.). By convention<a class="headerlink" href="#end-with-a-terminator-like-return-branch-etc-by-convention" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="the-first-block-is-called-entry">
+<h1>the first block is called &#8220;entry&#8221;.<a class="headerlink" href="#the-first-block-is-called-entry" title="Permalink to this headline">¶</a></h1>
+<p>bb = f_sum.append_basic_block(&#8220;entry&#8221;)</p>
+</div>
+<div class="section" id="let-s-add-instructions-into-the-block-for-this-we-need-an">
+<h1>Let&#8217;s add instructions into the block. For this, we need an<a class="headerlink" href="#let-s-add-instructions-into-the-block-for-this-we-need-an" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="instruction-builder">
+<h1>instruction builder:<a class="headerlink" href="#instruction-builder" title="Permalink to this headline">¶</a></h1>
+<p>builder = Builder.new(bb)</p>
+</div>
+<div class="section" id="ok-now-for-the-instructions-themselves-we-ll-create-an-add">
+<h1>OK, now for the instructions themselves. We&#8217;ll create an add<a class="headerlink" href="#ok-now-for-the-instructions-themselves-we-ll-create-an-add" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="instruction-that-returns-the-sum-as-a-value-which-we-ll-use">
+<h1>instruction that returns the sum as a value, which we&#8217;ll use<a class="headerlink" href="#instruction-that-returns-the-sum-as-a-value-which-we-ll-use" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="a-ret-instruction-to-return">
+<h1>a ret instruction to return.<a class="headerlink" href="#a-ret-instruction-to-return" title="Permalink to this headline">¶</a></h1>
+<p>tmp = builder.add(f_sum.args[0], f_sum.args[1], &#8220;tmp&#8221;)
+builder.ret(tmp)</p>
+</div>
+<div class="section" id="we-ve-completed-the-definition-now-let-s-see-the-llvm-assembly">
+<h1>We&#8217;ve completed the definition now! Let&#8217;s see the LLVM assembly<a class="headerlink" href="#we-ve-completed-the-definition-now-let-s-see-the-llvm-assembly" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="language-representation-of-what-we-ve-created">
+<h1>language representation of what we&#8217;ve created:<a class="headerlink" href="#language-representation-of-what-we-ve-created" title="Permalink to this headline">¶</a></h1>
+<p>print my_module {% endhighlight %}</p>
+<p>Here is the output:</p>
+<p>{% highlight llvm %} ; ModuleID = &#8216;my_module&#8217;</p>
+<p>define i32 &#64;sum(i32 %a, i32 %b) { entry: %tmp = add i32 %a, %b ;
+[#uses=1] ret i32 %tmp } {% endhighlight %}</p>
+<div class="section" id="adding-jit-compilation">
+<h2>Adding JIT Compilation<a class="headerlink" href="#adding-jit-compilation" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s compile this function in-memory and run it.</p>
+<p>{% highlight python %} #!/usr/bin/env python</p>
+</div>
+</div>
+<div class="section" id="id1">
+<h1>Import the llvm-py modules.<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<p>from llvm import * from llvm.core import * from llvm.ee import * #
+new import: ee = Execution Engine</p>
+</div>
+<div class="section" id="create-a-module-as-in-the-previous-example">
+<h1>Create a module, as in the previous example.<a class="headerlink" href="#create-a-module-as-in-the-previous-example" title="Permalink to this headline">¶</a></h1>
+<p>my_module = Module.new(&#8216;my_module&#8217;) ty_int = Type.int() # by default
+32 bits ty_func = Type.function(ty_int, [ty_int, ty_int]) f_sum =
+my_module.add_function(ty_func, &#8220;sum&#8221;) f_sum.args[0].name = &#8220;a&#8221;
+f_sum.args[1].name = &#8220;b&#8221; bb = f_sum.append_basic_block(&#8220;entry&#8221;)
+builder = Builder.new(bb) tmp = builder.add(f_sum.args[0],
+f_sum.args[1], &#8220;tmp&#8221;) builder.ret(tmp)</p>
+</div>
+<div class="section" id="create-an-execution-engine-object-this-will-create-a-jit-compiler">
+<h1>Create an execution engine object. This will create a JIT compiler<a class="headerlink" href="#create-an-execution-engine-object-this-will-create-a-jit-compiler" title="Permalink to this headline">¶</a></h1>
+</div>
+<div class="section" id="on-platforms-that-support-it-or-an-interpreter-otherwise">
+<h1>on platforms that support it, or an interpreter otherwise.<a class="headerlink" href="#on-platforms-that-support-it-or-an-interpreter-otherwise" title="Permalink to this headline">¶</a></h1>
+<p>ee = ExecutionEngine.new(my_module)</p>
+</div>
+<div class="section" id="the-arguments-needs-to-be-passed-as-genericvalue-objects">
+<h1>The arguments needs to be passed as &#8220;GenericValue&#8221; objects.<a class="headerlink" href="#the-arguments-needs-to-be-passed-as-genericvalue-objects" title="Permalink to this headline">¶</a></h1>
+<p>arg1 = GenericValue.int(ty_int, 100) arg2 = GenericValue.int(ty_int,
+42)</p>
+</div>
+<div class="section" id="now-let-s-compile-and-run">
+<h1>Now let&#8217;s compile and run!<a class="headerlink" href="#now-let-s-compile-and-run" title="Permalink to this headline">¶</a></h1>
+<p>retval = ee.run_function(f_sum, [arg1, arg2])</p>
+</div>
+<div class="section" id="the-return-value-is-also-genericvalue-let-s-print-it">
+<h1>The return value is also GenericValue. Let&#8217;s print it.<a class="headerlink" href="#the-return-value-is-also-genericvalue-let-s-print-it" title="Permalink to this headline">¶</a></h1>
+<p>print &#8220;returned&#8221;, retval.as_int() {% endhighlight %}</p>
+<p>And here&#8217;s the output:</p>
+<div class="highlight-python"><pre>returned 142</pre>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="llvm-tutorials">
+<h1>LLVM Tutorials<a class="headerlink" href="#llvm-tutorials" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="simple-jit-tutorials">
+<h2>Simple JIT Tutorials<a class="headerlink" href="#simple-jit-tutorials" title="Permalink to this headline">¶</a></h2>
+<p>The following JIT tutorials were contributed by Sebastien Binet.</p>
+<ol class="arabic simple">
+<li><a class="reference external" href="examples/JITTutorial1.html">A First Function</a></li>
+<li><a class="reference external" href="examples/JITTutorial2.html">A More Complicated Function</a></li>
+</ol>
+</div>
+<div class="section" id="kaleidoscope-kaleidoscope">
+<h2>Kaleidoscope ## {#kaleidoscope}<a class="headerlink" href="#kaleidoscope-kaleidoscope" title="Permalink to this headline">¶</a></h2>
+<p>Implementing a Language with LLVM</p>
+<p>The LLVM <a class="reference external" href="http://www.llvm.org/docs/tutorial/">Kaleidoscope</a> tutorial
+has been ported to llvm-py by Max Shawabkeh.</p>
+<ol class="arabic simple">
+<li><a class="reference external" href="kaleidoscope/PythonLangImpl1.html">Tutorial Introduction and the
+Lexer</a></li>
+<li><a class="reference external" href="kaleidoscope/PythonLangImpl2.html">Implementing a Parser and AST</a></li>
+<li><a class="reference external" href="kaleidoscope/PythonLangImpl3.html">Implementing Code Generation to LLVM
+IR</a></li>
+<li><a class="reference external" href="kaleidoscope/PythonLangImpl4.html">Adding JIT and Optimizer
+Support</a></li>
+<li><a class="reference external" href="kaleidoscope/PythonLangImpl5.html">Extending the language: control
+flow</a></li>
+<li><a class="reference external" href="kaleidoscope/PythonLangImpl6.html">Extending the language: user-defined
+operators</a></li>
+<li><a class="reference external" href="kaleidoscope/PythonLangImpl7.html">Extending the language: mutable variables / SSA
+construction</a></li>
+<li><a class="reference external" href="kaleidoscope/PythonLangImpl8.html">Conclusion and other useful LLVM
+tidbits</a></li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Examples</a><ul>
+<li><a class="reference internal" href="#a-simple-function">A Simple Function</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#import-the-llvm-py-modules">Import the llvm-py modules.</a></li>
+<li><a class="reference internal" href="#create-an-empty-module">Create an (empty) module.</a></li>
+<li><a class="reference internal" href="#all-the-types-involved-here-are-int-s-this-type-is-represented">All the types involved here are &#8220;int&#8221;s. This type is represented</a></li>
+<li><a class="reference internal" href="#by-an-object-of-the-llvm-core-type-class">by an object of the llvm.core.Type class:</a></li>
+<li><a class="reference internal" href="#we-need-to-represent-the-class-of-functions-that-accept-two-integers">We need to represent the class of functions that accept two integers</a></li>
+<li><a class="reference internal" href="#and-return-an-integer-this-is-represented-by-an-object-of-the">and return an integer. This is represented by an object of the</a></li>
+<li><a class="reference internal" href="#function-type-llvm-core-functiontype">function type (llvm.core.FunctionType):</a></li>
+<li><a class="reference internal" href="#now-we-need-a-function-named-sum-of-this-type-functions-are-not">Now we need a function named &#8216;sum&#8217; of this type. Functions are not</a></li>
+<li><a class="reference internal" href="#free-standing-in-llvm-py-it-needs-to-be-contained-in-a-module">free-standing (in llvm-py); it needs to be contained in a module.</a></li>
+<li><a class="reference internal" href="#let-s-name-the-function-arguments-as-a-and-b">Let&#8217;s name the function arguments as &#8216;a&#8217; and &#8216;b&#8217;.</a></li>
+<li><a class="reference internal" href="#our-function-needs-a-basic-block-a-set-of-instructions-that">Our function needs a &#8220;basic block&#8221; &#8211; a set of instructions that</a></li>
+<li><a class="reference internal" href="#end-with-a-terminator-like-return-branch-etc-by-convention">end with a terminator (like return, branch etc.). By convention</a></li>
+<li><a class="reference internal" href="#the-first-block-is-called-entry">the first block is called &#8220;entry&#8221;.</a></li>
+<li><a class="reference internal" href="#let-s-add-instructions-into-the-block-for-this-we-need-an">Let&#8217;s add instructions into the block. For this, we need an</a></li>
+<li><a class="reference internal" href="#instruction-builder">instruction builder:</a></li>
+<li><a class="reference internal" href="#ok-now-for-the-instructions-themselves-we-ll-create-an-add">OK, now for the instructions themselves. We&#8217;ll create an add</a></li>
+<li><a class="reference internal" href="#instruction-that-returns-the-sum-as-a-value-which-we-ll-use">instruction that returns the sum as a value, which we&#8217;ll use</a></li>
+<li><a class="reference internal" href="#a-ret-instruction-to-return">a ret instruction to return.</a></li>
+<li><a class="reference internal" href="#we-ve-completed-the-definition-now-let-s-see-the-llvm-assembly">We&#8217;ve completed the definition now! Let&#8217;s see the LLVM assembly</a></li>
+<li><a class="reference internal" href="#language-representation-of-what-we-ve-created">language representation of what we&#8217;ve created:</a><ul>
+<li><a class="reference internal" href="#adding-jit-compilation">Adding JIT Compilation</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id1">Import the llvm-py modules.</a></li>
+<li><a class="reference internal" href="#create-a-module-as-in-the-previous-example">Create a module, as in the previous example.</a></li>
+<li><a class="reference internal" href="#create-an-execution-engine-object-this-will-create-a-jit-compiler">Create an execution engine object. This will create a JIT compiler</a></li>
+<li><a class="reference internal" href="#on-platforms-that-support-it-or-an-interpreter-otherwise">on platforms that support it, or an interpreter otherwise.</a></li>
+<li><a class="reference internal" href="#the-arguments-needs-to-be-passed-as-genericvalue-objects">The arguments needs to be passed as &#8220;GenericValue&#8221; objects.</a></li>
+<li><a class="reference internal" href="#now-let-s-compile-and-run">Now let&#8217;s compile and run!</a></li>
+<li><a class="reference internal" href="#the-return-value-is-also-genericvalue-let-s-print-it">The return value is also GenericValue. Let&#8217;s print it.</a></li>
+<li><a class="reference internal" href="#llvm-tutorials">LLVM Tutorials</a><ul>
+<li><a class="reference internal" href="#simple-jit-tutorials">Simple JIT Tutorials</a></li>
+<li><a class="reference internal" href="#kaleidoscope-kaleidoscope">Kaleidoscope ## {#kaleidoscope}</a></li>
+</ul>
+</li>
+</ul>
+
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/doc/examples.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li><a href="../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Mahadevan R (2008-2010), Continuum Analytics (2012).
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
