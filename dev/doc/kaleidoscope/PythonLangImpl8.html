@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Conclusion and other useful LLVM tidbits &mdash; llvmpy 0.8.2 documentation</title>
+    <title>8. Chapter 8: Conclusion and other useful LLVM tidbits &mdash; llvmpy 0.8.2 documentation</title>
     
     <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -26,7 +26,9 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="llvmpy 0.8.2 documentation" href="../../index.html" /> 
+    <link rel="top" title="llvmpy 0.8.2 documentation" href="../../index.html" />
+    <link rel="up" title="Kaleidoscope" href="index.html" />
+    <link rel="prev" title="7. Chapter 7: Extending the Language: Mutable Variables / SSA construction" href="PythonLangImpl7.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,7 +37,12 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="PythonLangImpl7.html" title="7. Chapter 7: Extending the Language: Mutable Variables / SSA construction"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples and LLVM Tutorials</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Kaleidoscope</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -44,28 +51,11 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <table border="1" class="docutils">
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>layout: page</td>
-</tr>
-<tr class="row-even"><td>title: &#8220;Kaleidoscope: Chapter 8&#8221;</td>
-</tr>
-</tbody>
-</table>
-<div class="section" id="conclusion-and-other-useful-llvm-tidbits">
-<h1>Conclusion and other useful LLVM tidbits<a class="headerlink" href="#conclusion-and-other-useful-llvm-tidbits" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="chapter-8-conclusion-and-other-useful-llvm-tidbits">
+<h1>8. Chapter 8: Conclusion and other useful LLVM tidbits<a class="headerlink" href="#chapter-8-conclusion-and-other-useful-llvm-tidbits" title="Permalink to this headline">¶</a></h1>
 <p>Written by <a class="reference external" href="mailto:sabre&#37;&#52;&#48;nondot&#46;org">Chris Lattner</a></p>
-<p><strong>Chapter 8</strong></p>
-<ul class="simple">
-<li>This will become a table of contents (this text will be scraped).
-{:toc}</li>
-</ul>
-</div>
 <div class="section" id="tutorial-conclusion-conclusion">
-<h1>Tutorial Conclusion # {#conclusion}<a class="headerlink" href="#tutorial-conclusion-conclusion" title="Permalink to this headline">¶</a></h1>
+<h2>8.1. Tutorial Conclusion # {#conclusion}<a class="headerlink" href="#tutorial-conclusion-conclusion" title="Permalink to this headline">¶</a></h2>
 <p>Welcome to the the final chapter of the <a class="reference external" href="http://www.llvm.org/docs/tutorial/index.html">Implementing a language with
 LLVM</a> tutorial. In the
 course of this tutorial, we have grown our little Kaleidoscope language
@@ -165,11 +155,11 @@ LLVM&#8217;s capabilities.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="properties-of-the-llvm-ir-llvmirproperties">
-<h1>Properties of the LLVM IR # {#llvmirproperties}<a class="headerlink" href="#properties-of-the-llvm-ir-llvmirproperties" title="Permalink to this headline">¶</a></h1>
+<h2>8.2. Properties of the LLVM IR # {#llvmirproperties}<a class="headerlink" href="#properties-of-the-llvm-ir-llvmirproperties" title="Permalink to this headline">¶</a></h2>
 <p>We have a couple common questions about code in the LLVM IR form - let&#8217;s
 just get these out of the way right now, shall we?</p>
 <div class="section" id="target-independence-targetindep">
-<h2>Target Independence ## {#targetindep}<a class="headerlink" href="#target-independence-targetindep" title="Permalink to this headline">¶</a></h2>
+<h3>8.2.1. Target Independence ## {#targetindep}<a class="headerlink" href="#target-independence-targetindep" title="Permalink to this headline">¶</a></h3>
 <p>Kaleidoscope is an example of a &#8220;portable language&#8221;: any program written
 in Kaleidoscope will work the same way on any target that it runs on.
 Many other languages have this property, e.g. LISP, Java, Haskell,
@@ -207,7 +197,7 @@ you can have portable code. This can make sense for specialized domains
 such as an in-kernel language.</p>
 </div>
 <div class="section" id="safety-guarantees-safety">
-<h2>Safety Guarantees ## {#safety}<a class="headerlink" href="#safety-guarantees-safety" title="Permalink to this headline">¶</a></h2>
+<h3>8.2.2. Safety Guarantees ## {#safety}<a class="headerlink" href="#safety-guarantees-safety" title="Permalink to this headline">¶</a></h3>
 <p>Many of the languages above are also &#8220;safe&#8221; languages: it is impossible
 for a program written in Java to corrupt its address space and crash the
 process (assuming the JVM has no bugs). Safety is an interesting
@@ -222,7 +212,7 @@ mailing list</a> if
 you are interested in more details.</p>
 </div>
 <div class="section" id="language-specific-optimizations-langspecific">
-<h2>Language-Specific Optimizations ## {#langspecific}<a class="headerlink" href="#language-specific-optimizations-langspecific" title="Permalink to this headline">¶</a></h2>
+<h3>8.2.3. Language-Specific Optimizations ## {#langspecific}<a class="headerlink" href="#language-specific-optimizations-langspecific" title="Permalink to this headline">¶</a></h3>
 <p>One thing about LLVM that turns off many people is that it does not
 solve all the world&#8217;s problems in one system (sorry &#8216;world hunger&#8217;,
 someone else will have to solve you some other day). One specific
@@ -269,13 +259,13 @@ you desire in your front-end, on the language-specific AST.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="tips-and-tricks-tipsandtricks">
-<h1>Tips and Tricks # {#tipsandtricks}<a class="headerlink" href="#tips-and-tricks-tipsandtricks" title="Permalink to this headline">¶</a></h1>
+<h2>8.3. Tips and Tricks # {#tipsandtricks}<a class="headerlink" href="#tips-and-tricks-tipsandtricks" title="Permalink to this headline">¶</a></h2>
 <p>There is a variety of useful tips and tricks that you come to know after
 working on/with LLVM that aren&#8217;t obvious at first glance. Instead of
 letting everyone rediscover them, this section talks about some of these
 issues.</p>
 <div class="section" id="implementing-portable-offsetof-sizeof-offsetofsizeof">
-<h2>Implementing portable offsetof/sizeof ## {#offsetofsizeof}<a class="headerlink" href="#implementing-portable-offsetof-sizeof-offsetofsizeof" title="Permalink to this headline">¶</a></h2>
+<h3>8.3.1. Implementing portable offsetof/sizeof ## {#offsetofsizeof}<a class="headerlink" href="#implementing-portable-offsetof-sizeof-offsetofsizeof" title="Permalink to this headline">¶</a></h3>
 <p>One interesting thing that comes up, if you are trying to keep the code
 generated by your compiler &#8220;target independent&#8221;, is that you often need
 to know the size of some LLVM type or the offset of some field in an
@@ -288,7 +278,7 @@ instruction</a>
 that allows you to compute this in a portable way.</p>
 </div>
 <div class="section" id="garbage-collected-stack-frames-gcstack">
-<h2>Garbage Collected Stack Frames ## {#gcstack}<a class="headerlink" href="#garbage-collected-stack-frames-gcstack" title="Permalink to this headline">¶</a></h2>
+<h3>8.3.2. Garbage Collected Stack Frames ## {#gcstack}<a class="headerlink" href="#garbage-collected-stack-frames-gcstack" title="Permalink to this headline">¶</a></h3>
 <p>Some languages want to explicitly manage their stack frames, often so
 that they are garbage collected or to allow easy implementation of
 closures. There are often better ways to implement these features than
@@ -300,6 +290,7 @@ Style</a> and
 the use of tail calls (which LLVM also supports).</p>
 </div>
 </div>
+</div>
 
 
           </div>
@@ -309,21 +300,26 @@ the use of tail calls (which LLVM also supports).</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="../../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Conclusion and other useful LLVM tidbits</a></li>
-<li><a class="reference internal" href="#tutorial-conclusion-conclusion">Tutorial Conclusion # {#conclusion}</a></li>
-<li><a class="reference internal" href="#properties-of-the-llvm-ir-llvmirproperties">Properties of the LLVM IR # {#llvmirproperties}</a><ul>
-<li><a class="reference internal" href="#target-independence-targetindep">Target Independence ## {#targetindep}</a></li>
-<li><a class="reference internal" href="#safety-guarantees-safety">Safety Guarantees ## {#safety}</a></li>
-<li><a class="reference internal" href="#language-specific-optimizations-langspecific">Language-Specific Optimizations ## {#langspecific}</a></li>
+<li><a class="reference internal" href="#">8. Chapter 8: Conclusion and other useful LLVM tidbits</a><ul>
+<li><a class="reference internal" href="#tutorial-conclusion-conclusion">8.1. Tutorial Conclusion # {#conclusion}</a></li>
+<li><a class="reference internal" href="#properties-of-the-llvm-ir-llvmirproperties">8.2. Properties of the LLVM IR # {#llvmirproperties}</a><ul>
+<li><a class="reference internal" href="#target-independence-targetindep">8.2.1. Target Independence ## {#targetindep}</a></li>
+<li><a class="reference internal" href="#safety-guarantees-safety">8.2.2. Safety Guarantees ## {#safety}</a></li>
+<li><a class="reference internal" href="#language-specific-optimizations-langspecific">8.2.3. Language-Specific Optimizations ## {#langspecific}</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#tips-and-tricks-tipsandtricks">Tips and Tricks # {#tipsandtricks}</a><ul>
-<li><a class="reference internal" href="#implementing-portable-offsetof-sizeof-offsetofsizeof">Implementing portable offsetof/sizeof ## {#offsetofsizeof}</a></li>
-<li><a class="reference internal" href="#garbage-collected-stack-frames-gcstack">Garbage Collected Stack Frames ## {#gcstack}</a></li>
+<li><a class="reference internal" href="#tips-and-tricks-tipsandtricks">8.3. Tips and Tricks # {#tipsandtricks}</a><ul>
+<li><a class="reference internal" href="#implementing-portable-offsetof-sizeof-offsetofsizeof">8.3.1. Implementing portable offsetof/sizeof ## {#offsetofsizeof}</a></li>
+<li><a class="reference internal" href="#garbage-collected-stack-frames-gcstack">8.3.2. Garbage Collected Stack Frames ## {#gcstack}</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="PythonLangImpl7.html"
+                        title="previous chapter">7. Chapter 7: Extending the Language: Mutable Variables / SSA construction</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../../_sources/doc/kaleidoscope/PythonLangImpl8.txt"
@@ -352,7 +348,12 @@ the use of tail calls (which LLVM also supports).</p>
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="PythonLangImpl7.html" title="7. Chapter 7: Extending the Language: Mutable Variables / SSA construction"
+             >previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples and LLVM Tutorials</a> &raquo;</li>
+          <li><a href="index.html" >Kaleidoscope</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

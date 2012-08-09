@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>create a module &mdash; llvmpy 0.8.2 documentation</title>
+    <title>A First Function &mdash; llvmpy 0.8.2 documentation</title>
     
     <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -27,8 +27,9 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="llvmpy 0.8.2 documentation" href="../../index.html" />
-    <link rel="next" title="create a module" href="JITTutorial2.html" />
-    <link rel="prev" title="An Example" href="../types.html" /> 
+    <link rel="up" title="LLVM Tutorials" href="index.html" />
+    <link rel="next" title="A More Complicated Function" href="JITTutorial2.html" />
+    <link rel="prev" title="LLVM Tutorials" href="index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,12 +39,14 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="JITTutorial2.html" title="create a module"
+          <a href="JITTutorial2.html" title="A More Complicated Function"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../types.html" title="An Example"
+          <a href="index.html" title="LLVM Tutorials"
              accesskey="P">previous</a> |</li>
-        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples and LLVM Tutorials</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">LLVM Tutorials</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -52,47 +55,41 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <table border="1" class="docutils">
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>layout: page</td>
-</tr>
-<tr class="row-even"><td>title: JIT Tutorial 1</td>
-</tr>
-</tbody>
-</table>
-<p>{% highlight python %} #!/usr/bin/env python</p>
-<p>from llvm.core import *</p>
-<div class="section" id="create-a-module">
-<h1>create a module<a class="headerlink" href="#create-a-module" title="Permalink to this headline">¶</a></h1>
-<p>module = Module.new (&#8220;tut1&#8221;)</p>
+  <div class="section" id="a-first-function">
+<h1>A First Function<a class="headerlink" href="#a-first-function" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+
+<span class="kn">from</span> <span class="nn">llvm.core</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c">#create a module</span>
+<span class="n">module</span> <span class="o">=</span> <span class="n">Module</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s">&quot;tut1&quot;</span><span class="p">)</span>
+
+<span class="c">#create a function type taking 3 32-bit integers, return a 32-bit integer</span>
+<span class="n">ty_int</span> <span class="o">=</span> <span class="n">Type</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+<span class="n">func_type</span> <span class="o">=</span> <span class="n">Type</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">ty_int</span><span class="p">,</span> <span class="p">(</span><span class="n">ty_int</span><span class="p">,)</span><span class="o">*</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c">#create a function of that type</span>
+<span class="n">mul_add</span> <span class="o">=</span> <span class="n">Function</span><span class="o">.</span><span class="n">new</span> <span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">func_type</span><span class="p">,</span> <span class="s">&quot;mul_add&quot;</span><span class="p">)</span>
+<span class="n">mul_add</span><span class="o">.</span><span class="n">calling_convention</span> <span class="o">=</span> <span class="n">CC_C</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">mul_add</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;x&quot;</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">mul_add</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span> <span class="n">y</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;y&quot;</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">mul_add</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span> <span class="n">z</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;z&quot;</span>
+
+<span class="c">#implement the function</span>
+
+<span class="c">#new block</span>
+<span class="n">blk</span> <span class="o">=</span> <span class="n">mul_add</span><span class="o">.</span><span class="n">append_basic_block</span><span class="p">(</span><span class="s">&quot;entry&quot;</span><span class="p">)</span>
+
+<span class="c">#IR builder</span>
+<span class="n">bldr</span> <span class="o">=</span> <span class="n">Builder</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">blk</span><span class="p">)</span>
+<span class="n">tmp_1</span> <span class="o">=</span> <span class="n">bldr</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s">&quot;tmp_1&quot;</span><span class="p">)</span>
+<span class="n">tmp_2</span> <span class="o">=</span> <span class="n">bldr</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tmp_1</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="s">&quot;tmp_2&quot;</span><span class="p">)</span>
+
+<span class="n">bldr</span><span class="o">.</span><span class="n">ret</span><span class="p">(</span><span class="n">tmp_2</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="n">module</span>
+</pre></div>
 </div>
-<div class="section" id="create-a-function-type-taking-3-32-bit-integers-return-a-32-bit-integer">
-<h1>create a function type taking 3 32-bit integers, return a 32-bit integer<a class="headerlink" href="#create-a-function-type-taking-3-32-bit-integers-return-a-32-bit-integer" title="Permalink to this headline">¶</a></h1>
-<p>ty_int = Type.int (32) func_type = Type.function (ty_int,
-(ty_int,)*3)</p>
-</div>
-<div class="section" id="create-a-function-of-that-type">
-<h1>create a function of that type<a class="headerlink" href="#create-a-function-of-that-type" title="Permalink to this headline">¶</a></h1>
-<p>mul_add = Function.new (module, func_type, &#8220;mul_add&#8221;)
-mul_add.calling_convention = CC_C x = mul_add.args[0]; x.name = &#8220;x&#8221;
-y = mul_add.args[1]; y.name = &#8220;y&#8221; z = mul_add.args[2]; z.name = &#8220;z&#8221;</p>
-</div>
-<div class="section" id="implement-the-function">
-<h1>implement the function<a class="headerlink" href="#implement-the-function" title="Permalink to this headline">¶</a></h1>
-</div>
-<div class="section" id="new-block">
-<h1>new block<a class="headerlink" href="#new-block" title="Permalink to this headline">¶</a></h1>
-<p>blk = mul_add.append_basic_block (&#8220;entry&#8221;)</p>
-</div>
-<div class="section" id="ir-builder">
-<h1>IR builder<a class="headerlink" href="#ir-builder" title="Permalink to this headline">¶</a></h1>
-<p>bldr = Builder.new (blk) tmp_1 = bldr.mul (x, y, &#8220;tmp_1&#8221;) tmp_2 =
-bldr.add (tmp_1, z, &#8220;tmp_2&#8221;)</p>
-<p>bldr.ret (tmp_2)</p>
-<p>print(module) {% endhighlight %}</p>
 </div>
 
 
@@ -101,22 +98,12 @@ bldr.add (tmp_1, z, &#8220;tmp_2&#8221;)</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">create a module</a></li>
-<li><a class="reference internal" href="#create-a-function-type-taking-3-32-bit-integers-return-a-32-bit-integer">create a function type taking 3 32-bit integers, return a 32-bit integer</a></li>
-<li><a class="reference internal" href="#create-a-function-of-that-type">create a function of that type</a></li>
-<li><a class="reference internal" href="#implement-the-function">implement the function</a></li>
-<li><a class="reference internal" href="#new-block">new block</a></li>
-<li><a class="reference internal" href="#ir-builder">IR builder</a></li>
-</ul>
-
   <h4>Previous topic</h4>
-  <p class="topless"><a href="../types.html"
-                        title="previous chapter">An Example</a></p>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">LLVM Tutorials</a></p>
   <h4>Next topic</h4>
   <p class="topless"><a href="JITTutorial2.html"
-                        title="next chapter">create a module</a></p>
+                        title="next chapter">A More Complicated Function</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../../_sources/doc/examples/JITTutorial1.txt"
@@ -146,12 +133,14 @@ bldr.add (tmp_1, z, &#8220;tmp_2&#8221;)</p>
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="JITTutorial2.html" title="create a module"
+          <a href="JITTutorial2.html" title="A More Complicated Function"
              >next</a> |</li>
         <li class="right" >
-          <a href="../types.html" title="An Example"
+          <a href="index.html" title="LLVM Tutorials"
              >previous</a> |</li>
-        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples and LLVM Tutorials</a> &raquo;</li>
+          <li><a href="index.html" >LLVM Tutorials</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

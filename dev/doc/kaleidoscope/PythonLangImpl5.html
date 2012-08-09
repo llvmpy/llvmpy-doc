@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Extending the Language: Control Flow &mdash; llvmpy 0.8.2 documentation</title>
+    <title>5. Chapter 5: Extending the Language: Control Flow &mdash; llvmpy 0.8.2 documentation</title>
     
     <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -26,7 +26,10 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="llvmpy 0.8.2 documentation" href="../../index.html" /> 
+    <link rel="top" title="llvmpy 0.8.2 documentation" href="../../index.html" />
+    <link rel="up" title="Kaleidoscope" href="index.html" />
+    <link rel="next" title="6. Chapter 6: Extending the Language: User-defined Operators" href="PythonLangImpl6.html" />
+    <link rel="prev" title="4. Chapter 4: Adding JIT and Optimizer Support" href="PythonLangImpl4.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,7 +38,15 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="PythonLangImpl6.html" title="6. Chapter 6: Extending the Language: User-defined Operators"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="PythonLangImpl4.html" title="4. Chapter 4: Adding JIT and Optimizer Support"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples and LLVM Tutorials</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Kaleidoscope</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -44,31 +55,12 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <table border="1" class="docutils">
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>layout: page</td>
-</tr>
-<tr class="row-even"><td>title: &#8220;Kaleidoscope: Chapter 5&#8221;</td>
-</tr>
-</tbody>
-</table>
-<div class="section" id="extending-the-language-control-flow">
-<h1>Extending the Language: Control Flow<a class="headerlink" href="#extending-the-language-control-flow" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="chapter-5-extending-the-language-control-flow">
+<h1>5. Chapter 5: Extending the Language: Control Flow<a class="headerlink" href="#chapter-5-extending-the-language-control-flow" title="Permalink to this headline">¶</a></h1>
 <p>Written by <a class="reference external" href="mailto:sabre&#37;&#52;&#48;nondot&#46;org">Chris Lattner</a> and <a class="reference external" href="http://max99x.com">Max
 Shawabkeh</a></p>
-<p><strong>Chapter 5</strong></p>
-<ul class="simple">
-<li>This will become a table of contents (this text will be scraped).
-{:toc}</li>
-</ul>
-<p><strong>`Chapter 6: Extending the Language: User-defined
-Operators &lt;PythonLangImpl6.html&gt;`_</strong></p>
-</div>
 <div class="section" id="introduction-intro">
-<h1>Introduction # {#intro}<a class="headerlink" href="#introduction-intro" title="Permalink to this headline">¶</a></h1>
+<h2>5.1. Introduction # {#intro}<a class="headerlink" href="#introduction-intro" title="Permalink to this headline">¶</a></h2>
 <p>Welcome to Chapter 5 of the <a class="reference external" href="http://www.llvm.org/docs/tutorial/index.html">Implementing a language with
 LLVM</a> tutorial. Parts
 1-4 described the implementation of the simple Kaleidoscope language and
@@ -82,7 +74,7 @@ extend Kaleidoscope to have an if/then/else expression plus a simple
 </div>
 <hr class="docutils" />
 <div class="section" id="if-then-else-ifthen">
-<h1>If/Then/Else # {#ifthen}<a class="headerlink" href="#if-then-else-ifthen" title="Permalink to this headline">¶</a></h1>
+<h2>5.2. If/Then/Else # {#ifthen}<a class="headerlink" href="#if-then-else-ifthen" title="Permalink to this headline">¶</a></h2>
 <p>Extending Kaleidoscope to support if/then/else is quite straightforward.
 It basically requires adding lexer support for this &#8220;new&#8221; concept to the
 lexer, parser, AST, and LLVM code emitter. This example is nice, because
@@ -109,7 +101,7 @@ down.</p>
 <p>Now that we know what we &#8220;want&#8221;, let&#8217;s break this down into its
 constituent pieces.</p>
 <div class="section" id="lexer-extensions-for-if-then-else-iflexer">
-<h2>Lexer Extensions for If/Then/Else ## {#iflexer}<a class="headerlink" href="#lexer-extensions-for-if-then-else-iflexer" title="Permalink to this headline">¶</a></h2>
+<h3>5.2.1. Lexer Extensions for If/Then/Else ## {#iflexer}<a class="headerlink" href="#lexer-extensions-for-if-then-else-iflexer" title="Permalink to this headline">¶</a></h3>
 <p>The lexer extensions are straightforward. First we add new token classes
 for the relevant tokens:</p>
 <p>{% highlight python %} class IfToken(object): pass class
@@ -123,7 +115,7 @@ identifier == &#8216;else&#8217;: yield ElseToken() else: yield
 IdentifierToken(identifier) {% endhighlight %}</p>
 </div>
 <div class="section" id="ast-extensions-for-if-then-else-ifast">
-<h2>AST Extensions for If/Then/Else ## {#ifast}<a class="headerlink" href="#ast-extensions-for-if-then-else-ifast" title="Permalink to this headline">¶</a></h2>
+<h3>5.2.2. AST Extensions for If/Then/Else ## {#ifast}<a class="headerlink" href="#ast-extensions-for-if-then-else-ifast" title="Permalink to this headline">¶</a></h3>
 <p>To represent the new expression we add a new AST node for it:</p>
 <p>{% highlight python %} # Expression class for if/then/else. class
 IfExpressionNode(ExpressionNode):</p>
@@ -134,7 +126,7 @@ self.else_branch = else_branch</p>
 <p>The AST node just has pointers to the various subexpressions.</p>
 </div>
 <div class="section" id="parser-extensions-for-if-then-else-ifparser">
-<h2>Parser Extensions for If/Then/Else ## {#ifparser}<a class="headerlink" href="#parser-extensions-for-if-then-else-ifparser" title="Permalink to this headline">¶</a></h2>
+<h3>5.2.3. Parser Extensions for If/Then/Else ## {#ifparser}<a class="headerlink" href="#parser-extensions-for-if-then-else-ifparser" title="Permalink to this headline">¶</a></h3>
 <p>Now that we have the relevant tokens coming from the lexer and we have
 the AST node to build, our parsing logic is relatively straightforward.
 First we define a new parsing function:</p>
@@ -169,7 +161,7 @@ return self.ParseParenExpr() else: raise RuntimeError(&#8216;Unknown token
 when expecting an expression.&#8217;) {% endhighlight %}</p>
 </div>
 <div class="section" id="llvm-ir-for-if-then-else-ifir">
-<h2>LLVM IR for If/Then/Else ## {#ifir}<a class="headerlink" href="#llvm-ir-for-if-then-else-ifir" title="Permalink to this headline">¶</a></h2>
+<h3>5.2.4. LLVM IR for If/Then/Else ## {#ifir}<a class="headerlink" href="#llvm-ir-for-if-then-else-ifir" title="Permalink to this headline">¶</a></h3>
 <p>Now that we have it parsing and building the AST, the final piece is
 adding LLVM code generation support. This is the most interesting part
 of the if/then/else example, because this is where it starts to
@@ -247,7 +239,7 @@ really easy to generate the Phi node, so we choose to do it directly.</p>
 <p>Okay, enough of the motivation and overview, lets generate code!</p>
 </div>
 <div class="section" id="code-generation-for-if-then-else-ifcodegen">
-<h2>Code Generation for If/Then/Else ## {#ifcodegen}<a class="headerlink" href="#code-generation-for-if-then-else-ifcodegen" title="Permalink to this headline">¶</a></h2>
+<h3>5.2.5. Code Generation for If/Then/Else ## {#ifcodegen}<a class="headerlink" href="#code-generation-for-if-then-else-ifcodegen" title="Permalink to this headline">¶</a></h3>
 <p>In order to generate code for this, we implement the <tt class="docutils literal"><span class="pre">Codegen</span></tt> method
 for <tt class="docutils literal"><span class="pre">IfExpressionNode</span></tt>:</p>
 <p>{% highlight python %} def CodeGen(self): condition =
@@ -359,7 +351,7 @@ languages...</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="for-loop-expression-for">
-<h1>&#8216;for&#8217; Loop Expression # {#for}<a class="headerlink" href="#for-loop-expression-for" title="Permalink to this headline">¶</a></h1>
+<h2>5.3. &#8216;for&#8217; Loop Expression # {#for}<a class="headerlink" href="#for-loop-expression-for" title="Permalink to this headline">¶</a></h2>
 <p>Now that we know how to add basic control flow constructs to the
 language, we have the tools to add more powerful things. Lets add
 something more aggressive, a &#8216;for&#8217; expression:</p>
@@ -380,7 +372,7 @@ the future when we have mutable variables, it will get more useful.</p>
 <p>As before, lets talk about the changes that we need to Kaleidoscope to
 support this.</p>
 <div class="section" id="lexer-extensions-for-the-for-loop-forlexer">
-<h2>Lexer Extensions for the &#8216;for&#8217; Loop ## {#forlexer}<a class="headerlink" href="#lexer-extensions-for-the-for-loop-forlexer" title="Permalink to this headline">¶</a></h2>
+<h3>5.3.1. Lexer Extensions for the &#8216;for&#8217; Loop ## {#forlexer}<a class="headerlink" href="#lexer-extensions-for-the-for-loop-forlexer" title="Permalink to this headline">¶</a></h3>
 <p>The lexer extensions are the same sort of thing as for if/then/else:</p>
 <p>{% highlight python %} ...</p>
 <p>class ThenToken(object): pass class ElseToken(object): pass class
@@ -401,7 +393,7 @@ else:
 <p>{% endhighlight %}</p>
 </div>
 <div class="section" id="ast-extensions-for-the-for-loop-forast">
-<h2>AST Extensions for the &#8216;for&#8217; Loop ## {#forast}<a class="headerlink" href="#ast-extensions-for-the-for-loop-forast" title="Permalink to this headline">¶</a></h2>
+<h3>5.3.2. AST Extensions for the &#8216;for&#8217; Loop ## {#forast}<a class="headerlink" href="#ast-extensions-for-the-for-loop-forast" title="Permalink to this headline">¶</a></h3>
 <p>The AST node is just as simple. It basically boils down to capturing the
 variable name and the constituent expressions in the node.</p>
 <p>{% highlight python %} # Expression class for for/in. class
@@ -412,7 +404,7 @@ self.step = step self.body = body</p>
 <p>def CodeGen(self): ... {% endhighlight %}</p>
 </div>
 <div class="section" id="parser-extensions-for-the-for-loop-forparser">
-<h2>Parser Extensions for the &#8216;for&#8217; Loop ## {#forparser}<a class="headerlink" href="#parser-extensions-for-the-for-loop-forparser" title="Permalink to this headline">¶</a></h2>
+<h3>5.3.3. Parser Extensions for the &#8216;for&#8217; Loop ## {#forparser}<a class="headerlink" href="#parser-extensions-for-the-for-loop-forparser" title="Permalink to this headline">¶</a></h3>
 <p>The parser code is also fairly standard. The only interesting thing here
 is handling of the optional step value. The parser code handles it by
 checking to see if the second comma is present. If not, it sets the step
@@ -457,7 +449,7 @@ the for.</p>
 <p>{% endhighlight %}</p>
 </div>
 <div class="section" id="llvm-ir-for-the-for-loop-forir">
-<h2>LLVM IR for the &#8216;for&#8217; Loop ## {#forir}<a class="headerlink" href="#llvm-ir-for-the-for-loop-forir" title="Permalink to this headline">¶</a></h2>
+<h3>5.3.4. LLVM IR for the &#8216;for&#8217; Loop ## {#forir}<a class="headerlink" href="#llvm-ir-for-the-for-loop-forir" title="Permalink to this headline">¶</a></h3>
 <p>Now we get to the good part: the LLVM IR we want to generate for this
 thing. With the simple example above, we get this LLVM IR (note that
 this dump is generated with optimizations disabled for clarity):</p>
@@ -476,7 +468,7 @@ several expressions, and some basic blocks. Lets see how this fits
 together.</p>
 </div>
 <div class="section" id="code-generation-for-the-for-loop-forcodegen">
-<h2>Code Generation for the &#8216;for&#8217; Loop ## {#forcodegen}<a class="headerlink" href="#code-generation-for-the-for-loop-forcodegen" title="Permalink to this headline">¶</a></h2>
+<h3>5.3.5. Code Generation for the &#8216;for&#8217; Loop ## {#forcodegen}<a class="headerlink" href="#code-generation-for-the-for-loop-forcodegen" title="Permalink to this headline">¶</a></h3>
 <p>The first part of Codegen is very simple: we just output the start
 expression for the loop value:</p>
 <p>{% highlight python %} def CodeGen(self): # Emit the start code first,
@@ -607,7 +599,7 @@ operators</a> to our poor innocent language.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="full-code-listing-code">
-<h1>Full Code Listing # {#code}<a class="headerlink" href="#full-code-listing-code" title="Permalink to this headline">¶</a></h1>
+<h2>5.4. Full Code Listing # {#code}<a class="headerlink" href="#full-code-listing-code" title="Permalink to this headline">¶</a></h2>
 <p>Here is the complete code listing for our running example, enhanced with
 the if/then/else and for expressions:</p>
 <p>{% highlight python %} #!/usr/bin/env python</p>
@@ -618,37 +610,37 @@ import FunctionPassManager</p>
 (PASS_INSTRUCTION_COMBINING, PASS_REASSOCIATE, PASS_GVN,
 PASS_CFG_SIMPLIFICATION)</p>
 <div class="section" id="globals">
-<h2>Globals<a class="headerlink" href="#globals" title="Permalink to this headline">¶</a></h2>
+<h3>5.4.1. Globals<a class="headerlink" href="#globals" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 <div class="section" id="the-llvm-module-which-holds-all-the-ir-code">
-<h1>The LLVM module, which holds all the IR code.<a class="headerlink" href="#the-llvm-module-which-holds-all-the-ir-code" title="Permalink to this headline">¶</a></h1>
+<h2>5.5. The LLVM module, which holds all the IR code.<a class="headerlink" href="#the-llvm-module-which-holds-all-the-ir-code" title="Permalink to this headline">¶</a></h2>
 <p>g_llvm_module = Module.new(&#8216;my cool jit&#8217;)</p>
 </div>
 <div class="section" id="the-llvm-instruction-builder-created-whenever-a-new-function-is-entered">
-<h1>The LLVM instruction builder. Created whenever a new function is entered.<a class="headerlink" href="#the-llvm-instruction-builder-created-whenever-a-new-function-is-entered" title="Permalink to this headline">¶</a></h1>
+<h2>5.6. The LLVM instruction builder. Created whenever a new function is entered.<a class="headerlink" href="#the-llvm-instruction-builder-created-whenever-a-new-function-is-entered" title="Permalink to this headline">¶</a></h2>
 <p>g_llvm_builder = None</p>
 </div>
 <div class="section" id="a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope">
-<h1>A dictionary that keeps track of which values are defined in the current scope<a class="headerlink" href="#a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope" title="Permalink to this headline">¶</a></h1>
+<h2>5.7. A dictionary that keeps track of which values are defined in the current scope<a class="headerlink" href="#a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="and-what-their-llvm-representation-is">
-<h1>and what their LLVM representation is.<a class="headerlink" href="#and-what-their-llvm-representation-is" title="Permalink to this headline">¶</a></h1>
+<h2>5.8. and what their LLVM representation is.<a class="headerlink" href="#and-what-their-llvm-representation-is" title="Permalink to this headline">¶</a></h2>
 <p>g_named_values = {}</p>
 </div>
 <div class="section" id="the-function-optimization-passes-manager">
-<h1>The function optimization passes manager.<a class="headerlink" href="#the-function-optimization-passes-manager" title="Permalink to this headline">¶</a></h1>
+<h2>5.9. The function optimization passes manager.<a class="headerlink" href="#the-function-optimization-passes-manager" title="Permalink to this headline">¶</a></h2>
 <p>g_llvm_pass_manager = FunctionPassManager.new(g_llvm_module)</p>
 </div>
 <div class="section" id="the-llvm-execution-engine">
-<h1>The LLVM execution engine.<a class="headerlink" href="#the-llvm-execution-engine" title="Permalink to this headline">¶</a></h1>
+<h2>5.10. The LLVM execution engine.<a class="headerlink" href="#the-llvm-execution-engine" title="Permalink to this headline">¶</a></h2>
 <p>g_llvm_executor = ExecutionEngine.new(g_llvm_module)</p>
 <div class="section" id="lexer">
-<h2>Lexer<a class="headerlink" href="#lexer" title="Permalink to this headline">¶</a></h2>
+<h3>5.10.1. Lexer<a class="headerlink" href="#lexer" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 <div class="section" id="the-lexer-yields-one-of-these-types-for-each-token">
-<h1>The lexer yields one of these types for each token.<a class="headerlink" href="#the-lexer-yields-one-of-these-types-for-each-token" title="Permalink to this headline">¶</a></h1>
+<h2>5.11. The lexer yields one of these types for each token.<a class="headerlink" href="#the-lexer-yields-one-of-these-types-for-each-token" title="Permalink to this headline">¶</a></h2>
 <p>class EOFToken(object): pass class DefToken(object): pass class
 ExternToken(object): pass class IfToken(object): pass class
 ThenToken(object): pass class ElseToken(object): pass class
@@ -663,7 +655,7 @@ and self.char == other.char def <strong>ne</strong>(self, other): return not sel
 == other</p>
 </div>
 <div class="section" id="regular-expressions-that-tokens-and-comments-of-our-language">
-<h1>Regular expressions that tokens and comments of our language.<a class="headerlink" href="#regular-expressions-that-tokens-and-comments-of-our-language" title="Permalink to this headline">¶</a></h1>
+<h2>5.12. Regular expressions that tokens and comments of our language.<a class="headerlink" href="#regular-expressions-that-tokens-and-comments-of-our-language" title="Permalink to this headline">¶</a></h2>
 <p>REGEX_NUMBER = re.compile(&#8216;[0-9]+(?:.[0-9]+)?&#8217;) REGEX_IDENTIFIER =
 re.compile(&#8216;[a-zA-Z][a-zA-Z0-9]<em>&#8216;) REGEX_COMMENT = re.compile(&#8216;#.</em>&#8216;)</p>
 <p>def Tokenize(string): while string: # Skip whitespace. if
@@ -709,21 +701,21 @@ string[0].isspace(): string = string[1:] continue</p>
 </div>
 <p>yield EOFToken()</p>
 <div class="section" id="abstract-syntax-tree-aka-parse-tree">
-<h2>Abstract Syntax Tree (aka Parse Tree)<a class="headerlink" href="#abstract-syntax-tree-aka-parse-tree" title="Permalink to this headline">¶</a></h2>
+<h3>5.12.1. Abstract Syntax Tree (aka Parse Tree)<a class="headerlink" href="#abstract-syntax-tree-aka-parse-tree" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 <div class="section" id="base-class-for-all-expression-nodes">
-<h1>Base class for all expression nodes.<a class="headerlink" href="#base-class-for-all-expression-nodes" title="Permalink to this headline">¶</a></h1>
+<h2>5.13. Base class for all expression nodes.<a class="headerlink" href="#base-class-for-all-expression-nodes" title="Permalink to this headline">¶</a></h2>
 <p>class ExpressionNode(object): pass</p>
 </div>
 <div class="section" id="expression-class-for-numeric-literals-like-1-0">
-<h1>Expression class for numeric literals like &#8220;1.0&#8221;.<a class="headerlink" href="#expression-class-for-numeric-literals-like-1-0" title="Permalink to this headline">¶</a></h1>
+<h2>5.14. Expression class for numeric literals like &#8220;1.0&#8221;.<a class="headerlink" href="#expression-class-for-numeric-literals-like-1-0" title="Permalink to this headline">¶</a></h2>
 <p>class NumberExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, value): self.value = value</p>
 <p>def CodeGen(self): return Constant.real(Type.double(), self.value)</p>
 </div>
 <div class="section" id="expression-class-for-referencing-a-variable-like-a">
-<h1>Expression class for referencing a variable, like &#8220;a&#8221;.<a class="headerlink" href="#expression-class-for-referencing-a-variable-like-a" title="Permalink to this headline">¶</a></h1>
+<h2>5.15. Expression class for referencing a variable, like &#8220;a&#8221;.<a class="headerlink" href="#expression-class-for-referencing-a-variable-like-a" title="Permalink to this headline">¶</a></h2>
 <p>class VariableExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, name): self.name = name</p>
 <p>def CodeGen(self): if self.name in g_named_values: return
@@ -731,7 +723,7 @@ g_named_values[self.name] else: raise RuntimeError(&#8216;Unknown variable
 name: &#8216; + self.name)</p>
 </div>
 <div class="section" id="expression-class-for-a-binary-operator">
-<h1>Expression class for a binary operator.<a class="headerlink" href="#expression-class-for-a-binary-operator" title="Permalink to this headline">¶</a></h1>
+<h2>5.16. Expression class for a binary operator.<a class="headerlink" href="#expression-class-for-a-binary-operator" title="Permalink to this headline">¶</a></h2>
 <p>class BinaryOperatorExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, operator, left, right): self.operator = operator
 self.left = left self.right = right</p>
@@ -753,7 +745,7 @@ self.right.CodeGen()</p>
 </div>
 </div>
 <div class="section" id="expression-class-for-function-calls">
-<h1>Expression class for function calls.<a class="headerlink" href="#expression-class-for-function-calls" title="Permalink to this headline">¶</a></h1>
+<h2>5.17. Expression class for function calls.<a class="headerlink" href="#expression-class-for-function-calls" title="Permalink to this headline">¶</a></h2>
 <p>class CallExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, callee, args): self.callee = callee self.args =
 args</p>
@@ -770,7 +762,7 @@ args</p>
 </div>
 </div>
 <div class="section" id="expression-class-for-if-then-else">
-<h1>Expression class for if/then/else.<a class="headerlink" href="#expression-class-for-if-then-else" title="Permalink to this headline">¶</a></h1>
+<h2>5.18. Expression class for if/then/else.<a class="headerlink" href="#expression-class-for-if-then-else" title="Permalink to this headline">¶</a></h2>
 <p>class IfExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, condition, then_branch, else_branch):
 self.condition = condition self.then_branch = then_branch
@@ -819,7 +811,7 @@ self.else_branch = else_branch</p>
 </div>
 </div>
 <div class="section" id="expression-class-for-for-in">
-<h1>Expression class for for/in.<a class="headerlink" href="#expression-class-for-for-in" title="Permalink to this headline">¶</a></h1>
+<h2>5.19. Expression class for for/in.<a class="headerlink" href="#expression-class-for-for-in" title="Permalink to this headline">¶</a></h2>
 <p>class ForExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, loop_variable, start, end, step, body):
 self.loop_variable = loop_variable self.start = start self.end = end
@@ -896,13 +888,13 @@ endloop # outloop:</p>
 </div>
 </div>
 <div class="section" id="this-class-represents-the-prototype-for-a-function-which-captures-its-name">
-<h1>This class represents the &#8220;prototype&#8221; for a function, which captures its name,<a class="headerlink" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name" title="Permalink to this headline">¶</a></h1>
+<h2>5.20. This class represents the &#8220;prototype&#8221; for a function, which captures its name,<a class="headerlink" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function">
-<h1>and its argument names (thus implicitly the number of arguments the function<a class="headerlink" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function" title="Permalink to this headline">¶</a></h1>
+<h2>5.21. and its argument names (thus implicitly the number of arguments the function<a class="headerlink" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="takes">
-<h1>takes).<a class="headerlink" href="#takes" title="Permalink to this headline">¶</a></h1>
+<h2>5.22. takes).<a class="headerlink" href="#takes" title="Permalink to this headline">¶</a></h2>
 <p>class PrototypeNode(object):</p>
 <p>def <strong>init</strong>(self, name, args): self.name = name self.args = args</p>
 <p>def CodeGen(self): # Make the function type, eg. double(double,double).
@@ -936,7 +928,7 @@ len(self.args), False)</p>
 </div>
 </div>
 <div class="section" id="this-class-represents-a-function-definition-itself">
-<h1>This class represents a function definition itself.<a class="headerlink" href="#this-class-represents-a-function-definition-itself" title="Permalink to this headline">¶</a></h1>
+<h2>5.23. This class represents a function definition itself.<a class="headerlink" href="#this-class-represents-a-function-definition-itself" title="Permalink to this headline">¶</a></h2>
 <p>class FunctionNode(object):</p>
 <p>def <strong>init</strong>(self, prototype, body): self.prototype = prototype
 self.body = body</p>
@@ -967,7 +959,7 @@ self.body = body</p>
 </pre></div>
 </div>
 <div class="section" id="parser">
-<h2>Parser<a class="headerlink" href="#parser" title="Permalink to this headline">¶</a></h2>
+<h3>5.23.1. Parser<a class="headerlink" href="#parser" title="Permalink to this headline">¶</a></h3>
 <p>class Parser(object):</p>
 <p>def <strong>init</strong>(self, tokens, binop_precedence): self.tokens = tokens
 self.binop_precedence = binop_precedence self.Next()</p>
@@ -1149,7 +1141,7 @@ function().CodeGen() except Exception, e: print &#8216;Error:&#8217;, e try:
 self.Next() # Skip for error recovery. except: pass</p>
 </div>
 <div class="section" id="main-driver-code">
-<h2>Main driver code.<a class="headerlink" href="#main-driver-code" title="Permalink to this headline">¶</a></h2>
+<h3>5.23.2. Main driver code.<a class="headerlink" href="#main-driver-code" title="Permalink to this headline">¶</a></h3>
 <p>def main(): # Set up the optimizer pipeline. Start with registering info
 about how the # target lays out data structures.
 g_llvm_pass_manager.add(g_llvm_executor.target_data) # Do simple
@@ -1185,6 +1177,7 @@ g_llvm_pass_manager.add(PASS_CFG_SIMPLIFICATION)</p>
 operators &lt;PythonLangImpl6.html&gt;`_</strong></p>
 </div>
 </div>
+</div>
 
 
           </div>
@@ -1194,59 +1187,67 @@ operators &lt;PythonLangImpl6.html&gt;`_</strong></p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="../../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Extending the Language: Control Flow</a></li>
-<li><a class="reference internal" href="#introduction-intro">Introduction # {#intro}</a></li>
-<li><a class="reference internal" href="#if-then-else-ifthen">If/Then/Else # {#ifthen}</a><ul>
-<li><a class="reference internal" href="#lexer-extensions-for-if-then-else-iflexer">Lexer Extensions for If/Then/Else ## {#iflexer}</a></li>
-<li><a class="reference internal" href="#ast-extensions-for-if-then-else-ifast">AST Extensions for If/Then/Else ## {#ifast}</a></li>
-<li><a class="reference internal" href="#parser-extensions-for-if-then-else-ifparser">Parser Extensions for If/Then/Else ## {#ifparser}</a></li>
-<li><a class="reference internal" href="#llvm-ir-for-if-then-else-ifir">LLVM IR for If/Then/Else ## {#ifir}</a></li>
-<li><a class="reference internal" href="#code-generation-for-if-then-else-ifcodegen">Code Generation for If/Then/Else ## {#ifcodegen}</a></li>
+<li><a class="reference internal" href="#">5. Chapter 5: Extending the Language: Control Flow</a><ul>
+<li><a class="reference internal" href="#introduction-intro">5.1. Introduction # {#intro}</a></li>
+<li><a class="reference internal" href="#if-then-else-ifthen">5.2. If/Then/Else # {#ifthen}</a><ul>
+<li><a class="reference internal" href="#lexer-extensions-for-if-then-else-iflexer">5.2.1. Lexer Extensions for If/Then/Else ## {#iflexer}</a></li>
+<li><a class="reference internal" href="#ast-extensions-for-if-then-else-ifast">5.2.2. AST Extensions for If/Then/Else ## {#ifast}</a></li>
+<li><a class="reference internal" href="#parser-extensions-for-if-then-else-ifparser">5.2.3. Parser Extensions for If/Then/Else ## {#ifparser}</a></li>
+<li><a class="reference internal" href="#llvm-ir-for-if-then-else-ifir">5.2.4. LLVM IR for If/Then/Else ## {#ifir}</a></li>
+<li><a class="reference internal" href="#code-generation-for-if-then-else-ifcodegen">5.2.5. Code Generation for If/Then/Else ## {#ifcodegen}</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#for-loop-expression-for">&#8216;for&#8217; Loop Expression # {#for}</a><ul>
-<li><a class="reference internal" href="#lexer-extensions-for-the-for-loop-forlexer">Lexer Extensions for the &#8216;for&#8217; Loop ## {#forlexer}</a></li>
-<li><a class="reference internal" href="#ast-extensions-for-the-for-loop-forast">AST Extensions for the &#8216;for&#8217; Loop ## {#forast}</a></li>
-<li><a class="reference internal" href="#parser-extensions-for-the-for-loop-forparser">Parser Extensions for the &#8216;for&#8217; Loop ## {#forparser}</a></li>
-<li><a class="reference internal" href="#llvm-ir-for-the-for-loop-forir">LLVM IR for the &#8216;for&#8217; Loop ## {#forir}</a></li>
-<li><a class="reference internal" href="#code-generation-for-the-for-loop-forcodegen">Code Generation for the &#8216;for&#8217; Loop ## {#forcodegen}</a></li>
+<li><a class="reference internal" href="#for-loop-expression-for">5.3. &#8216;for&#8217; Loop Expression # {#for}</a><ul>
+<li><a class="reference internal" href="#lexer-extensions-for-the-for-loop-forlexer">5.3.1. Lexer Extensions for the &#8216;for&#8217; Loop ## {#forlexer}</a></li>
+<li><a class="reference internal" href="#ast-extensions-for-the-for-loop-forast">5.3.2. AST Extensions for the &#8216;for&#8217; Loop ## {#forast}</a></li>
+<li><a class="reference internal" href="#parser-extensions-for-the-for-loop-forparser">5.3.3. Parser Extensions for the &#8216;for&#8217; Loop ## {#forparser}</a></li>
+<li><a class="reference internal" href="#llvm-ir-for-the-for-loop-forir">5.3.4. LLVM IR for the &#8216;for&#8217; Loop ## {#forir}</a></li>
+<li><a class="reference internal" href="#code-generation-for-the-for-loop-forcodegen">5.3.5. Code Generation for the &#8216;for&#8217; Loop ## {#forcodegen}</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#full-code-listing-code">Full Code Listing # {#code}</a><ul>
-<li><a class="reference internal" href="#globals">Globals</a></li>
+<li><a class="reference internal" href="#full-code-listing-code">5.4. Full Code Listing # {#code}</a><ul>
+<li><a class="reference internal" href="#globals">5.4.1. Globals</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#the-llvm-module-which-holds-all-the-ir-code">The LLVM module, which holds all the IR code.</a></li>
-<li><a class="reference internal" href="#the-llvm-instruction-builder-created-whenever-a-new-function-is-entered">The LLVM instruction builder. Created whenever a new function is entered.</a></li>
-<li><a class="reference internal" href="#a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope">A dictionary that keeps track of which values are defined in the current scope</a></li>
-<li><a class="reference internal" href="#and-what-their-llvm-representation-is">and what their LLVM representation is.</a></li>
-<li><a class="reference internal" href="#the-function-optimization-passes-manager">The function optimization passes manager.</a></li>
-<li><a class="reference internal" href="#the-llvm-execution-engine">The LLVM execution engine.</a><ul>
-<li><a class="reference internal" href="#lexer">Lexer</a></li>
+<li><a class="reference internal" href="#the-llvm-module-which-holds-all-the-ir-code">5.5. The LLVM module, which holds all the IR code.</a></li>
+<li><a class="reference internal" href="#the-llvm-instruction-builder-created-whenever-a-new-function-is-entered">5.6. The LLVM instruction builder. Created whenever a new function is entered.</a></li>
+<li><a class="reference internal" href="#a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope">5.7. A dictionary that keeps track of which values are defined in the current scope</a></li>
+<li><a class="reference internal" href="#and-what-their-llvm-representation-is">5.8. and what their LLVM representation is.</a></li>
+<li><a class="reference internal" href="#the-function-optimization-passes-manager">5.9. The function optimization passes manager.</a></li>
+<li><a class="reference internal" href="#the-llvm-execution-engine">5.10. The LLVM execution engine.</a><ul>
+<li><a class="reference internal" href="#lexer">5.10.1. Lexer</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#the-lexer-yields-one-of-these-types-for-each-token">The lexer yields one of these types for each token.</a></li>
-<li><a class="reference internal" href="#regular-expressions-that-tokens-and-comments-of-our-language">Regular expressions that tokens and comments of our language.</a><ul>
-<li><a class="reference internal" href="#abstract-syntax-tree-aka-parse-tree">Abstract Syntax Tree (aka Parse Tree)</a></li>
+<li><a class="reference internal" href="#the-lexer-yields-one-of-these-types-for-each-token">5.11. The lexer yields one of these types for each token.</a></li>
+<li><a class="reference internal" href="#regular-expressions-that-tokens-and-comments-of-our-language">5.12. Regular expressions that tokens and comments of our language.</a><ul>
+<li><a class="reference internal" href="#abstract-syntax-tree-aka-parse-tree">5.12.1. Abstract Syntax Tree (aka Parse Tree)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#base-class-for-all-expression-nodes">Base class for all expression nodes.</a></li>
-<li><a class="reference internal" href="#expression-class-for-numeric-literals-like-1-0">Expression class for numeric literals like &#8220;1.0&#8221;.</a></li>
-<li><a class="reference internal" href="#expression-class-for-referencing-a-variable-like-a">Expression class for referencing a variable, like &#8220;a&#8221;.</a></li>
-<li><a class="reference internal" href="#expression-class-for-a-binary-operator">Expression class for a binary operator.</a></li>
-<li><a class="reference internal" href="#expression-class-for-function-calls">Expression class for function calls.</a></li>
-<li><a class="reference internal" href="#expression-class-for-if-then-else">Expression class for if/then/else.</a></li>
-<li><a class="reference internal" href="#expression-class-for-for-in">Expression class for for/in.</a></li>
-<li><a class="reference internal" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name">This class represents the &#8220;prototype&#8221; for a function, which captures its name,</a></li>
-<li><a class="reference internal" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function">and its argument names (thus implicitly the number of arguments the function</a></li>
-<li><a class="reference internal" href="#takes">takes).</a></li>
-<li><a class="reference internal" href="#this-class-represents-a-function-definition-itself">This class represents a function definition itself.</a><ul>
-<li><a class="reference internal" href="#parser">Parser</a></li>
-<li><a class="reference internal" href="#main-driver-code">Main driver code.</a></li>
+<li><a class="reference internal" href="#base-class-for-all-expression-nodes">5.13. Base class for all expression nodes.</a></li>
+<li><a class="reference internal" href="#expression-class-for-numeric-literals-like-1-0">5.14. Expression class for numeric literals like &#8220;1.0&#8221;.</a></li>
+<li><a class="reference internal" href="#expression-class-for-referencing-a-variable-like-a">5.15. Expression class for referencing a variable, like &#8220;a&#8221;.</a></li>
+<li><a class="reference internal" href="#expression-class-for-a-binary-operator">5.16. Expression class for a binary operator.</a></li>
+<li><a class="reference internal" href="#expression-class-for-function-calls">5.17. Expression class for function calls.</a></li>
+<li><a class="reference internal" href="#expression-class-for-if-then-else">5.18. Expression class for if/then/else.</a></li>
+<li><a class="reference internal" href="#expression-class-for-for-in">5.19. Expression class for for/in.</a></li>
+<li><a class="reference internal" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name">5.20. This class represents the &#8220;prototype&#8221; for a function, which captures its name,</a></li>
+<li><a class="reference internal" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function">5.21. and its argument names (thus implicitly the number of arguments the function</a></li>
+<li><a class="reference internal" href="#takes">5.22. takes).</a></li>
+<li><a class="reference internal" href="#this-class-represents-a-function-definition-itself">5.23. This class represents a function definition itself.</a><ul>
+<li><a class="reference internal" href="#parser">5.23.1. Parser</a></li>
+<li><a class="reference internal" href="#main-driver-code">5.23.2. Main driver code.</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="PythonLangImpl4.html"
+                        title="previous chapter">4. Chapter 4: Adding JIT and Optimizer Support</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="PythonLangImpl6.html"
+                        title="next chapter">6. Chapter 6: Extending the Language: User-defined Operators</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../../_sources/doc/kaleidoscope/PythonLangImpl5.txt"
@@ -1275,7 +1276,15 @@ operators &lt;PythonLangImpl6.html&gt;`_</strong></p>
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="PythonLangImpl6.html" title="6. Chapter 6: Extending the Language: User-defined Operators"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="PythonLangImpl4.html" title="4. Chapter 4: Adding JIT and Optimizer Support"
+             >previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples and LLVM Tutorials</a> &raquo;</li>
+          <li><a href="index.html" >Kaleidoscope</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

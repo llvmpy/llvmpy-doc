@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Extending the Language: Mutable Variables / SSA construction &mdash; llvmpy 0.8.2 documentation</title>
+    <title>7. Chapter 7: Extending the Language: Mutable Variables / SSA construction &mdash; llvmpy 0.8.2 documentation</title>
     
     <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -26,7 +26,10 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="llvmpy 0.8.2 documentation" href="../../index.html" /> 
+    <link rel="top" title="llvmpy 0.8.2 documentation" href="../../index.html" />
+    <link rel="up" title="Kaleidoscope" href="index.html" />
+    <link rel="next" title="8. Chapter 8: Conclusion and other useful LLVM tidbits" href="PythonLangImpl8.html" />
+    <link rel="prev" title="6. Chapter 6: Extending the Language: User-defined Operators" href="PythonLangImpl6.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,7 +38,15 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="PythonLangImpl8.html" title="8. Chapter 8: Conclusion and other useful LLVM tidbits"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="PythonLangImpl6.html" title="6. Chapter 6: Extending the Language: User-defined Operators"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples and LLVM Tutorials</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Kaleidoscope</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -44,31 +55,12 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <table border="1" class="docutils">
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>layout: page</td>
-</tr>
-<tr class="row-even"><td>title: &#8220;Kaleidoscope: Chapter 7&#8221;</td>
-</tr>
-</tbody>
-</table>
-<div class="section" id="extending-the-language-mutable-variables-ssa-construction">
-<h1>Extending the Language: Mutable Variables / SSA construction<a class="headerlink" href="#extending-the-language-mutable-variables-ssa-construction" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="chapter-7-extending-the-language-mutable-variables-ssa-construction">
+<h1>7. Chapter 7: Extending the Language: Mutable Variables / SSA construction<a class="headerlink" href="#chapter-7-extending-the-language-mutable-variables-ssa-construction" title="Permalink to this headline">¶</a></h1>
 <p>Written by <a class="reference external" href="mailto:sabre&#37;&#52;&#48;nondot&#46;org">Chris Lattner</a> and <a class="reference external" href="http://max99x.com">Max
 Shawabkeh</a></p>
-<p><strong>Chapter 7</strong></p>
-<ul class="simple">
-<li>This will become a table of contents (this text will be scraped).
-{:toc}</li>
-</ul>
-<p><strong>`Chapter 8: Conclusion and other useful LLVM
-tidbits &lt;PythonLangImpl8.html&gt;`_</strong></p>
-</div>
 <div class="section" id="introduction-intro">
-<h1>Introduction # {#intro}<a class="headerlink" href="#introduction-intro" title="Permalink to this headline">¶</a></h1>
+<h2>7.1. Introduction # {#intro}<a class="headerlink" href="#introduction-intro" title="Permalink to this headline">¶</a></h2>
 <p>Welcome to Chapter 7 of the <a class="reference external" href="http://www.llvm.org/docs/tutorial/index.html">Implementing a language with
 LLVM</a> tutorial. In
 chapters 1 through 6, we&#8217;ve built a very respectable, albeit simple,
@@ -91,7 +83,7 @@ well tested support for this, though the way it works is a bit
 unexpected for some.</p>
 </div>
 <div class="section" id="why-is-this-a-hard-problem-why">
-<h1>Why is this a hard problem? # {#why}<a class="headerlink" href="#why-is-this-a-hard-problem-why" title="Permalink to this headline">¶</a></h1>
+<h2>7.2. Why is this a hard problem? # {#why}<a class="headerlink" href="#why-is-this-a-hard-problem-why" title="Permalink to this headline">¶</a></h2>
 <p>To understand why mutable variables cause complexities in SSA
 construction, consider this extremely simple C example:</p>
 <p>{% highlight python %} int G, H; int test(_Bool Condition) { int X; if
@@ -124,7 +116,7 @@ structures, so it is inconvenient and wasteful for every front-end to
 have to reproduce this logic.</p>
 </div>
 <div class="section" id="memory-in-llvm-memory">
-<h1>Memory in LLVM # {#memory}<a class="headerlink" href="#memory-in-llvm-memory" title="Permalink to this headline">¶</a></h1>
+<h2>7.3. Memory in LLVM # {#memory}<a class="headerlink" href="#memory-in-llvm-memory" title="Permalink to this headline">¶</a></h2>
 <p>The &#8216;trick&#8217; here is that while LLVM does require all register values to
 be in SSA form, it does not require (or permit) memory objects to be in
 SSA form. In the example above, note that the loads from G and H are
@@ -246,7 +238,7 @@ mutable variables now!</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="mutable-variables-in-kaleidoscope-kalvars">
-<h1>Mutable Variables in Kaleidoscope # {#kalvars}<a class="headerlink" href="#mutable-variables-in-kaleidoscope-kalvars" title="Permalink to this headline">¶</a></h1>
+<h2>7.4. Mutable Variables in Kaleidoscope # {#kalvars}<a class="headerlink" href="#mutable-variables-in-kaleidoscope-kalvars" title="Permalink to this headline">¶</a></h2>
 <p>Now that we know the sort of problem we want to tackle, lets see what
 this looks like in the context of our little Kaleidoscope language.
 We&#8217;re going to add two features:</p>
@@ -264,16 +256,16 @@ operator that ignores operands # and just returns the RHS. def binary :
 1 (x y) y;</p>
 </div>
 <div class="section" id="recursive-fib-we-could-do-this-before">
-<h1>Recursive fib, we could do this before.<a class="headerlink" href="#recursive-fib-we-could-do-this-before" title="Permalink to this headline">¶</a></h1>
+<h2>7.5. Recursive fib, we could do this before.<a class="headerlink" href="#recursive-fib-we-could-do-this-before" title="Permalink to this headline">¶</a></h2>
 <p>def fib(x) if (x &lt; 3) then 1 else fib(x-1) + fib(x-2)</p>
 </div>
 <div class="section" id="iterative-fib">
-<h1>Iterative fib.<a class="headerlink" href="#iterative-fib" title="Permalink to this headline">¶</a></h1>
+<h2>7.6. Iterative fib.<a class="headerlink" href="#iterative-fib" title="Permalink to this headline">¶</a></h2>
 <p>def fibi(x) var a = 1, b = 1, c in (for i = 3, i &lt; x in c = a + b : a =
 b : b = c) : b</p>
 </div>
 <div class="section" id="call-it">
-<h1>Call it.<a class="headerlink" href="#call-it" title="Permalink to this headline">¶</a></h1>
+<h2>7.7. Call it.<a class="headerlink" href="#call-it" title="Permalink to this headline">¶</a></h2>
 <p>fibi(10) {% endhighlight %}</p>
 <p>In order to mutate variables, we have to change our existing variables
 to use the &#8220;alloca trick&#8221;. Once we have that, we&#8217;ll add our new
@@ -281,7 +273,7 @@ operator, then extend Kaleidoscope to support new variable definitions.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="adjusting-existing-variables-for-mutation-adjustments">
-<h1>Adjusting Existing Variables for Mutation # {#adjustments}<a class="headerlink" href="#adjusting-existing-variables-for-mutation-adjustments" title="Permalink to this headline">¶</a></h1>
+<h2>7.8. Adjusting Existing Variables for Mutation # {#adjustments}<a class="headerlink" href="#adjusting-existing-variables-for-mutation-adjustments" title="Permalink to this headline">¶</a></h2>
 <p>The symbol table in Kaleidoscope is managed at code generation time by
 the <tt class="docutils literal"><span class="pre">g_named_values</span></tt> map. This map currently keeps track of the LLVM
 &#8220;Value&#8221; that holds the double value for the named variable. In order to
@@ -432,7 +424,7 @@ we&#8217;ll add the assignment operator.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="new-assignment-operator-assignment">
-<h1>New Assignment Operator # {#assignment}<a class="headerlink" href="#new-assignment-operator-assignment" title="Permalink to this headline">¶</a></h1>
+<h2>7.9. New Assignment Operator # {#assignment}<a class="headerlink" href="#new-assignment-operator-assignment" title="Permalink to this headline">¶</a></h2>
 <p>With our current framework, adding a new assignment operator is really
 simple. We will parse it just like any other binary operator, but handle
 it internally (instead of allowing the user to define it). The first
@@ -478,10 +470,10 @@ and arguments. For example, we can now run code like this:</p>
 <p>{% highlight python %} # Function to print a double. extern printd(x)</p>
 </div>
 <div class="section" id="define-for-sequencing-as-a-low-precedence-operator-that-ignores-operands">
-<h1>Define &#8216;:&#8217; for sequencing: as a low-precedence operator that ignores operands<a class="headerlink" href="#define-for-sequencing-as-a-low-precedence-operator-that-ignores-operands" title="Permalink to this headline">¶</a></h1>
+<h2>7.10. Define &#8216;:&#8217; for sequencing: as a low-precedence operator that ignores operands<a class="headerlink" href="#define-for-sequencing-as-a-low-precedence-operator-that-ignores-operands" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="and-just-returns-the-rhs">
-<h1>and just returns the RHS.<a class="headerlink" href="#and-just-returns-the-rhs" title="Permalink to this headline">¶</a></h1>
+<h2>7.11. and just returns the RHS.<a class="headerlink" href="#and-just-returns-the-rhs" title="Permalink to this headline">¶</a></h2>
 <p>def binary : 1 (x y) y</p>
 <p>def test(x) printd(x) : x = 4 : printd(x)</p>
 <p>test(123) {% endhighlight %}</p>
@@ -493,7 +485,7 @@ own local variables. Let&#8217;s add this next!</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="user-defined-local-variables-localvars">
-<h1>User-defined Local Variables # {#localvars}<a class="headerlink" href="#user-defined-local-variables-localvars" title="Permalink to this headline">¶</a></h1>
+<h2>7.12. User-defined Local Variables # {#localvars}<a class="headerlink" href="#user-defined-local-variables-localvars" title="Permalink to this headline">¶</a></h2>
 <p>Adding var/in is just like any other other extensions we made to
 Kaleidoscope: we extend the lexer, the parser, the AST and the code
 generator. The first step for adding our new &#8216;var/in&#8217; construct is to
@@ -628,7 +620,7 @@ dominance frontier&#8221; computation anywhere in sight.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="full-code-listing-code">
-<h1>Full Code Listing # {#code}<a class="headerlink" href="#full-code-listing-code" title="Permalink to this headline">¶</a></h1>
+<h2>7.13. Full Code Listing # {#code}<a class="headerlink" href="#full-code-listing-code" title="Permalink to this headline">¶</a></h2>
 <p>Here is the complete code listing for our running example, enhanced with
 mutable variables and var/in support:</p>
 <p>{% highlight python %} #!/usr/bin/env python</p>
@@ -639,51 +631,51 @@ import FunctionPassManager</p>
 (PASS_PROMOTE_MEMORY_TO_REGISTER, PASS_INSTRUCTION_COMBINING,
 PASS_REASSOCIATE, PASS_GVN, PASS_CFG_SIMPLIFICATION)</p>
 <div class="section" id="globals">
-<h2>Globals<a class="headerlink" href="#globals" title="Permalink to this headline">¶</a></h2>
+<h3>7.13.1. Globals<a class="headerlink" href="#globals" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 <div class="section" id="the-llvm-module-which-holds-all-the-ir-code">
-<h1>The LLVM module, which holds all the IR code.<a class="headerlink" href="#the-llvm-module-which-holds-all-the-ir-code" title="Permalink to this headline">¶</a></h1>
+<h2>7.14. The LLVM module, which holds all the IR code.<a class="headerlink" href="#the-llvm-module-which-holds-all-the-ir-code" title="Permalink to this headline">¶</a></h2>
 <p>g_llvm_module = Module.new(&#8216;my cool jit&#8217;)</p>
 </div>
 <div class="section" id="the-llvm-instruction-builder-created-whenever-a-new-function-is-entered">
-<h1>The LLVM instruction builder. Created whenever a new function is entered.<a class="headerlink" href="#the-llvm-instruction-builder-created-whenever-a-new-function-is-entered" title="Permalink to this headline">¶</a></h1>
+<h2>7.15. The LLVM instruction builder. Created whenever a new function is entered.<a class="headerlink" href="#the-llvm-instruction-builder-created-whenever-a-new-function-is-entered" title="Permalink to this headline">¶</a></h2>
 <p>g_llvm_builder = None</p>
 </div>
 <div class="section" id="a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope">
-<h1>A dictionary that keeps track of which values are defined in the current scope<a class="headerlink" href="#a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope" title="Permalink to this headline">¶</a></h1>
+<h2>7.16. A dictionary that keeps track of which values are defined in the current scope<a class="headerlink" href="#a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="and-what-their-llvm-representation-is">
-<h1>and what their LLVM representation is.<a class="headerlink" href="#and-what-their-llvm-representation-is" title="Permalink to this headline">¶</a></h1>
+<h2>7.17. and what their LLVM representation is.<a class="headerlink" href="#and-what-their-llvm-representation-is" title="Permalink to this headline">¶</a></h2>
 <p>g_named_values = {}</p>
 </div>
 <div class="section" id="the-function-optimization-passes-manager">
-<h1>The function optimization passes manager.<a class="headerlink" href="#the-function-optimization-passes-manager" title="Permalink to this headline">¶</a></h1>
+<h2>7.18. The function optimization passes manager.<a class="headerlink" href="#the-function-optimization-passes-manager" title="Permalink to this headline">¶</a></h2>
 <p>g_llvm_pass_manager = FunctionPassManager.new(g_llvm_module)</p>
 </div>
 <div class="section" id="the-llvm-execution-engine">
-<h1>The LLVM execution engine.<a class="headerlink" href="#the-llvm-execution-engine" title="Permalink to this headline">¶</a></h1>
+<h2>7.19. The LLVM execution engine.<a class="headerlink" href="#the-llvm-execution-engine" title="Permalink to this headline">¶</a></h2>
 <p>g_llvm_executor = ExecutionEngine.new(g_llvm_module)</p>
 </div>
 <div class="section" id="the-binary-operator-precedence-chart">
-<h1>The binary operator precedence chart.<a class="headerlink" href="#the-binary-operator-precedence-chart" title="Permalink to this headline">¶</a></h1>
+<h2>7.20. The binary operator precedence chart.<a class="headerlink" href="#the-binary-operator-precedence-chart" title="Permalink to this headline">¶</a></h2>
 <p>g_binop_precedence = {}</p>
 </div>
 <div class="section" id="creates-an-alloca-instruction-in-the-entry-block-of-the-function-this-is-used">
-<h1>Creates an alloca instruction in the entry block of the function. This is used<a class="headerlink" href="#creates-an-alloca-instruction-in-the-entry-block-of-the-function-this-is-used" title="Permalink to this headline">¶</a></h1>
+<h2>7.21. Creates an alloca instruction in the entry block of the function. This is used<a class="headerlink" href="#creates-an-alloca-instruction-in-the-entry-block-of-the-function-this-is-used" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="for-mutable-variables">
-<h1>for mutable variables.<a class="headerlink" href="#for-mutable-variables" title="Permalink to this headline">¶</a></h1>
+<h2>7.22. for mutable variables.<a class="headerlink" href="#for-mutable-variables" title="Permalink to this headline">¶</a></h2>
 <p>def CreateEntryBlockAlloca(function, var_name): entry =
 function.get_entry_basic_block() builder = Builder.new(entry)
 builder.position_at_beginning(entry) return
 builder.alloca(Type.double(), var_name)</p>
 <div class="section" id="lexer">
-<h2>Lexer<a class="headerlink" href="#lexer" title="Permalink to this headline">¶</a></h2>
+<h3>7.22.1. Lexer<a class="headerlink" href="#lexer" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 <div class="section" id="the-lexer-yields-one-of-these-types-for-each-token">
-<h1>The lexer yields one of these types for each token.<a class="headerlink" href="#the-lexer-yields-one-of-these-types-for-each-token" title="Permalink to this headline">¶</a></h1>
+<h2>7.23. The lexer yields one of these types for each token.<a class="headerlink" href="#the-lexer-yields-one-of-these-types-for-each-token" title="Permalink to this headline">¶</a></h2>
 <p>class EOFToken(object): pass class DefToken(object): pass class
 ExternToken(object): pass class IfToken(object): pass class
 ThenToken(object): pass class ElseToken(object): pass class
@@ -700,7 +692,7 @@ and self.char == other.char def <strong>ne</strong>(self, other): return not sel
 == other</p>
 </div>
 <div class="section" id="regular-expressions-that-tokens-and-comments-of-our-language">
-<h1>Regular expressions that tokens and comments of our language.<a class="headerlink" href="#regular-expressions-that-tokens-and-comments-of-our-language" title="Permalink to this headline">¶</a></h1>
+<h2>7.24. Regular expressions that tokens and comments of our language.<a class="headerlink" href="#regular-expressions-that-tokens-and-comments-of-our-language" title="Permalink to this headline">¶</a></h2>
 <p>REGEX_NUMBER = re.compile(&#8216;[0-9]+(?:.[0-9]+)?&#8217;) REGEX_IDENTIFIER =
 re.compile(&#8216;[a-zA-Z][a-zA-Z0-9]<em>&#8216;) REGEX_COMMENT = re.compile(&#8216;#.</em>&#8216;)</p>
 <p>def Tokenize(string): while string: # Skip whitespace. if
@@ -752,21 +744,21 @@ string[0].isspace(): string = string[1:] continue</p>
 </div>
 <p>yield EOFToken()</p>
 <div class="section" id="abstract-syntax-tree-aka-parse-tree">
-<h2>Abstract Syntax Tree (aka Parse Tree)<a class="headerlink" href="#abstract-syntax-tree-aka-parse-tree" title="Permalink to this headline">¶</a></h2>
+<h3>7.24.1. Abstract Syntax Tree (aka Parse Tree)<a class="headerlink" href="#abstract-syntax-tree-aka-parse-tree" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 <div class="section" id="base-class-for-all-expression-nodes">
-<h1>Base class for all expression nodes.<a class="headerlink" href="#base-class-for-all-expression-nodes" title="Permalink to this headline">¶</a></h1>
+<h2>7.25. Base class for all expression nodes.<a class="headerlink" href="#base-class-for-all-expression-nodes" title="Permalink to this headline">¶</a></h2>
 <p>class ExpressionNode(object): pass</p>
 </div>
 <div class="section" id="expression-class-for-numeric-literals-like-1-0">
-<h1>Expression class for numeric literals like &#8220;1.0&#8221;.<a class="headerlink" href="#expression-class-for-numeric-literals-like-1-0" title="Permalink to this headline">¶</a></h1>
+<h2>7.26. Expression class for numeric literals like &#8220;1.0&#8221;.<a class="headerlink" href="#expression-class-for-numeric-literals-like-1-0" title="Permalink to this headline">¶</a></h2>
 <p>class NumberExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, value): self.value = value</p>
 <p>def CodeGen(self): return Constant.real(Type.double(), self.value)</p>
 </div>
 <div class="section" id="expression-class-for-referencing-a-variable-like-a">
-<h1>Expression class for referencing a variable, like &#8220;a&#8221;.<a class="headerlink" href="#expression-class-for-referencing-a-variable-like-a" title="Permalink to this headline">¶</a></h1>
+<h2>7.27. Expression class for referencing a variable, like &#8220;a&#8221;.<a class="headerlink" href="#expression-class-for-referencing-a-variable-like-a" title="Permalink to this headline">¶</a></h2>
 <p>class VariableExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, name): self.name = name</p>
 <p>def CodeGen(self): if self.name in g_named_values: return
@@ -774,7 +766,7 @@ g_llvm_builder.load(g_named_values[self.name], self.name) else:
 raise RuntimeError(&#8216;Unknown variable name: &#8216; + self.name)</p>
 </div>
 <div class="section" id="expression-class-for-a-binary-operator">
-<h1>Expression class for a binary operator.<a class="headerlink" href="#expression-class-for-a-binary-operator" title="Permalink to this headline">¶</a></h1>
+<h2>7.28. Expression class for a binary operator.<a class="headerlink" href="#expression-class-for-a-binary-operator" title="Permalink to this headline">¶</a></h2>
 <p>class BinaryOperatorExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, operator, left, right): self.operator = operator
 self.left = left self.right = right</p>
@@ -813,7 +805,7 @@ else:
 </div>
 </div>
 <div class="section" id="expression-class-for-function-calls">
-<h1>Expression class for function calls.<a class="headerlink" href="#expression-class-for-function-calls" title="Permalink to this headline">¶</a></h1>
+<h2>7.29. Expression class for function calls.<a class="headerlink" href="#expression-class-for-function-calls" title="Permalink to this headline">¶</a></h2>
 <p>class CallExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, callee, args): self.callee = callee self.args =
 args</p>
@@ -830,7 +822,7 @@ args</p>
 </div>
 </div>
 <div class="section" id="expression-class-for-if-then-else">
-<h1>Expression class for if/then/else.<a class="headerlink" href="#expression-class-for-if-then-else" title="Permalink to this headline">¶</a></h1>
+<h2>7.30. Expression class for if/then/else.<a class="headerlink" href="#expression-class-for-if-then-else" title="Permalink to this headline">¶</a></h2>
 <p>class IfExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, condition, then_branch, else_branch):
 self.condition = condition self.then_branch = then_branch
@@ -879,7 +871,7 @@ self.else_branch = else_branch</p>
 </div>
 </div>
 <div class="section" id="expression-class-for-for-in">
-<h1>Expression class for for/in.<a class="headerlink" href="#expression-class-for-for-in" title="Permalink to this headline">¶</a></h1>
+<h2>7.31. Expression class for for/in.<a class="headerlink" href="#expression-class-for-for-in" title="Permalink to this headline">¶</a></h2>
 <p>class ForExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, loop_variable, start, end, step, body):
 self.loop_variable = loop_variable self.start = start self.end = end
@@ -959,7 +951,7 @@ endloop # outloop:</p>
 </div>
 </div>
 <div class="section" id="expression-class-for-a-unary-operator">
-<h1>Expression class for a unary operator.<a class="headerlink" href="#expression-class-for-a-unary-operator" title="Permalink to this headline">¶</a></h1>
+<h2>7.32. Expression class for a unary operator.<a class="headerlink" href="#expression-class-for-a-unary-operator" title="Permalink to this headline">¶</a></h2>
 <p>class UnaryExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, operator, operand): self.operator = operator
 self.operand = operand</p>
@@ -968,7 +960,7 @@ g_llvm_module.get_function_named(&#8216;unary&#8217; + self.operator) return
 g_llvm_builder.call(function, [operand], &#8216;unop&#8217;)</p>
 </div>
 <div class="section" id="expression-class-for-var-in">
-<h1>Expression class for var/in.<a class="headerlink" href="#expression-class-for-var-in" title="Permalink to this headline">¶</a></h1>
+<h2>7.33. Expression class for var/in.<a class="headerlink" href="#expression-class-for-var-in" title="Permalink to this headline">¶</a></h2>
 <p>class VarExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, variables, body): self.variables = variables
 self.body = body</p>
@@ -1012,13 +1004,13 @@ g_llvm_builder.basic_block.function</p>
 </div>
 </div>
 <div class="section" id="this-class-represents-the-prototype-for-a-function-which-captures-its-name">
-<h1>This class represents the &#8220;prototype&#8221; for a function, which captures its name,<a class="headerlink" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name" title="Permalink to this headline">¶</a></h1>
+<h2>7.34. This class represents the &#8220;prototype&#8221; for a function, which captures its name,<a class="headerlink" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function">
-<h1>and its argument names (thus implicitly the number of arguments the function<a class="headerlink" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function" title="Permalink to this headline">¶</a></h1>
+<h2>7.35. and its argument names (thus implicitly the number of arguments the function<a class="headerlink" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="takes-as-well-as-if-it-is-an-operator">
-<h1>takes), as well as if it is an operator.<a class="headerlink" href="#takes-as-well-as-if-it-is-an-operator" title="Permalink to this headline">¶</a></h1>
+<h2>7.36. takes), as well as if it is an operator.<a class="headerlink" href="#takes-as-well-as-if-it-is-an-operator" title="Permalink to this headline">¶</a></h2>
 <p>class PrototypeNode(object):</p>
 <p>def <strong>init</strong>(self, name, args, is_operator=False, precedence=0):
 self.name = name self.args = args self.is_operator = is_operator
@@ -1060,7 +1052,7 @@ arg_name) g_llvm_builder.store(arg, alloca)
 g_named_values[arg_name] = alloca</p>
 </div>
 <div class="section" id="this-class-represents-a-function-definition-itself">
-<h1>This class represents a function definition itself.<a class="headerlink" href="#this-class-represents-a-function-definition-itself" title="Permalink to this headline">¶</a></h1>
+<h2>7.37. This class represents a function definition itself.<a class="headerlink" href="#this-class-represents-a-function-definition-itself" title="Permalink to this headline">¶</a></h2>
 <p>class FunctionNode(object):</p>
 <p>def <strong>init</strong>(self, prototype, body): self.prototype = prototype
 self.body = body</p>
@@ -1101,7 +1093,7 @@ self.body = body</p>
 </pre></div>
 </div>
 <div class="section" id="parser">
-<h2>Parser<a class="headerlink" href="#parser" title="Permalink to this headline">¶</a></h2>
+<h3>7.37.1. Parser<a class="headerlink" href="#parser" title="Permalink to this headline">¶</a></h3>
 <p>class Parser(object):</p>
 <p>def <strong>init</strong>(self, tokens): self.tokens = tokens self.Next()</p>
 <p># Provide a simple token buffer. Parser.current is the current token the
@@ -1346,7 +1338,7 @@ function().CodeGen() except Exception, e: raise#print &#8216;Error:&#8217;, e tr
 self.Next() # Skip for error recovery. except: pass</p>
 </div>
 <div class="section" id="main-driver-code">
-<h2>Main driver code.<a class="headerlink" href="#main-driver-code" title="Permalink to this headline">¶</a></h2>
+<h3>7.37.2. Main driver code.<a class="headerlink" href="#main-driver-code" title="Permalink to this headline">¶</a></h3>
 <p>def main(): # Set up the optimizer pipeline. Start with registering info
 about how the # target lays out data structures.
 g_llvm_pass_manager.add(g_llvm_executor.target_data) # Promote
@@ -1385,6 +1377,7 @@ g_binop_precedence[&#8216;-&#8216;] = 20 g_binop_precedence[&#8216;*&#8217;] = 4
 tidbits &lt;PythonLangImpl8.html&gt;`_</strong></p>
 </div>
 </div>
+</div>
 
 
           </div>
@@ -1394,59 +1387,67 @@ tidbits &lt;PythonLangImpl8.html&gt;`_</strong></p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="../../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Extending the Language: Mutable Variables / SSA construction</a></li>
-<li><a class="reference internal" href="#introduction-intro">Introduction # {#intro}</a></li>
-<li><a class="reference internal" href="#why-is-this-a-hard-problem-why">Why is this a hard problem? # {#why}</a></li>
-<li><a class="reference internal" href="#memory-in-llvm-memory">Memory in LLVM # {#memory}</a></li>
-<li><a class="reference internal" href="#mutable-variables-in-kaleidoscope-kalvars">Mutable Variables in Kaleidoscope # {#kalvars}</a></li>
-<li><a class="reference internal" href="#recursive-fib-we-could-do-this-before">Recursive fib, we could do this before.</a></li>
-<li><a class="reference internal" href="#iterative-fib">Iterative fib.</a></li>
-<li><a class="reference internal" href="#call-it">Call it.</a></li>
-<li><a class="reference internal" href="#adjusting-existing-variables-for-mutation-adjustments">Adjusting Existing Variables for Mutation # {#adjustments}</a></li>
-<li><a class="reference internal" href="#new-assignment-operator-assignment">New Assignment Operator # {#assignment}</a></li>
-<li><a class="reference internal" href="#define-for-sequencing-as-a-low-precedence-operator-that-ignores-operands">Define &#8216;:&#8217; for sequencing: as a low-precedence operator that ignores operands</a></li>
-<li><a class="reference internal" href="#and-just-returns-the-rhs">and just returns the RHS.</a></li>
-<li><a class="reference internal" href="#user-defined-local-variables-localvars">User-defined Local Variables # {#localvars}</a></li>
-<li><a class="reference internal" href="#full-code-listing-code">Full Code Listing # {#code}</a><ul>
-<li><a class="reference internal" href="#globals">Globals</a></li>
+<li><a class="reference internal" href="#">7. Chapter 7: Extending the Language: Mutable Variables / SSA construction</a><ul>
+<li><a class="reference internal" href="#introduction-intro">7.1. Introduction # {#intro}</a></li>
+<li><a class="reference internal" href="#why-is-this-a-hard-problem-why">7.2. Why is this a hard problem? # {#why}</a></li>
+<li><a class="reference internal" href="#memory-in-llvm-memory">7.3. Memory in LLVM # {#memory}</a></li>
+<li><a class="reference internal" href="#mutable-variables-in-kaleidoscope-kalvars">7.4. Mutable Variables in Kaleidoscope # {#kalvars}</a></li>
+<li><a class="reference internal" href="#recursive-fib-we-could-do-this-before">7.5. Recursive fib, we could do this before.</a></li>
+<li><a class="reference internal" href="#iterative-fib">7.6. Iterative fib.</a></li>
+<li><a class="reference internal" href="#call-it">7.7. Call it.</a></li>
+<li><a class="reference internal" href="#adjusting-existing-variables-for-mutation-adjustments">7.8. Adjusting Existing Variables for Mutation # {#adjustments}</a></li>
+<li><a class="reference internal" href="#new-assignment-operator-assignment">7.9. New Assignment Operator # {#assignment}</a></li>
+<li><a class="reference internal" href="#define-for-sequencing-as-a-low-precedence-operator-that-ignores-operands">7.10. Define &#8216;:&#8217; for sequencing: as a low-precedence operator that ignores operands</a></li>
+<li><a class="reference internal" href="#and-just-returns-the-rhs">7.11. and just returns the RHS.</a></li>
+<li><a class="reference internal" href="#user-defined-local-variables-localvars">7.12. User-defined Local Variables # {#localvars}</a></li>
+<li><a class="reference internal" href="#full-code-listing-code">7.13. Full Code Listing # {#code}</a><ul>
+<li><a class="reference internal" href="#globals">7.13.1. Globals</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#the-llvm-module-which-holds-all-the-ir-code">The LLVM module, which holds all the IR code.</a></li>
-<li><a class="reference internal" href="#the-llvm-instruction-builder-created-whenever-a-new-function-is-entered">The LLVM instruction builder. Created whenever a new function is entered.</a></li>
-<li><a class="reference internal" href="#a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope">A dictionary that keeps track of which values are defined in the current scope</a></li>
-<li><a class="reference internal" href="#and-what-their-llvm-representation-is">and what their LLVM representation is.</a></li>
-<li><a class="reference internal" href="#the-function-optimization-passes-manager">The function optimization passes manager.</a></li>
-<li><a class="reference internal" href="#the-llvm-execution-engine">The LLVM execution engine.</a></li>
-<li><a class="reference internal" href="#the-binary-operator-precedence-chart">The binary operator precedence chart.</a></li>
-<li><a class="reference internal" href="#creates-an-alloca-instruction-in-the-entry-block-of-the-function-this-is-used">Creates an alloca instruction in the entry block of the function. This is used</a></li>
-<li><a class="reference internal" href="#for-mutable-variables">for mutable variables.</a><ul>
-<li><a class="reference internal" href="#lexer">Lexer</a></li>
+<li><a class="reference internal" href="#the-llvm-module-which-holds-all-the-ir-code">7.14. The LLVM module, which holds all the IR code.</a></li>
+<li><a class="reference internal" href="#the-llvm-instruction-builder-created-whenever-a-new-function-is-entered">7.15. The LLVM instruction builder. Created whenever a new function is entered.</a></li>
+<li><a class="reference internal" href="#a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope">7.16. A dictionary that keeps track of which values are defined in the current scope</a></li>
+<li><a class="reference internal" href="#and-what-their-llvm-representation-is">7.17. and what their LLVM representation is.</a></li>
+<li><a class="reference internal" href="#the-function-optimization-passes-manager">7.18. The function optimization passes manager.</a></li>
+<li><a class="reference internal" href="#the-llvm-execution-engine">7.19. The LLVM execution engine.</a></li>
+<li><a class="reference internal" href="#the-binary-operator-precedence-chart">7.20. The binary operator precedence chart.</a></li>
+<li><a class="reference internal" href="#creates-an-alloca-instruction-in-the-entry-block-of-the-function-this-is-used">7.21. Creates an alloca instruction in the entry block of the function. This is used</a></li>
+<li><a class="reference internal" href="#for-mutable-variables">7.22. for mutable variables.</a><ul>
+<li><a class="reference internal" href="#lexer">7.22.1. Lexer</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#the-lexer-yields-one-of-these-types-for-each-token">The lexer yields one of these types for each token.</a></li>
-<li><a class="reference internal" href="#regular-expressions-that-tokens-and-comments-of-our-language">Regular expressions that tokens and comments of our language.</a><ul>
-<li><a class="reference internal" href="#abstract-syntax-tree-aka-parse-tree">Abstract Syntax Tree (aka Parse Tree)</a></li>
+<li><a class="reference internal" href="#the-lexer-yields-one-of-these-types-for-each-token">7.23. The lexer yields one of these types for each token.</a></li>
+<li><a class="reference internal" href="#regular-expressions-that-tokens-and-comments-of-our-language">7.24. Regular expressions that tokens and comments of our language.</a><ul>
+<li><a class="reference internal" href="#abstract-syntax-tree-aka-parse-tree">7.24.1. Abstract Syntax Tree (aka Parse Tree)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#base-class-for-all-expression-nodes">Base class for all expression nodes.</a></li>
-<li><a class="reference internal" href="#expression-class-for-numeric-literals-like-1-0">Expression class for numeric literals like &#8220;1.0&#8221;.</a></li>
-<li><a class="reference internal" href="#expression-class-for-referencing-a-variable-like-a">Expression class for referencing a variable, like &#8220;a&#8221;.</a></li>
-<li><a class="reference internal" href="#expression-class-for-a-binary-operator">Expression class for a binary operator.</a></li>
-<li><a class="reference internal" href="#expression-class-for-function-calls">Expression class for function calls.</a></li>
-<li><a class="reference internal" href="#expression-class-for-if-then-else">Expression class for if/then/else.</a></li>
-<li><a class="reference internal" href="#expression-class-for-for-in">Expression class for for/in.</a></li>
-<li><a class="reference internal" href="#expression-class-for-a-unary-operator">Expression class for a unary operator.</a></li>
-<li><a class="reference internal" href="#expression-class-for-var-in">Expression class for var/in.</a></li>
-<li><a class="reference internal" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name">This class represents the &#8220;prototype&#8221; for a function, which captures its name,</a></li>
-<li><a class="reference internal" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function">and its argument names (thus implicitly the number of arguments the function</a></li>
-<li><a class="reference internal" href="#takes-as-well-as-if-it-is-an-operator">takes), as well as if it is an operator.</a></li>
-<li><a class="reference internal" href="#this-class-represents-a-function-definition-itself">This class represents a function definition itself.</a><ul>
-<li><a class="reference internal" href="#parser">Parser</a></li>
-<li><a class="reference internal" href="#main-driver-code">Main driver code.</a></li>
+<li><a class="reference internal" href="#base-class-for-all-expression-nodes">7.25. Base class for all expression nodes.</a></li>
+<li><a class="reference internal" href="#expression-class-for-numeric-literals-like-1-0">7.26. Expression class for numeric literals like &#8220;1.0&#8221;.</a></li>
+<li><a class="reference internal" href="#expression-class-for-referencing-a-variable-like-a">7.27. Expression class for referencing a variable, like &#8220;a&#8221;.</a></li>
+<li><a class="reference internal" href="#expression-class-for-a-binary-operator">7.28. Expression class for a binary operator.</a></li>
+<li><a class="reference internal" href="#expression-class-for-function-calls">7.29. Expression class for function calls.</a></li>
+<li><a class="reference internal" href="#expression-class-for-if-then-else">7.30. Expression class for if/then/else.</a></li>
+<li><a class="reference internal" href="#expression-class-for-for-in">7.31. Expression class for for/in.</a></li>
+<li><a class="reference internal" href="#expression-class-for-a-unary-operator">7.32. Expression class for a unary operator.</a></li>
+<li><a class="reference internal" href="#expression-class-for-var-in">7.33. Expression class for var/in.</a></li>
+<li><a class="reference internal" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name">7.34. This class represents the &#8220;prototype&#8221; for a function, which captures its name,</a></li>
+<li><a class="reference internal" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function">7.35. and its argument names (thus implicitly the number of arguments the function</a></li>
+<li><a class="reference internal" href="#takes-as-well-as-if-it-is-an-operator">7.36. takes), as well as if it is an operator.</a></li>
+<li><a class="reference internal" href="#this-class-represents-a-function-definition-itself">7.37. This class represents a function definition itself.</a><ul>
+<li><a class="reference internal" href="#parser">7.37.1. Parser</a></li>
+<li><a class="reference internal" href="#main-driver-code">7.37.2. Main driver code.</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="PythonLangImpl6.html"
+                        title="previous chapter">6. Chapter 6: Extending the Language: User-defined Operators</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="PythonLangImpl8.html"
+                        title="next chapter">8. Chapter 8: Conclusion and other useful LLVM tidbits</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../../_sources/doc/kaleidoscope/PythonLangImpl7.txt"
@@ -1475,7 +1476,15 @@ tidbits &lt;PythonLangImpl8.html&gt;`_</strong></p>
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="PythonLangImpl8.html" title="8. Chapter 8: Conclusion and other useful LLVM tidbits"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="PythonLangImpl6.html" title="6. Chapter 6: Extending the Language: User-defined Operators"
+             >previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples and LLVM Tutorials</a> &raquo;</li>
+          <li><a href="index.html" >Kaleidoscope</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

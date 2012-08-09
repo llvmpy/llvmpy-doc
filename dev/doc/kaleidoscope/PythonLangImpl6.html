@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Extending the Language: User-defined Operators &mdash; llvmpy 0.8.2 documentation</title>
+    <title>6. Chapter 6: Extending the Language: User-defined Operators &mdash; llvmpy 0.8.2 documentation</title>
     
     <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -26,7 +26,10 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="llvmpy 0.8.2 documentation" href="../../index.html" /> 
+    <link rel="top" title="llvmpy 0.8.2 documentation" href="../../index.html" />
+    <link rel="up" title="Kaleidoscope" href="index.html" />
+    <link rel="next" title="7. Chapter 7: Extending the Language: Mutable Variables / SSA construction" href="PythonLangImpl7.html" />
+    <link rel="prev" title="5. Chapter 5: Extending the Language: Control Flow" href="PythonLangImpl5.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,7 +38,15 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="PythonLangImpl7.html" title="7. Chapter 7: Extending the Language: Mutable Variables / SSA construction"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="PythonLangImpl5.html" title="5. Chapter 5: Extending the Language: Control Flow"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples and LLVM Tutorials</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Kaleidoscope</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -44,31 +55,12 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <table border="1" class="docutils">
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>layout: page</td>
-</tr>
-<tr class="row-even"><td>title: &#8220;Kaleidoscope: Chapter 6&#8221;</td>
-</tr>
-</tbody>
-</table>
-<div class="section" id="extending-the-language-user-defined-operators">
-<h1>Extending the Language: User-defined Operators<a class="headerlink" href="#extending-the-language-user-defined-operators" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="chapter-6-extending-the-language-user-defined-operators">
+<h1>6. Chapter 6: Extending the Language: User-defined Operators<a class="headerlink" href="#chapter-6-extending-the-language-user-defined-operators" title="Permalink to this headline">¶</a></h1>
 <p>Written by <a class="reference external" href="mailto:sabre&#37;&#52;&#48;nondot&#46;org">Chris Lattner</a> and <a class="reference external" href="http://max99x.com">Max
 Shawabkeh</a></p>
-<p><strong>Chapter 6</strong></p>
-<ul class="simple">
-<li>This will become a table of contents (this text will be scraped).
-{:toc}</li>
-</ul>
-<p><strong>`Chapter 7: Extending the Language: Mutable Variables / SSA
-Construction &lt;PythonLangImpl7.html&gt;`_</strong></p>
-</div>
 <div class="section" id="introduction-intro">
-<h1>Introduction # {#intro}<a class="headerlink" href="#introduction-intro" title="Permalink to this headline">¶</a></h1>
+<h2>6.1. Introduction # {#intro}<a class="headerlink" href="#introduction-intro" title="Permalink to this headline">¶</a></h2>
 <p>Welcome to Chapter 6 of the <a class="reference external" href="http://www.llvm.org/docs/tutorial/index.html">Implementing a language with
 LLVM</a> tutorial. At this
 point in our tutorial, we now have a fully functional language that is
@@ -87,7 +79,7 @@ application that <a class="reference external" href="#example">renders the Mande
 example of what you can build with Kaleidoscope and its feature set.</p>
 </div>
 <div class="section" id="user-defined-operators-the-idea-idea">
-<h1>User-defined Operators: the Idea # {#idea}<a class="headerlink" href="#user-defined-operators-the-idea-idea" title="Permalink to this headline">¶</a></h1>
+<h2>6.2. User-defined Operators: the Idea # {#idea}<a class="headerlink" href="#user-defined-operators-the-idea-idea" title="Permalink to this headline">¶</a></h2>
 <p>The &#8220;operator overloading&#8221; that we will add to Kaleidoscope is more
 general than languages like C++. In C++, you are only allowed to
 redefine existing operators: you can&#8217;t programatically change the
@@ -109,15 +101,15 @@ binary operators. An example of this is:</p>
 else 1</p>
 </div>
 <div class="section" id="define-with-the-same-precedence-as">
-<h1>Define &gt; with the same precedence as &lt;.<a class="headerlink" href="#define-with-the-same-precedence-as" title="Permalink to this headline">¶</a></h1>
+<h2>6.3. Define &gt; with the same precedence as &lt;.<a class="headerlink" href="#define-with-the-same-precedence-as" title="Permalink to this headline">¶</a></h2>
 <p>def binary&gt; 10 (LHS RHS) RHS &lt; LHS</p>
 </div>
 <div class="section" id="binary-logical-or-note-that-it-does-not-short-circuit">
-<h1>Binary &#8220;logical or&#8221;, (note that it does not &#8220;short circuit&#8221;).<a class="headerlink" href="#binary-logical-or-note-that-it-does-not-short-circuit" title="Permalink to this headline">¶</a></h1>
+<h2>6.4. Binary &#8220;logical or&#8221;, (note that it does not &#8220;short circuit&#8221;).<a class="headerlink" href="#binary-logical-or-note-that-it-does-not-short-circuit" title="Permalink to this headline">¶</a></h2>
 <p>def binary| 5 (LHS RHS) if LHS then 1 else if RHS then 1 else 0</p>
 </div>
 <div class="section" id="define-with-slightly-lower-precedence-than-relationals">
-<h1>Define = with slightly lower precedence than relationals.<a class="headerlink" href="#define-with-slightly-lower-precedence-than-relationals" title="Permalink to this headline">¶</a></h1>
+<h2>6.5. Define = with slightly lower precedence than relationals.<a class="headerlink" href="#define-with-slightly-lower-precedence-than-relationals" title="Permalink to this headline">¶</a></h2>
 <p>def binary= 9 (LHS RHS) !(LHS &lt; RHS | LHS &gt; RHS) {% endhighlight %}</p>
 <p>Many languages aspire to being able to implement their standard runtime
 library in the language itself. In Kaleidoscope, we can implement
@@ -128,7 +120,7 @@ operators.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="user-defined-binary-operators-binary">
-<h1>User-defined Binary Operators # {#binary}<a class="headerlink" href="#user-defined-binary-operators-binary" title="Permalink to this headline">¶</a></h1>
+<h2>6.6. User-defined Binary Operators # {#binary}<a class="headerlink" href="#user-defined-binary-operators-binary" title="Permalink to this headline">¶</a></h2>
 <p>Adding support for user-defined binary operators is pretty simple with
 our current framework. We&#8217;ll first add support for the unary/binary
 keywords:</p>
@@ -272,7 +264,7 @@ operators is a bit more challenging, because we don&#8217;t have any framework
 for it yet - let&#8217;s see what it takes.</p>
 </div>
 <div class="section" id="user-defined-unary-operators-unary">
-<h1>User-defined Unary Operators # {#unary}<a class="headerlink" href="#user-defined-unary-operators-unary" title="Permalink to this headline">¶</a></h1>
+<h2>6.7. User-defined Unary Operators # {#unary}<a class="headerlink" href="#user-defined-unary-operators-unary" title="Permalink to this headline">¶</a></h2>
 <p>Since we don&#8217;t currently support unary operators in the Kaleidoscope
 language, we&#8217;ll need to add everything to support them. Above, we added
 simple support for the &#8216;unary&#8217; keyword to the lexer. In addition to
@@ -347,7 +339,7 @@ predefined operators.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="kicking-the-tires-example">
-<h1>Kicking the Tires # {#example}<a class="headerlink" href="#kicking-the-tires-example" title="Permalink to this headline">¶</a></h1>
+<h2>6.8. Kicking the Tires # {#example}<a class="headerlink" href="#kicking-the-tires-example" title="Permalink to this headline">¶</a></h2>
 <p>It is somewhat hard to believe, but with a few simple extensions we&#8217;ve
 covered in the last chapters, we have grown a real-ish language. With
 this, we can do a lot of interesting things, including I/O, math, and a
@@ -362,23 +354,23 @@ printd(66) : printd(67) A B C Evaluated to: 0.0 {% endhighlight %}</p>
 else 1</p>
 </div>
 <div class="section" id="unary-negate">
-<h1>Unary negate.<a class="headerlink" href="#unary-negate" title="Permalink to this headline">¶</a></h1>
+<h2>6.9. Unary negate.<a class="headerlink" href="#unary-negate" title="Permalink to this headline">¶</a></h2>
 <p>def unary-(v) 0-v</p>
 </div>
 <div class="section" id="id1">
-<h1>Define &gt; with the same precedence as &lt;.<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<h2>6.10. Define &gt; with the same precedence as &lt;.<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>def binary&gt; 10 (LHS RHS) RHS &lt; LHS</p>
 </div>
 <div class="section" id="binary-logical-or-which-does-not-short-circuit">
-<h1>Binary logical or, which does not short circuit.<a class="headerlink" href="#binary-logical-or-which-does-not-short-circuit" title="Permalink to this headline">¶</a></h1>
+<h2>6.11. Binary logical or, which does not short circuit.<a class="headerlink" href="#binary-logical-or-which-does-not-short-circuit" title="Permalink to this headline">¶</a></h2>
 <p>def binary| 5 (LHS RHS) if LHS then 1 else if RHS then 1 else 0</p>
 </div>
 <div class="section" id="binary-logical-and-which-does-not-short-circuit">
-<h1>Binary logical and, which does not short circuit.<a class="headerlink" href="#binary-logical-and-which-does-not-short-circuit" title="Permalink to this headline">¶</a></h1>
+<h2>6.12. Binary logical and, which does not short circuit.<a class="headerlink" href="#binary-logical-and-which-does-not-short-circuit" title="Permalink to this headline">¶</a></h2>
 <p>def binary&amp; 6 (LHS RHS) if !LHS then 0 else !!RHS</p>
 </div>
 <div class="section" id="id2">
-<h1>Define = with slightly lower precedence than relationals.<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h1>
+<h2>6.13. Define = with slightly lower precedence than relationals.<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>def binary = 9 (LHS RHS) !(LHS &lt; RHS | LHS &gt; RHS)</p>
 <p>{% endhighlight %}</p>
 <p>Given the previous if/then/else support, we can also define interesting
@@ -404,7 +396,7 @@ mandelconverger(real<em>real - imag</em>imag + creal, 2<em>real</em>imag +
 cimag, iters+1, creal, cimag)</p>
 </div>
 <div class="section" id="return-the-number-of-iterations-required-for-the-iteration-to-escape">
-<h1>return the number of iterations required for the iteration to escape<a class="headerlink" href="#return-the-number-of-iterations-required-for-the-iteration-to-escape" title="Permalink to this headline">¶</a></h1>
+<h2>6.14. return the number of iterations required for the iteration to escape<a class="headerlink" href="#return-the-number-of-iterations-required-for-the-iteration-to-escape" title="Permalink to this headline">¶</a></h2>
 <p>def mandelconverge(real imag) mandelconverger(real, imag, 0, real, imag)
 {% endhighlight %}</p>
 <p>This &#8220;z = z2 + c&#8221; function is a beautiful little creature that is the
@@ -422,10 +414,10 @@ ymin ymax ystep) for y = ymin, y &lt; ymax, ystep in ( (for x = xmin, x &lt;
 xmax, xstep in printdensity(mandleconverge(x,y))) : putchard(10) )</p>
 </div>
 <div class="section" id="mandel-this-is-a-convenient-helper-function-for-ploting-the-mandelbrot-set">
-<h1>mandel - This is a convenient helper function for ploting the mandelbrot set<a class="headerlink" href="#mandel-this-is-a-convenient-helper-function-for-ploting-the-mandelbrot-set" title="Permalink to this headline">¶</a></h1>
+<h2>6.15. mandel - This is a convenient helper function for ploting the mandelbrot set<a class="headerlink" href="#mandel-this-is-a-convenient-helper-function-for-ploting-the-mandelbrot-set" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="from-the-specified-position-with-the-specified-magnification">
-<h1>from the specified position with the specified Magnification.<a class="headerlink" href="#from-the-specified-position-with-the-specified-magnification" title="Permalink to this headline">¶</a></h1>
+<h2>6.16. from the specified position with the specified Magnification.<a class="headerlink" href="#from-the-specified-position-with-the-specified-magnification" title="Permalink to this headline">¶</a></h2>
 <p>def mandel(realstart imagstart realmag imagmag) mandelhelp(realstart,
 realstart+realmag<em>78, realmag, imagstart, imagstart+imagmag</em>40,
 imagmag); {% endhighlight %}</p>
@@ -600,7 +592,7 @@ front-end.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="full-code-listing-code">
-<h1>Full Code Listing # {#code}<a class="headerlink" href="#full-code-listing-code" title="Permalink to this headline">¶</a></h1>
+<h2>6.17. Full Code Listing # {#code}<a class="headerlink" href="#full-code-listing-code" title="Permalink to this headline">¶</a></h2>
 <p>Here is the complete code listing for our running example, enhanced with
 the if/then/else and for expressions:</p>
 <p>{% highlight python %} #!/usr/bin/env python</p>
@@ -611,41 +603,41 @@ import FunctionPassManager</p>
 (PASS_INSTRUCTION_COMBINING, PASS_REASSOCIATE, PASS_GVN,
 PASS_CFG_SIMPLIFICATION)</p>
 <div class="section" id="globals">
-<h2>Globals<a class="headerlink" href="#globals" title="Permalink to this headline">¶</a></h2>
+<h3>6.17.1. Globals<a class="headerlink" href="#globals" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 <div class="section" id="the-llvm-module-which-holds-all-the-ir-code">
-<h1>The LLVM module, which holds all the IR code.<a class="headerlink" href="#the-llvm-module-which-holds-all-the-ir-code" title="Permalink to this headline">¶</a></h1>
+<h2>6.18. The LLVM module, which holds all the IR code.<a class="headerlink" href="#the-llvm-module-which-holds-all-the-ir-code" title="Permalink to this headline">¶</a></h2>
 <p>g_llvm_module = Module.new(&#8216;my cool jit&#8217;)</p>
 </div>
 <div class="section" id="the-llvm-instruction-builder-created-whenever-a-new-function-is-entered">
-<h1>The LLVM instruction builder. Created whenever a new function is entered.<a class="headerlink" href="#the-llvm-instruction-builder-created-whenever-a-new-function-is-entered" title="Permalink to this headline">¶</a></h1>
+<h2>6.19. The LLVM instruction builder. Created whenever a new function is entered.<a class="headerlink" href="#the-llvm-instruction-builder-created-whenever-a-new-function-is-entered" title="Permalink to this headline">¶</a></h2>
 <p>g_llvm_builder = None</p>
 </div>
 <div class="section" id="a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope">
-<h1>A dictionary that keeps track of which values are defined in the current scope<a class="headerlink" href="#a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope" title="Permalink to this headline">¶</a></h1>
+<h2>6.20. A dictionary that keeps track of which values are defined in the current scope<a class="headerlink" href="#a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="and-what-their-llvm-representation-is">
-<h1>and what their LLVM representation is.<a class="headerlink" href="#and-what-their-llvm-representation-is" title="Permalink to this headline">¶</a></h1>
+<h2>6.21. and what their LLVM representation is.<a class="headerlink" href="#and-what-their-llvm-representation-is" title="Permalink to this headline">¶</a></h2>
 <p>g_named_values = {}</p>
 </div>
 <div class="section" id="the-function-optimization-passes-manager">
-<h1>The function optimization passes manager.<a class="headerlink" href="#the-function-optimization-passes-manager" title="Permalink to this headline">¶</a></h1>
+<h2>6.22. The function optimization passes manager.<a class="headerlink" href="#the-function-optimization-passes-manager" title="Permalink to this headline">¶</a></h2>
 <p>g_llvm_pass_manager = FunctionPassManager.new(g_llvm_module)</p>
 </div>
 <div class="section" id="the-llvm-execution-engine">
-<h1>The LLVM execution engine.<a class="headerlink" href="#the-llvm-execution-engine" title="Permalink to this headline">¶</a></h1>
+<h2>6.23. The LLVM execution engine.<a class="headerlink" href="#the-llvm-execution-engine" title="Permalink to this headline">¶</a></h2>
 <p>g_llvm_executor = ExecutionEngine.new(g_llvm_module)</p>
 </div>
 <div class="section" id="the-binary-operator-precedence-chart">
-<h1>The binary operator precedence chart.<a class="headerlink" href="#the-binary-operator-precedence-chart" title="Permalink to this headline">¶</a></h1>
+<h2>6.24. The binary operator precedence chart.<a class="headerlink" href="#the-binary-operator-precedence-chart" title="Permalink to this headline">¶</a></h2>
 <p>g_binop_precedence = {}</p>
 <div class="section" id="lexer">
-<h2>Lexer<a class="headerlink" href="#lexer" title="Permalink to this headline">¶</a></h2>
+<h3>6.24.1. Lexer<a class="headerlink" href="#lexer" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 <div class="section" id="the-lexer-yields-one-of-these-types-for-each-token">
-<h1>The lexer yields one of these types for each token.<a class="headerlink" href="#the-lexer-yields-one-of-these-types-for-each-token" title="Permalink to this headline">¶</a></h1>
+<h2>6.25. The lexer yields one of these types for each token.<a class="headerlink" href="#the-lexer-yields-one-of-these-types-for-each-token" title="Permalink to this headline">¶</a></h2>
 <p>class EOFToken(object): pass class DefToken(object): pass class
 ExternToken(object): pass class IfToken(object): pass class
 ThenToken(object): pass class ElseToken(object): pass class
@@ -661,7 +653,7 @@ and self.char == other.char def <strong>ne</strong>(self, other): return not sel
 == other</p>
 </div>
 <div class="section" id="regular-expressions-that-tokens-and-comments-of-our-language">
-<h1>Regular expressions that tokens and comments of our language.<a class="headerlink" href="#regular-expressions-that-tokens-and-comments-of-our-language" title="Permalink to this headline">¶</a></h1>
+<h2>6.26. Regular expressions that tokens and comments of our language.<a class="headerlink" href="#regular-expressions-that-tokens-and-comments-of-our-language" title="Permalink to this headline">¶</a></h2>
 <p>REGEX_NUMBER = re.compile(&#8216;[0-9]+(?:.[0-9]+)?&#8217;) REGEX_IDENTIFIER =
 re.compile(&#8216;[a-zA-Z][a-zA-Z0-9]<em>&#8216;) REGEX_COMMENT = re.compile(&#8216;#.</em>&#8216;)</p>
 <p>def Tokenize(string): while string: # Skip whitespace. if
@@ -711,21 +703,21 @@ string[0].isspace(): string = string[1:] continue</p>
 </div>
 <p>yield EOFToken()</p>
 <div class="section" id="abstract-syntax-tree-aka-parse-tree">
-<h2>Abstract Syntax Tree (aka Parse Tree)<a class="headerlink" href="#abstract-syntax-tree-aka-parse-tree" title="Permalink to this headline">¶</a></h2>
+<h3>6.26.1. Abstract Syntax Tree (aka Parse Tree)<a class="headerlink" href="#abstract-syntax-tree-aka-parse-tree" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 <div class="section" id="base-class-for-all-expression-nodes">
-<h1>Base class for all expression nodes.<a class="headerlink" href="#base-class-for-all-expression-nodes" title="Permalink to this headline">¶</a></h1>
+<h2>6.27. Base class for all expression nodes.<a class="headerlink" href="#base-class-for-all-expression-nodes" title="Permalink to this headline">¶</a></h2>
 <p>class ExpressionNode(object): pass</p>
 </div>
 <div class="section" id="expression-class-for-numeric-literals-like-1-0">
-<h1>Expression class for numeric literals like &#8220;1.0&#8221;.<a class="headerlink" href="#expression-class-for-numeric-literals-like-1-0" title="Permalink to this headline">¶</a></h1>
+<h2>6.28. Expression class for numeric literals like &#8220;1.0&#8221;.<a class="headerlink" href="#expression-class-for-numeric-literals-like-1-0" title="Permalink to this headline">¶</a></h2>
 <p>class NumberExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, value): self.value = value</p>
 <p>def CodeGen(self): return Constant.real(Type.double(), self.value)</p>
 </div>
 <div class="section" id="expression-class-for-referencing-a-variable-like-a">
-<h1>Expression class for referencing a variable, like &#8220;a&#8221;.<a class="headerlink" href="#expression-class-for-referencing-a-variable-like-a" title="Permalink to this headline">¶</a></h1>
+<h2>6.29. Expression class for referencing a variable, like &#8220;a&#8221;.<a class="headerlink" href="#expression-class-for-referencing-a-variable-like-a" title="Permalink to this headline">¶</a></h2>
 <p>class VariableExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, name): self.name = name</p>
 <p>def CodeGen(self): if self.name in g_named_values: return
@@ -733,7 +725,7 @@ g_named_values[self.name] else: raise RuntimeError(&#8216;Unknown variable
 name: &#8216; + self.name)</p>
 </div>
 <div class="section" id="expression-class-for-a-binary-operator">
-<h1>Expression class for a binary operator.<a class="headerlink" href="#expression-class-for-a-binary-operator" title="Permalink to this headline">¶</a></h1>
+<h2>6.30. Expression class for a binary operator.<a class="headerlink" href="#expression-class-for-a-binary-operator" title="Permalink to this headline">¶</a></h2>
 <p>class BinaryOperatorExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, operator, left, right): self.operator = operator
 self.left = left self.right = right</p>
@@ -756,7 +748,7 @@ self.right.CodeGen()</p>
 </div>
 </div>
 <div class="section" id="expression-class-for-function-calls">
-<h1>Expression class for function calls.<a class="headerlink" href="#expression-class-for-function-calls" title="Permalink to this headline">¶</a></h1>
+<h2>6.31. Expression class for function calls.<a class="headerlink" href="#expression-class-for-function-calls" title="Permalink to this headline">¶</a></h2>
 <p>class CallExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, callee, args): self.callee = callee self.args =
 args</p>
@@ -773,7 +765,7 @@ args</p>
 </div>
 </div>
 <div class="section" id="expression-class-for-if-then-else">
-<h1>Expression class for if/then/else.<a class="headerlink" href="#expression-class-for-if-then-else" title="Permalink to this headline">¶</a></h1>
+<h2>6.32. Expression class for if/then/else.<a class="headerlink" href="#expression-class-for-if-then-else" title="Permalink to this headline">¶</a></h2>
 <p>class IfExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, condition, then_branch, else_branch):
 self.condition = condition self.then_branch = then_branch
@@ -822,7 +814,7 @@ self.else_branch = else_branch</p>
 </div>
 </div>
 <div class="section" id="expression-class-for-for-in">
-<h1>Expression class for for/in.<a class="headerlink" href="#expression-class-for-for-in" title="Permalink to this headline">¶</a></h1>
+<h2>6.33. Expression class for for/in.<a class="headerlink" href="#expression-class-for-for-in" title="Permalink to this headline">¶</a></h2>
 <p>class ForExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, loop_variable, start, end, step, body):
 self.loop_variable = loop_variable self.start = start self.end = end
@@ -899,7 +891,7 @@ endloop # outloop:</p>
 </div>
 </div>
 <div class="section" id="expression-class-for-a-unary-operator">
-<h1>Expression class for a unary operator.<a class="headerlink" href="#expression-class-for-a-unary-operator" title="Permalink to this headline">¶</a></h1>
+<h2>6.34. Expression class for a unary operator.<a class="headerlink" href="#expression-class-for-a-unary-operator" title="Permalink to this headline">¶</a></h2>
 <p>class UnaryExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, operator, operand): self.operator = operator
 self.operand = operand</p>
@@ -908,13 +900,13 @@ g_llvm_module.get_function_named(&#8216;unary&#8217; + self.operator) return
 g_llvm_builder.call(function, [operand], &#8216;unop&#8217;)</p>
 </div>
 <div class="section" id="this-class-represents-the-prototype-for-a-function-which-captures-its-name">
-<h1>This class represents the &#8220;prototype&#8221; for a function, which captures its name,<a class="headerlink" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name" title="Permalink to this headline">¶</a></h1>
+<h2>6.35. This class represents the &#8220;prototype&#8221; for a function, which captures its name,<a class="headerlink" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function">
-<h1>and its argument names (thus implicitly the number of arguments the function<a class="headerlink" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function" title="Permalink to this headline">¶</a></h1>
+<h2>6.36. and its argument names (thus implicitly the number of arguments the function<a class="headerlink" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="takes-as-well-as-if-it-is-an-operator">
-<h1>takes), as well as if it is an operator.<a class="headerlink" href="#takes-as-well-as-if-it-is-an-operator" title="Permalink to this headline">¶</a></h1>
+<h2>6.37. takes), as well as if it is an operator.<a class="headerlink" href="#takes-as-well-as-if-it-is-an-operator" title="Permalink to this headline">¶</a></h2>
 <p>class PrototypeNode(object):</p>
 <p>def <strong>init</strong>(self, name, args, is_operator=False, precedence=0):
 self.name = name self.args = args self.is_operator = is_operator
@@ -952,7 +944,7 @@ len(self.args), False)</p>
 </div>
 </div>
 <div class="section" id="this-class-represents-a-function-definition-itself">
-<h1>This class represents a function definition itself.<a class="headerlink" href="#this-class-represents-a-function-definition-itself" title="Permalink to this headline">¶</a></h1>
+<h2>6.38. This class represents a function definition itself.<a class="headerlink" href="#this-class-represents-a-function-definition-itself" title="Permalink to this headline">¶</a></h2>
 <p>class FunctionNode(object):</p>
 <p>def <strong>init</strong>(self, prototype, body): self.prototype = prototype
 self.body = body</p>
@@ -990,7 +982,7 @@ self.body = body</p>
 </pre></div>
 </div>
 <div class="section" id="parser">
-<h2>Parser<a class="headerlink" href="#parser" title="Permalink to this headline">¶</a></h2>
+<h3>6.38.1. Parser<a class="headerlink" href="#parser" title="Permalink to this headline">¶</a></h3>
 <p>class Parser(object):</p>
 <p>def <strong>init</strong>(self, tokens): self.tokens = tokens self.Next()</p>
 <p># Provide a simple token buffer. Parser.current is the current token the
@@ -1197,7 +1189,7 @@ function().CodeGen() except Exception, e: print &#8216;Error:&#8217;, e try:
 self.Next() # Skip for error recovery. except: pass</p>
 </div>
 <div class="section" id="main-driver-code">
-<h2>Main driver code.<a class="headerlink" href="#main-driver-code" title="Permalink to this headline">¶</a></h2>
+<h3>6.38.2. Main driver code.<a class="headerlink" href="#main-driver-code" title="Permalink to this headline">¶</a></h3>
 <p>def main(): # Set up the optimizer pipeline. Start with registering info
 about how the # target lays out data structures.
 g_llvm_pass_manager.add(g_llvm_executor.target_data) # Do simple
@@ -1234,6 +1226,7 @@ g_binop_precedence[&#8216;*&#8217;] = 40</p>
 construction &lt;PythonLangImpl7.html&gt;`_</strong></p>
 </div>
 </div>
+</div>
 
 
           </div>
@@ -1243,60 +1236,68 @@ construction &lt;PythonLangImpl7.html&gt;`_</strong></p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="../../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Extending the Language: User-defined Operators</a></li>
-<li><a class="reference internal" href="#introduction-intro">Introduction # {#intro}</a></li>
-<li><a class="reference internal" href="#user-defined-operators-the-idea-idea">User-defined Operators: the Idea # {#idea}</a></li>
-<li><a class="reference internal" href="#define-with-the-same-precedence-as">Define &gt; with the same precedence as &lt;.</a></li>
-<li><a class="reference internal" href="#binary-logical-or-note-that-it-does-not-short-circuit">Binary &#8220;logical or&#8221;, (note that it does not &#8220;short circuit&#8221;).</a></li>
-<li><a class="reference internal" href="#define-with-slightly-lower-precedence-than-relationals">Define = with slightly lower precedence than relationals.</a></li>
-<li><a class="reference internal" href="#user-defined-binary-operators-binary">User-defined Binary Operators # {#binary}</a></li>
-<li><a class="reference internal" href="#user-defined-unary-operators-unary">User-defined Unary Operators # {#unary}</a></li>
-<li><a class="reference internal" href="#kicking-the-tires-example">Kicking the Tires # {#example}</a></li>
-<li><a class="reference internal" href="#unary-negate">Unary negate.</a></li>
-<li><a class="reference internal" href="#id1">Define &gt; with the same precedence as &lt;.</a></li>
-<li><a class="reference internal" href="#binary-logical-or-which-does-not-short-circuit">Binary logical or, which does not short circuit.</a></li>
-<li><a class="reference internal" href="#binary-logical-and-which-does-not-short-circuit">Binary logical and, which does not short circuit.</a></li>
-<li><a class="reference internal" href="#id2">Define = with slightly lower precedence than relationals.</a></li>
-<li><a class="reference internal" href="#return-the-number-of-iterations-required-for-the-iteration-to-escape">return the number of iterations required for the iteration to escape</a></li>
-<li><a class="reference internal" href="#mandel-this-is-a-convenient-helper-function-for-ploting-the-mandelbrot-set">mandel - This is a convenient helper function for ploting the mandelbrot set</a></li>
-<li><a class="reference internal" href="#from-the-specified-position-with-the-specified-magnification">from the specified position with the specified Magnification.</a></li>
-<li><a class="reference internal" href="#full-code-listing-code">Full Code Listing # {#code}</a><ul>
-<li><a class="reference internal" href="#globals">Globals</a></li>
+<li><a class="reference internal" href="#">6. Chapter 6: Extending the Language: User-defined Operators</a><ul>
+<li><a class="reference internal" href="#introduction-intro">6.1. Introduction # {#intro}</a></li>
+<li><a class="reference internal" href="#user-defined-operators-the-idea-idea">6.2. User-defined Operators: the Idea # {#idea}</a></li>
+<li><a class="reference internal" href="#define-with-the-same-precedence-as">6.3. Define &gt; with the same precedence as &lt;.</a></li>
+<li><a class="reference internal" href="#binary-logical-or-note-that-it-does-not-short-circuit">6.4. Binary &#8220;logical or&#8221;, (note that it does not &#8220;short circuit&#8221;).</a></li>
+<li><a class="reference internal" href="#define-with-slightly-lower-precedence-than-relationals">6.5. Define = with slightly lower precedence than relationals.</a></li>
+<li><a class="reference internal" href="#user-defined-binary-operators-binary">6.6. User-defined Binary Operators # {#binary}</a></li>
+<li><a class="reference internal" href="#user-defined-unary-operators-unary">6.7. User-defined Unary Operators # {#unary}</a></li>
+<li><a class="reference internal" href="#kicking-the-tires-example">6.8. Kicking the Tires # {#example}</a></li>
+<li><a class="reference internal" href="#unary-negate">6.9. Unary negate.</a></li>
+<li><a class="reference internal" href="#id1">6.10. Define &gt; with the same precedence as &lt;.</a></li>
+<li><a class="reference internal" href="#binary-logical-or-which-does-not-short-circuit">6.11. Binary logical or, which does not short circuit.</a></li>
+<li><a class="reference internal" href="#binary-logical-and-which-does-not-short-circuit">6.12. Binary logical and, which does not short circuit.</a></li>
+<li><a class="reference internal" href="#id2">6.13. Define = with slightly lower precedence than relationals.</a></li>
+<li><a class="reference internal" href="#return-the-number-of-iterations-required-for-the-iteration-to-escape">6.14. return the number of iterations required for the iteration to escape</a></li>
+<li><a class="reference internal" href="#mandel-this-is-a-convenient-helper-function-for-ploting-the-mandelbrot-set">6.15. mandel - This is a convenient helper function for ploting the mandelbrot set</a></li>
+<li><a class="reference internal" href="#from-the-specified-position-with-the-specified-magnification">6.16. from the specified position with the specified Magnification.</a></li>
+<li><a class="reference internal" href="#full-code-listing-code">6.17. Full Code Listing # {#code}</a><ul>
+<li><a class="reference internal" href="#globals">6.17.1. Globals</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#the-llvm-module-which-holds-all-the-ir-code">The LLVM module, which holds all the IR code.</a></li>
-<li><a class="reference internal" href="#the-llvm-instruction-builder-created-whenever-a-new-function-is-entered">The LLVM instruction builder. Created whenever a new function is entered.</a></li>
-<li><a class="reference internal" href="#a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope">A dictionary that keeps track of which values are defined in the current scope</a></li>
-<li><a class="reference internal" href="#and-what-their-llvm-representation-is">and what their LLVM representation is.</a></li>
-<li><a class="reference internal" href="#the-function-optimization-passes-manager">The function optimization passes manager.</a></li>
-<li><a class="reference internal" href="#the-llvm-execution-engine">The LLVM execution engine.</a></li>
-<li><a class="reference internal" href="#the-binary-operator-precedence-chart">The binary operator precedence chart.</a><ul>
-<li><a class="reference internal" href="#lexer">Lexer</a></li>
+<li><a class="reference internal" href="#the-llvm-module-which-holds-all-the-ir-code">6.18. The LLVM module, which holds all the IR code.</a></li>
+<li><a class="reference internal" href="#the-llvm-instruction-builder-created-whenever-a-new-function-is-entered">6.19. The LLVM instruction builder. Created whenever a new function is entered.</a></li>
+<li><a class="reference internal" href="#a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope">6.20. A dictionary that keeps track of which values are defined in the current scope</a></li>
+<li><a class="reference internal" href="#and-what-their-llvm-representation-is">6.21. and what their LLVM representation is.</a></li>
+<li><a class="reference internal" href="#the-function-optimization-passes-manager">6.22. The function optimization passes manager.</a></li>
+<li><a class="reference internal" href="#the-llvm-execution-engine">6.23. The LLVM execution engine.</a></li>
+<li><a class="reference internal" href="#the-binary-operator-precedence-chart">6.24. The binary operator precedence chart.</a><ul>
+<li><a class="reference internal" href="#lexer">6.24.1. Lexer</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#the-lexer-yields-one-of-these-types-for-each-token">The lexer yields one of these types for each token.</a></li>
-<li><a class="reference internal" href="#regular-expressions-that-tokens-and-comments-of-our-language">Regular expressions that tokens and comments of our language.</a><ul>
-<li><a class="reference internal" href="#abstract-syntax-tree-aka-parse-tree">Abstract Syntax Tree (aka Parse Tree)</a></li>
+<li><a class="reference internal" href="#the-lexer-yields-one-of-these-types-for-each-token">6.25. The lexer yields one of these types for each token.</a></li>
+<li><a class="reference internal" href="#regular-expressions-that-tokens-and-comments-of-our-language">6.26. Regular expressions that tokens and comments of our language.</a><ul>
+<li><a class="reference internal" href="#abstract-syntax-tree-aka-parse-tree">6.26.1. Abstract Syntax Tree (aka Parse Tree)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#base-class-for-all-expression-nodes">Base class for all expression nodes.</a></li>
-<li><a class="reference internal" href="#expression-class-for-numeric-literals-like-1-0">Expression class for numeric literals like &#8220;1.0&#8221;.</a></li>
-<li><a class="reference internal" href="#expression-class-for-referencing-a-variable-like-a">Expression class for referencing a variable, like &#8220;a&#8221;.</a></li>
-<li><a class="reference internal" href="#expression-class-for-a-binary-operator">Expression class for a binary operator.</a></li>
-<li><a class="reference internal" href="#expression-class-for-function-calls">Expression class for function calls.</a></li>
-<li><a class="reference internal" href="#expression-class-for-if-then-else">Expression class for if/then/else.</a></li>
-<li><a class="reference internal" href="#expression-class-for-for-in">Expression class for for/in.</a></li>
-<li><a class="reference internal" href="#expression-class-for-a-unary-operator">Expression class for a unary operator.</a></li>
-<li><a class="reference internal" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name">This class represents the &#8220;prototype&#8221; for a function, which captures its name,</a></li>
-<li><a class="reference internal" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function">and its argument names (thus implicitly the number of arguments the function</a></li>
-<li><a class="reference internal" href="#takes-as-well-as-if-it-is-an-operator">takes), as well as if it is an operator.</a></li>
-<li><a class="reference internal" href="#this-class-represents-a-function-definition-itself">This class represents a function definition itself.</a><ul>
-<li><a class="reference internal" href="#parser">Parser</a></li>
-<li><a class="reference internal" href="#main-driver-code">Main driver code.</a></li>
+<li><a class="reference internal" href="#base-class-for-all-expression-nodes">6.27. Base class for all expression nodes.</a></li>
+<li><a class="reference internal" href="#expression-class-for-numeric-literals-like-1-0">6.28. Expression class for numeric literals like &#8220;1.0&#8221;.</a></li>
+<li><a class="reference internal" href="#expression-class-for-referencing-a-variable-like-a">6.29. Expression class for referencing a variable, like &#8220;a&#8221;.</a></li>
+<li><a class="reference internal" href="#expression-class-for-a-binary-operator">6.30. Expression class for a binary operator.</a></li>
+<li><a class="reference internal" href="#expression-class-for-function-calls">6.31. Expression class for function calls.</a></li>
+<li><a class="reference internal" href="#expression-class-for-if-then-else">6.32. Expression class for if/then/else.</a></li>
+<li><a class="reference internal" href="#expression-class-for-for-in">6.33. Expression class for for/in.</a></li>
+<li><a class="reference internal" href="#expression-class-for-a-unary-operator">6.34. Expression class for a unary operator.</a></li>
+<li><a class="reference internal" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name">6.35. This class represents the &#8220;prototype&#8221; for a function, which captures its name,</a></li>
+<li><a class="reference internal" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function">6.36. and its argument names (thus implicitly the number of arguments the function</a></li>
+<li><a class="reference internal" href="#takes-as-well-as-if-it-is-an-operator">6.37. takes), as well as if it is an operator.</a></li>
+<li><a class="reference internal" href="#this-class-represents-a-function-definition-itself">6.38. This class represents a function definition itself.</a><ul>
+<li><a class="reference internal" href="#parser">6.38.1. Parser</a></li>
+<li><a class="reference internal" href="#main-driver-code">6.38.2. Main driver code.</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="PythonLangImpl5.html"
+                        title="previous chapter">5. Chapter 5: Extending the Language: Control Flow</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="PythonLangImpl7.html"
+                        title="next chapter">7. Chapter 7: Extending the Language: Mutable Variables / SSA construction</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../../_sources/doc/kaleidoscope/PythonLangImpl6.txt"
@@ -1325,7 +1326,15 @@ construction &lt;PythonLangImpl7.html&gt;`_</strong></p>
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="PythonLangImpl7.html" title="7. Chapter 7: Extending the Language: Mutable Variables / SSA construction"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="PythonLangImpl5.html" title="5. Chapter 5: Extending the Language: Control Flow"
+             >previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples and LLVM Tutorials</a> &raquo;</li>
+          <li><a href="index.html" >Kaleidoscope</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

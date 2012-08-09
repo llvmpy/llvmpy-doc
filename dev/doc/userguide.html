@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Introduction &mdash; llvmpy 0.8.2 documentation</title>
+    <title>User Guide &mdash; llvmpy 0.8.2 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -27,8 +27,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="llvmpy 0.8.2 documentation" href="../index.html" />
-    <link rel="next" title="llvm" href="llvmpy_package.html" />
-    <link rel="prev" title="Documenation for llvmpy" href="../index.html" /> 
+    <link rel="next" title="Introduction" href="getting_started.html" />
+    <link rel="prev" title="Documentation for llvmpy" href="../index.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,10 +38,10 @@
           <a href="../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="llvmpy_package.html" title="llvm"
+          <a href="getting_started.html" title="Introduction"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="../index.html" title="Documenation for llvmpy"
+          <a href="../index.html" title="Documentation for llvmpy"
              accesskey="P">previous</a> |</li>
         <li><a href="../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
       </ul>
@@ -52,145 +52,20 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <table border="1" class="docutils">
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>layout: page</td>
-</tr>
-<tr class="row-even"><td>title: User Guide</td>
-</tr>
-</tbody>
-</table>
-<p>llvm-py provides Python bindings for LLVM. This document explains how
+  <div class="section" id="user-guide">
+<h1>User Guide<a class="headerlink" href="#user-guide" title="Permalink to this headline">¶</a></h1>
+<p>llvmpy provides Python bindings for LLVM. This document explains how
 you can setup and use it. A working knowledge of Python and a basic idea
 of LLVM is assumed.</p>
-<div class="section" id="introduction">
-<h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
-<p><a class="reference external" href="http://www.llvm.org/">LLVM</a> (Low-Level Virtual Machine) provides
-enough infrastructure to use it as the backend for your compiled, or
-JIT-compiled language. It provides extensive optimization support, and
-static and dynamic (JIT) backends for many platforms. See the website at
-<a class="reference external" href="http://www.llvm.org/">http://www.llvm.org/</a> to discover more.</p>
-<p>Python bindings for LLVM provides a gentler learning curve for working
-with the LLVM APIs. It should also be easier to create working
-prototypes and experimental languages using this medium.</p>
-<p>Together with <a class="reference external" href="http://clang.llvm.org/">clang</a> or
-<a class="reference external" href="http://llvm.org/cmds/llvmgcc.html">llvm-gcc</a> it also a provides a
-means to quickly instrument C and C++ sources. For e.g., llvm-gcc can be
-used to generate the LLVM assembly for a given C source file, which can
-then be loaded and manipulated (adding profiling code to every function,
-say) using a llvm-py based Python script.</p>
-<div class="section" id="license">
-<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
-<p>Both LLVM and llvm-py are distributed under (different) permissive open
-source licenses. llvm-py uses the <a class="reference external" href="http://opensource.org/licenses/bsd-license.php">new BSD
-license</a>. More
-information is available
-<a class="reference external" href="https://github.com/numba/llvm-py/blob/master/LICENSE">here</a>.</p>
-</div>
-<div class="section" id="platforms">
-<h2>Platforms<a class="headerlink" href="#platforms" title="Permalink to this headline">¶</a></h2>
-<p>llvm-py has been built/tested/reported to work on various GNU/Linux
-flavours, BSD, Mac OS X; on i386 and amd64 architectures. Windows is not
-supported, for a variety of reasons.</p>
-</div>
-<div class="section" id="versions">
-<h2>Versions<a class="headerlink" href="#versions" title="Permalink to this headline">¶</a></h2>
-<p>llvm-py 0.8.2 requires version 3.1 of LLVM. It may not work with
-previous versions.</p>
-<p>llvm-py has been built and tested with Python 2.7. It should work with
-earlier versions. It has not been tried with Python 3.x (patches
-welcome).</p>
-</div>
-</div>
-<hr class="docutils" />
-<div class="section" id="installation">
-<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
-<p>The Git repo of llvm-py is at <a class="reference external" href="https://github.com/numba/llvm-py.git">https://github.com/numba/llvm-py.git</a>.
-You&#8217;ll need to build and install it before it can be used. At least the
-following will be required for this:</p>
-<ul class="simple">
-<li>C and C++ compilers (gcc/g++)</li>
-<li>Python itself</li>
-<li>Python development files (headers and libraries)</li>
-<li>LLVM, either installed or built</li>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html#installation">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting_started.html#uninstall">Uninstall</a></li>
+<li class="toctree-l1"><a class="reference internal" href="llvm_concepts.html">LLVM Concepts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="llvmpy_package.html">The llvmpy Package</a></li>
 </ul>
-<p>On debian-based systems, the first three can be installed with the
-command <tt class="docutils literal"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">gcc</span> <span class="pre">g++</span> <span class="pre">python</span> <span class="pre">python-dev</span></tt>. Ensure that
-your distro&#8217;s repository has the appropriate version of LLVM!</p>
-<p>It does not matter which compiler LLVM itself was built with (<tt class="docutils literal"><span class="pre">g++</span></tt>,
-<tt class="docutils literal"><span class="pre">llvm-g++</span></tt> or any other); llvm-py can be built with any compiler. It
-has been tried only with gcc/g++ though.</p>
-<div class="section" id="llvm-and-enable-pic">
-<h2>LLVM and <tt class="docutils literal"><span class="pre">--enable-pic</span></tt><a class="headerlink" href="#llvm-and-enable-pic" title="Permalink to this headline">¶</a></h2>
-<p>The result of an LLVM build is a set of static libraries and object
-files. The llvm-py contains an extension package that is built into a
-shared object (_core.so) which links to these static libraries and
-object files. It is therefore required that the LLVM libraries and
-object files be built with the <tt class="docutils literal"><span class="pre">-fPIC</span></tt> option (generate position
-independent code). Be sure to use the <tt class="docutils literal"><span class="pre">--enable-pic</span></tt> option while
-configuring LLVM (default is no PIC), like this:</p>
-<p>{% highlight bash %} ~/llvm$ ./configure &#8211;enable-pic &#8211;enable-optimized
-{% endhighlight %}</p>
 </div>
-<div class="section" id="llvm-config">
-<h2>llvm-config<a class="headerlink" href="#llvm-config" title="Permalink to this headline">¶</a></h2>
-<p>In order to build llvm-py, it&#8217;s build script needs to know from where it
-can invoke the llvm helper program, <tt class="docutils literal"><span class="pre">llvm-config</span></tt>. If you&#8217;ve installed
-LLVM, then this will be available in your <tt class="docutils literal"><span class="pre">PATH</span></tt>, and nothing further
-needs to be done. If you&#8217;ve built LLVM yourself, or for any reason
-<tt class="docutils literal"><span class="pre">llvm-config</span></tt> is not in your <tt class="docutils literal"><span class="pre">PATH</span></tt>, you&#8217;ll need to pass the full
-path of <tt class="docutils literal"><span class="pre">llvm-config</span></tt> to the build script.</p>
-<p>You&#8217;ll need to be &#8216;root&#8217; to install llvm-py. Remember that your <tt class="docutils literal"><span class="pre">PATH</span></tt>
-is different from that of &#8216;root&#8217;, so even if <tt class="docutils literal"><span class="pre">llvm-config</span></tt> is in your
-<tt class="docutils literal"><span class="pre">PATH</span></tt>, it may not be available when you do <tt class="docutils literal"><span class="pre">sudo</span></tt>.</p>
-</div>
-<div class="section" id="steps">
-<h2>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h2>
-<p>Get 3.1 version of LLVM, build it. Make sure &#8216;&#8211;enable-pic&#8217; is passed to
-LLVM&#8217;s &#8216;configure&#8217;.</p>
-<p>Get llvm-py and install it:</p>
-<p>{% highlight bash %} $ git clone <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:numba/llvm-py.git $ cd
-llvm-py $ python setup.py install {% endhighlight %}</p>
-<p>If you need to tell the build script where <tt class="docutils literal"><span class="pre">llvm-config</span></tt> is, do it
-this way:</p>
-<p>{% highlight bash %} $ python setup.py install &#8211;user
-&#8211;llvm-config=/home/mdevan/llvm/Release/bin/llvm-config {% endhighlight
-%}</p>
-<p>To build a debug version of llvm-py, that links against the debug
-libraries of LLVM, use this:</p>
-<p>{% highlight bash %} $ python setup.py build -g
-&#8211;llvm-config=/home/mdevan/llvm/Debug/bin/llvm-config $ python setup.py
-install &#8211;user &#8211;llvm-config=/home/mdevan/llvm/Debug/bin/llvm-config {%
-endhighlight %}</p>
-<p>Be warned that debug binaries will be huge (100MB+) ! They are required
-only if you need to debug into LLVM also.</p>
-<p><tt class="docutils literal"><span class="pre">setup.py</span></tt> is a standard Python distutils script. See the Python
-documentation regarding <a class="reference external" href="http://docs.python.org/inst/inst.html">Installing Python
-Modules</a> and <a class="reference external" href="http://docs.python.org/dist/dist.html">Distributing
-Python Modules</a> for more
-information on such scripts.</p>
-</div>
-</div>
-<hr class="docutils" />
-<div class="section" id="uninstall-uninstall">
-<h1>Uninstall # {#uninstall}<a class="headerlink" href="#uninstall-uninstall" title="Permalink to this headline">¶</a></h1>
-<p>If you&#8217;d installed llvm-py with the <tt class="docutils literal"><span class="pre">--user</span></tt> option, then llvm-py
-would be present under <tt class="docutils literal"><span class="pre">~/.local/lib/python2.7/site-packages</span></tt>.
-Otherwise, it might be under <tt class="docutils literal"><span class="pre">/usr/lib/python2.7/site-packages</span></tt> or
-<tt class="docutils literal"><span class="pre">/usr/local/lib/python2.7/site-packages</span></tt>. The directory would vary
-with your Python version and OS flavour. Look around.</p>
-<p>Once you&#8217;ve located the site-packages directory, the modules and the
-&#8220;egg&#8221; can be removed like so:</p>
-<p>{% highlight bash %} $ rm -rf /llvm /llvm_py-.egg-info {% endhighlight
-%}</p>
-<p>See the <a class="reference external" href="http://docs.python.org/install/index.html">Python
-documentation</a> for more
-information.</p>
-<hr class="docutils" />
-<p><strong>Next</strong> &#8211; <a class="reference internal" href="llvm_concepts.html"><em>Intermediate Representation</em></a></p>
 </div>
 
 
@@ -199,29 +74,12 @@ information.</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">Introduction</a><ul>
-<li><a class="reference internal" href="#license">License</a></li>
-<li><a class="reference internal" href="#platforms">Platforms</a></li>
-<li><a class="reference internal" href="#versions">Versions</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#installation">Installation</a><ul>
-<li><a class="reference internal" href="#llvm-and-enable-pic">LLVM and <tt class="docutils literal"><span class="pre">--enable-pic</span></tt></a></li>
-<li><a class="reference internal" href="#llvm-config">llvm-config</a></li>
-<li><a class="reference internal" href="#steps">Steps</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#uninstall-uninstall">Uninstall # {#uninstall}</a></li>
-</ul>
-
   <h4>Previous topic</h4>
   <p class="topless"><a href="../index.html"
-                        title="previous chapter">Documenation for llvmpy</a></p>
+                        title="previous chapter">Documentation for llvmpy</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="llvmpy_package.html"
-                        title="next chapter">llvm</a></p>
+  <p class="topless"><a href="getting_started.html"
+                        title="next chapter">Introduction</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/doc/userguide.txt"
@@ -251,10 +109,10 @@ information.</p>
           <a href="../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="llvmpy_package.html" title="llvm"
+          <a href="getting_started.html" title="Introduction"
              >next</a> |</li>
         <li class="right" >
-          <a href="../index.html" title="Documenation for llvmpy"
+          <a href="../index.html" title="Documentation for llvmpy"
              >previous</a> |</li>
         <li><a href="../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
       </ul>

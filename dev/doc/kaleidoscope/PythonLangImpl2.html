@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Implementing a Parser and AST &mdash; llvmpy 0.8.2 documentation</title>
+    <title>2. Chapter 2: Implementing a Parser and AST &mdash; llvmpy 0.8.2 documentation</title>
     
     <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -26,7 +26,10 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="llvmpy 0.8.2 documentation" href="../../index.html" /> 
+    <link rel="top" title="llvmpy 0.8.2 documentation" href="../../index.html" />
+    <link rel="up" title="Kaleidoscope" href="index.html" />
+    <link rel="next" title="3. Chapter 3: Code generation to LLVM IR" href="PythonLangImpl3.html" />
+    <link rel="prev" title="1. Chapter 1: Tutorial Introduction and the Lexer" href="PythonLangImpl1.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,7 +38,15 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="PythonLangImpl3.html" title="3. Chapter 3: Code generation to LLVM IR"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="PythonLangImpl1.html" title="1. Chapter 1: Tutorial Introduction and the Lexer"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples and LLVM Tutorials</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Kaleidoscope</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -44,30 +55,12 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <table border="1" class="docutils">
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>layout: page</td>
-</tr>
-<tr class="row-even"><td>title: &#8220;Kaleidoscope: Chapter 2&#8221;</td>
-</tr>
-</tbody>
-</table>
-<div class="section" id="implementing-a-parser-and-ast">
-<h1>Implementing a Parser and AST<a class="headerlink" href="#implementing-a-parser-and-ast" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="chapter-2-implementing-a-parser-and-ast">
+<h1>2. Chapter 2: Implementing a Parser and AST<a class="headerlink" href="#chapter-2-implementing-a-parser-and-ast" title="Permalink to this headline">¶</a></h1>
 <p>Written by <a class="reference external" href="mailto:sabre&#37;&#52;&#48;nondot&#46;org">Chris Lattner</a> and <a class="reference external" href="http://max99x.com">Max
 Shawabkeh</a></p>
-<p><strong>Chapter 2</strong></p>
-<ul class="simple">
-<li>This will become a table of contents (this text will be scraped).
-{:toc}</li>
-</ul>
-<p><strong>`Chapter 3: Code generation to LLVM IR &lt;PythonLangImpl3.html&gt;`_</strong></p>
-</div>
 <div class="section" id="introduction-intro">
-<h1>Introduction # {#intro}<a class="headerlink" href="#introduction-intro" title="Permalink to this headline">¶</a></h1>
+<h2>2.1. Introduction # {#intro}<a class="headerlink" href="#introduction-intro" title="Permalink to this headline">¶</a></h2>
 <p>Welcome to Chapter 2 of the <a class="reference external" href="http://www.llvm.org/docs/tutorial/index.html">Implementing a language with
 LLVM</a> tutorial. This
 chapter shows you how to use the lexer, built in <a class="reference external" href="PythonLangImpl1.html">Chapter
@@ -85,7 +78,7 @@ talk about the output of the parser: the Abstract Syntax Tree.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="the-abstract-syntax-tree-ast-ast">
-<h1>The Abstract Syntax Tree (AST) # {#ast}<a class="headerlink" href="#the-abstract-syntax-tree-ast-ast" title="Permalink to this headline">¶</a></h1>
+<h2>2.2. The Abstract Syntax Tree (AST) # {#ast}<a class="headerlink" href="#the-abstract-syntax-tree-ast-ast" title="Permalink to this headline">¶</a></h2>
 <p>The AST for a program captures its behavior in such a way that it is
 easy for later stages of the compiler (e.g. code generation) to
 interpret. We basically want one object for each construct in the
@@ -96,7 +89,7 @@ We&#8217;ll start with expressions first:</p>
 ExpressionNode(object): pass</p>
 </div>
 <div class="section" id="expression-class-for-numeric-literals-like-1-0">
-<h1>Expression class for numeric literals like &#8220;1.0&#8221;.<a class="headerlink" href="#expression-class-for-numeric-literals-like-1-0" title="Permalink to this headline">¶</a></h1>
+<h2>2.3. Expression class for numeric literals like &#8220;1.0&#8221;.<a class="headerlink" href="#expression-class-for-numeric-literals-like-1-0" title="Permalink to this headline">¶</a></h2>
 <p>class NumberExpressionNode(ExpressionNode): def <strong>init</strong>(self, value):
 self.value = value</p>
 <p>{% endhighlight %}</p>
@@ -114,13 +107,13 @@ like &#8220;a&#8221;. class VariableExpressionNode(ExpressionNode): def
 <strong>init</strong>(self, name): self.name = name</p>
 </div>
 <div class="section" id="expression-class-for-a-binary-operator">
-<h1>Expression class for a binary operator.<a class="headerlink" href="#expression-class-for-a-binary-operator" title="Permalink to this headline">¶</a></h1>
+<h2>2.4. Expression class for a binary operator.<a class="headerlink" href="#expression-class-for-a-binary-operator" title="Permalink to this headline">¶</a></h2>
 <p>class BinaryOperatorExpressionNode(ExpressionNode): def <strong>init</strong>(self,
 operator, left, right): self.operator = operator self.left = left
 self.right = right</p>
 </div>
 <div class="section" id="expression-class-for-function-calls">
-<h1>Expression class for function calls.<a class="headerlink" href="#expression-class-for-function-calls" title="Permalink to this headline">¶</a></h1>
+<h2>2.5. Expression class for function calls.<a class="headerlink" href="#expression-class-for-function-calls" title="Permalink to this headline">¶</a></h2>
 <p>class CallExpressionNode(ExpressionNode): def <strong>init</strong>(self, callee,
 args): self.callee = callee self.args = args {% endhighlight %}</p>
 <p>This is all (intentionally) rather straight-forward: variables capture
@@ -142,7 +135,7 @@ PrototypeNode(object): def <strong>init</strong>(self, name, args): self.name =
 name self.args = args</p>
 </div>
 <div class="section" id="this-class-represents-a-function-definition-itself">
-<h1>This class represents a function definition itself.<a class="headerlink" href="#this-class-represents-a-function-definition-itself" title="Permalink to this headline">¶</a></h1>
+<h2>2.6. This class represents a function definition itself.<a class="headerlink" href="#this-class-represents-a-function-definition-itself" title="Permalink to this headline">¶</a></h2>
 <p>class FunctionNode(object): def <strong>init</strong>(self, prototype, body):
 self.prototype = prototype self.body = body {% endhighlight %}</p>
 <p>In Kaleidoscope, functions are typed with just a count of their
@@ -155,7 +148,7 @@ function bodies in Kaleidoscope.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="parser-basics-parserbasics">
-<h1>Parser Basics # {#parserbasics}<a class="headerlink" href="#parser-basics-parserbasics" title="Permalink to this headline">¶</a></h1>
+<h2>2.7. Parser Basics # {#parserbasics}<a class="headerlink" href="#parser-basics-parserbasics" title="Permalink to this headline">¶</a></h2>
 <p>Now that we have an AST to build, we need to define the parser code to
 build it. The idea here is that we want to parse something like
 <tt class="docutils literal"><span class="pre">x</span> <span class="pre">+</span> <span class="pre">y</span></tt> (which is returned as three tokens by the lexer) into an AST
@@ -184,7 +177,7 @@ our grammar: numeric literals.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="basic-expression-parsing-parserprimexprs">
-<h1>Basic Expression Parsing # {#parserprimexprs}<a class="headerlink" href="#basic-expression-parsing-parserprimexprs" title="Permalink to this headline">¶</a></h1>
+<h2>2.8. Basic Expression Parsing # {#parserprimexprs}<a class="headerlink" href="#basic-expression-parsing-parserprimexprs" title="Permalink to this headline">¶</a></h2>
 <p>We start with numeric literals, because they are the simplest to
 process. For each production in our grammar, we&#8217;ll define a function
 which parses that production. For numeric literals, we have:</p>
@@ -277,7 +270,7 @@ expressions. They are a bit more complex.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="binary-expression-parsing-parserbinops">
-<h1>Binary Expression Parsing # {#parserbinops}<a class="headerlink" href="#binary-expression-parsing-parserbinops" title="Permalink to this headline">¶</a></h1>
+<h2>2.9. Binary Expression Parsing # {#parserbinops}<a class="headerlink" href="#binary-expression-parsing-parserbinops" title="Permalink to this headline">¶</a></h2>
 <p>Binary expressions are significantly harder to parse because they are
 often ambiguous. For example, when given the string <tt class="docutils literal"><span class="pre">x+y*z</span></tt>, the
 parser can choose to parse it as either <tt class="docutils literal"><span class="pre">(x+y)*z</span></tt> or <tt class="docutils literal"><span class="pre">x+(y*z)</span></tt>. With
@@ -436,7 +429,7 @@ we need to handle function definitions, etc.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="parsing-the-rest-parsertop">
-<h1>Parsing the Rest # {#parsertop}<a class="headerlink" href="#parsing-the-rest-parsertop" title="Permalink to this headline">¶</a></h1>
+<h2>2.10. Parsing the Rest # {#parsertop}<a class="headerlink" href="#parsing-the-rest-parsertop" title="Permalink to this headline">¶</a></h2>
 <p>The next thing missing is handling of function prototypes. In
 Kaleidoscope, these are used both for &#8216;extern&#8217; function declarations as
 well as function body definitions. The code to do this is
@@ -490,7 +483,7 @@ let us actually <em>execute</em> this code we&#8217;ve built!</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="the-driver-driver">
-<h1>The Driver # {#driver}<a class="headerlink" href="#the-driver-driver" title="Permalink to this headline">¶</a></h1>
+<h2>2.11. The Driver # {#driver}<a class="headerlink" href="#the-driver-driver" title="Permalink to this headline">¶</a></h2>
 <p>The driver for this simply invokes all of the parsing pieces with a
 top-level dispatch loop. There isn&#8217;t much interesting here, so I&#8217;ll just
 include the top-level loop. See <a class="reference external" href="#code">below</a> for full code.</p>
@@ -516,7 +509,7 @@ allow the user to quit using Ctrl+C.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="conclusions-conclusions">
-<h1>Conclusions # {#conclusions}<a class="headerlink" href="#conclusions-conclusions" title="Permalink to this headline">¶</a></h1>
+<h2>2.12. Conclusions # {#conclusions}<a class="headerlink" href="#conclusions-conclusions" title="Permalink to this headline">¶</a></h2>
 <p>With just under 330 lines of commented code (200 lines of non-comment,
 non-blank code), we fully defined our minimal language, including a
 lexer, parser, and AST builder. With this done, the executable will
@@ -535,18 +528,18 @@ LLVM Intermediate Representation (IR) from the AST.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="full-code-listing-code">
-<h1>Full Code Listing # {#code}<a class="headerlink" href="#full-code-listing-code" title="Permalink to this headline">¶</a></h1>
+<h2>2.13. Full Code Listing # {#code}<a class="headerlink" href="#full-code-listing-code" title="Permalink to this headline">¶</a></h2>
 <p>Here is the complete code listing for this and the previous chapter.
 Note that it is fully self-contained: you don&#8217;t need LLVM or any
 external libraries at all for this.</p>
 <p>{% highlight python %} #!/usr/bin/env python</p>
 <p>import re</p>
 <div class="section" id="lexer">
-<h2>Lexer<a class="headerlink" href="#lexer" title="Permalink to this headline">¶</a></h2>
+<h3>2.13.1. Lexer<a class="headerlink" href="#lexer" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 <div class="section" id="the-lexer-yields-one-of-these-types-for-each-token">
-<h1>The lexer yields one of these types for each token.<a class="headerlink" href="#the-lexer-yields-one-of-these-types-for-each-token" title="Permalink to this headline">¶</a></h1>
+<h2>2.14. The lexer yields one of these types for each token.<a class="headerlink" href="#the-lexer-yields-one-of-these-types-for-each-token" title="Permalink to this headline">¶</a></h2>
 <p>class EOFToken(object): pass</p>
 <p>class DefToken(object): pass</p>
 <p>class ExternToken(object): pass</p>
@@ -560,7 +553,7 @@ and self.char == other.char def <strong>ne</strong>(self, other): return not sel
 == other</p>
 </div>
 <div class="section" id="regular-expressions-that-tokens-and-comments-of-our-language">
-<h1>Regular expressions that tokens and comments of our language.<a class="headerlink" href="#regular-expressions-that-tokens-and-comments-of-our-language" title="Permalink to this headline">¶</a></h1>
+<h2>2.15. Regular expressions that tokens and comments of our language.<a class="headerlink" href="#regular-expressions-that-tokens-and-comments-of-our-language" title="Permalink to this headline">¶</a></h2>
 <p>REGEX_NUMBER = re.compile(&#8216;[0-9]+(?:.[0-9]+)?&#8217;) REGEX_IDENTIFIER =
 re.compile(&#8216;[a-zA-Z][a-zA-Z0-9]<em>&#8216;) REGEX_COMMENT = re.compile(&#8216;#.</em>&#8216;)</p>
 <p>def Tokenize(string): while string: # Skip whitespace. if
@@ -596,51 +589,51 @@ string[0].isspace(): string = string[1:] continue</p>
 </div>
 <p>yield EOFToken()</p>
 <div class="section" id="abstract-syntax-tree-aka-parse-tree">
-<h2>Abstract Syntax Tree (aka Parse Tree)<a class="headerlink" href="#abstract-syntax-tree-aka-parse-tree" title="Permalink to this headline">¶</a></h2>
+<h3>2.15.1. Abstract Syntax Tree (aka Parse Tree)<a class="headerlink" href="#abstract-syntax-tree-aka-parse-tree" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 <div class="section" id="base-class-for-all-expression-nodes">
-<h1>Base class for all expression nodes.<a class="headerlink" href="#base-class-for-all-expression-nodes" title="Permalink to this headline">¶</a></h1>
+<h2>2.16. Base class for all expression nodes.<a class="headerlink" href="#base-class-for-all-expression-nodes" title="Permalink to this headline">¶</a></h2>
 <p>class ExpressionNode(object): pass</p>
 </div>
 <div class="section" id="id2">
-<h1>Expression class for numeric literals like &#8220;1.0&#8221;.<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h1>
+<h2>2.17. Expression class for numeric literals like &#8220;1.0&#8221;.<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 <p>class NumberExpressionNode(ExpressionNode): def <strong>init</strong>(self, value):
 self.value = value</p>
 </div>
 <div class="section" id="expression-class-for-referencing-a-variable-like-a">
-<h1>Expression class for referencing a variable, like &#8220;a&#8221;.<a class="headerlink" href="#expression-class-for-referencing-a-variable-like-a" title="Permalink to this headline">¶</a></h1>
+<h2>2.18. Expression class for referencing a variable, like &#8220;a&#8221;.<a class="headerlink" href="#expression-class-for-referencing-a-variable-like-a" title="Permalink to this headline">¶</a></h2>
 <p>class VariableExpressionNode(ExpressionNode): def <strong>init</strong>(self,
 name): self.name = name</p>
 </div>
 <div class="section" id="id3">
-<h1>Expression class for a binary operator.<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h1>
+<h2>2.19. Expression class for a binary operator.<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>class BinaryOperatorExpressionNode(ExpressionNode): def <strong>init</strong>(self,
 operator, left, right): self.operator = operator self.left = left
 self.right = right</p>
 </div>
 <div class="section" id="id4">
-<h1>Expression class for function calls.<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h1>
+<h2>2.20. Expression class for function calls.<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p>class CallExpressionNode(ExpressionNode): def <strong>init</strong>(self, callee,
 args): self.callee = callee self.args = args</p>
 </div>
 <div class="section" id="this-class-represents-the-prototype-for-a-function-which-captures-its-name">
-<h1>This class represents the &#8220;prototype&#8221; for a function, which captures its name,<a class="headerlink" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name" title="Permalink to this headline">¶</a></h1>
+<h2>2.21. This class represents the &#8220;prototype&#8221; for a function, which captures its name,<a class="headerlink" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function">
-<h1>and its argument names (thus implicitly the number of arguments the function<a class="headerlink" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function" title="Permalink to this headline">¶</a></h1>
+<h2>2.22. and its argument names (thus implicitly the number of arguments the function<a class="headerlink" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="takes">
-<h1>takes).<a class="headerlink" href="#takes" title="Permalink to this headline">¶</a></h1>
+<h2>2.23. takes).<a class="headerlink" href="#takes" title="Permalink to this headline">¶</a></h2>
 <p>class PrototypeNode(object): def <strong>init</strong>(self, name, args): self.name
 = name self.args = args</p>
 </div>
 <div class="section" id="id5">
-<h1>This class represents a function definition itself.<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h1>
+<h2>2.24. This class represents a function definition itself.<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <p>class FunctionNode(object): def <strong>init</strong>(self, prototype, body):
 self.prototype = prototype self.body = body</p>
 <div class="section" id="id6">
-<h2>Parser<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<h3>2.24.1. Parser<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
 <p>class Parser(object):</p>
 <p>def <strong>init</strong>(self, tokens, binop_precedence): self.tokens = tokens
 self.binop_precedence = binop_precedence self.Next()</p>
@@ -762,7 +755,7 @@ except Exception, e: print &#8216;Error:&#8217;, e try: self.Next() # Skip for e
 recovery. except: pass</p>
 </div>
 <div class="section" id="main-driver-code">
-<h2>Main driver code.<a class="headerlink" href="#main-driver-code" title="Permalink to this headline">¶</a></h2>
+<h3>2.24.2. Main driver code.<a class="headerlink" href="#main-driver-code" title="Permalink to this headline">¶</a></h3>
 <p>def main(): # Install standard binary operators. # 1 is lowest possible
 precedence. 40 is the highest. operator_precedence = { &#8216;&lt;&#8217;: 10, &#8216;+&#8217;:
 20, &#8216;-&#8216;: 20, &#8216;*&#8217;: 40 }</p>
@@ -787,6 +780,7 @@ precedence. 40 is the highest. operator_precedence = { &#8216;&lt;&#8217;: 10, &
 IR &lt;PythonLangImpl3.html&gt;`_</strong></p>
 </div>
 </div>
+</div>
 
 
           </div>
@@ -796,43 +790,51 @@ IR &lt;PythonLangImpl3.html&gt;`_</strong></p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="../../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Implementing a Parser and AST</a></li>
-<li><a class="reference internal" href="#introduction-intro">Introduction # {#intro}</a></li>
-<li><a class="reference internal" href="#the-abstract-syntax-tree-ast-ast">The Abstract Syntax Tree (AST) # {#ast}</a></li>
-<li><a class="reference internal" href="#expression-class-for-numeric-literals-like-1-0">Expression class for numeric literals like &#8220;1.0&#8221;.</a></li>
-<li><a class="reference internal" href="#expression-class-for-a-binary-operator">Expression class for a binary operator.</a></li>
-<li><a class="reference internal" href="#expression-class-for-function-calls">Expression class for function calls.</a></li>
-<li><a class="reference internal" href="#this-class-represents-a-function-definition-itself">This class represents a function definition itself.</a></li>
-<li><a class="reference internal" href="#parser-basics-parserbasics">Parser Basics # {#parserbasics}</a></li>
-<li><a class="reference internal" href="#basic-expression-parsing-parserprimexprs">Basic Expression Parsing # {#parserprimexprs}</a></li>
-<li><a class="reference internal" href="#binary-expression-parsing-parserbinops">Binary Expression Parsing # {#parserbinops}</a></li>
-<li><a class="reference internal" href="#parsing-the-rest-parsertop">Parsing the Rest # {#parsertop}</a></li>
-<li><a class="reference internal" href="#the-driver-driver">The Driver # {#driver}</a></li>
-<li><a class="reference internal" href="#conclusions-conclusions">Conclusions # {#conclusions}</a></li>
-<li><a class="reference internal" href="#full-code-listing-code">Full Code Listing # {#code}</a><ul>
-<li><a class="reference internal" href="#lexer">Lexer</a></li>
+<li><a class="reference internal" href="#">2. Chapter 2: Implementing a Parser and AST</a><ul>
+<li><a class="reference internal" href="#introduction-intro">2.1. Introduction # {#intro}</a></li>
+<li><a class="reference internal" href="#the-abstract-syntax-tree-ast-ast">2.2. The Abstract Syntax Tree (AST) # {#ast}</a></li>
+<li><a class="reference internal" href="#expression-class-for-numeric-literals-like-1-0">2.3. Expression class for numeric literals like &#8220;1.0&#8221;.</a></li>
+<li><a class="reference internal" href="#expression-class-for-a-binary-operator">2.4. Expression class for a binary operator.</a></li>
+<li><a class="reference internal" href="#expression-class-for-function-calls">2.5. Expression class for function calls.</a></li>
+<li><a class="reference internal" href="#this-class-represents-a-function-definition-itself">2.6. This class represents a function definition itself.</a></li>
+<li><a class="reference internal" href="#parser-basics-parserbasics">2.7. Parser Basics # {#parserbasics}</a></li>
+<li><a class="reference internal" href="#basic-expression-parsing-parserprimexprs">2.8. Basic Expression Parsing # {#parserprimexprs}</a></li>
+<li><a class="reference internal" href="#binary-expression-parsing-parserbinops">2.9. Binary Expression Parsing # {#parserbinops}</a></li>
+<li><a class="reference internal" href="#parsing-the-rest-parsertop">2.10. Parsing the Rest # {#parsertop}</a></li>
+<li><a class="reference internal" href="#the-driver-driver">2.11. The Driver # {#driver}</a></li>
+<li><a class="reference internal" href="#conclusions-conclusions">2.12. Conclusions # {#conclusions}</a></li>
+<li><a class="reference internal" href="#full-code-listing-code">2.13. Full Code Listing # {#code}</a><ul>
+<li><a class="reference internal" href="#lexer">2.13.1. Lexer</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#the-lexer-yields-one-of-these-types-for-each-token">The lexer yields one of these types for each token.</a></li>
-<li><a class="reference internal" href="#regular-expressions-that-tokens-and-comments-of-our-language">Regular expressions that tokens and comments of our language.</a><ul>
-<li><a class="reference internal" href="#abstract-syntax-tree-aka-parse-tree">Abstract Syntax Tree (aka Parse Tree)</a></li>
+<li><a class="reference internal" href="#the-lexer-yields-one-of-these-types-for-each-token">2.14. The lexer yields one of these types for each token.</a></li>
+<li><a class="reference internal" href="#regular-expressions-that-tokens-and-comments-of-our-language">2.15. Regular expressions that tokens and comments of our language.</a><ul>
+<li><a class="reference internal" href="#abstract-syntax-tree-aka-parse-tree">2.15.1. Abstract Syntax Tree (aka Parse Tree)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#base-class-for-all-expression-nodes">Base class for all expression nodes.</a></li>
-<li><a class="reference internal" href="#id2">Expression class for numeric literals like &#8220;1.0&#8221;.</a></li>
-<li><a class="reference internal" href="#expression-class-for-referencing-a-variable-like-a">Expression class for referencing a variable, like &#8220;a&#8221;.</a></li>
-<li><a class="reference internal" href="#id3">Expression class for a binary operator.</a></li>
-<li><a class="reference internal" href="#id4">Expression class for function calls.</a></li>
-<li><a class="reference internal" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name">This class represents the &#8220;prototype&#8221; for a function, which captures its name,</a></li>
-<li><a class="reference internal" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function">and its argument names (thus implicitly the number of arguments the function</a></li>
-<li><a class="reference internal" href="#takes">takes).</a></li>
-<li><a class="reference internal" href="#id5">This class represents a function definition itself.</a><ul>
-<li><a class="reference internal" href="#id6">Parser</a></li>
-<li><a class="reference internal" href="#main-driver-code">Main driver code.</a></li>
+<li><a class="reference internal" href="#base-class-for-all-expression-nodes">2.16. Base class for all expression nodes.</a></li>
+<li><a class="reference internal" href="#id2">2.17. Expression class for numeric literals like &#8220;1.0&#8221;.</a></li>
+<li><a class="reference internal" href="#expression-class-for-referencing-a-variable-like-a">2.18. Expression class for referencing a variable, like &#8220;a&#8221;.</a></li>
+<li><a class="reference internal" href="#id3">2.19. Expression class for a binary operator.</a></li>
+<li><a class="reference internal" href="#id4">2.20. Expression class for function calls.</a></li>
+<li><a class="reference internal" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name">2.21. This class represents the &#8220;prototype&#8221; for a function, which captures its name,</a></li>
+<li><a class="reference internal" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function">2.22. and its argument names (thus implicitly the number of arguments the function</a></li>
+<li><a class="reference internal" href="#takes">2.23. takes).</a></li>
+<li><a class="reference internal" href="#id5">2.24. This class represents a function definition itself.</a><ul>
+<li><a class="reference internal" href="#id6">2.24.1. Parser</a></li>
+<li><a class="reference internal" href="#main-driver-code">2.24.2. Main driver code.</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="PythonLangImpl1.html"
+                        title="previous chapter">1. Chapter 1: Tutorial Introduction and the Lexer</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="PythonLangImpl3.html"
+                        title="next chapter">3. Chapter 3: Code generation to LLVM IR</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../../_sources/doc/kaleidoscope/PythonLangImpl2.txt"
@@ -861,7 +863,15 @@ IR &lt;PythonLangImpl3.html&gt;`_</strong></p>
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="PythonLangImpl3.html" title="3. Chapter 3: Code generation to LLVM IR"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="PythonLangImpl1.html" title="1. Chapter 1: Tutorial Introduction and the Lexer"
+             >previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples and LLVM Tutorials</a> &raquo;</li>
+          <li><a href="index.html" >Kaleidoscope</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

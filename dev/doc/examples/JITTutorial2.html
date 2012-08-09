@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>create a module &mdash; llvmpy 0.8.2 documentation</title>
+    <title>A More Complicated Function &mdash; llvmpy 0.8.2 documentation</title>
     
     <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -27,8 +27,9 @@
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="llvmpy 0.8.2 documentation" href="../../index.html" />
-    <link rel="next" title="Tutorial Introduction and the Lexer" href="../kaleidoscope/PythonLangImpl1.html" />
-    <link rel="prev" title="create a module" href="JITTutorial1.html" /> 
+    <link rel="up" title="LLVM Tutorials" href="index.html" />
+    <link rel="next" title="Kaleidoscope" href="../kaleidoscope/index.html" />
+    <link rel="prev" title="A First Function" href="JITTutorial1.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,12 +39,14 @@
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="../kaleidoscope/PythonLangImpl1.html" title="Tutorial Introduction and the Lexer"
+          <a href="../kaleidoscope/index.html" title="Kaleidoscope"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="JITTutorial1.html" title="create a module"
+          <a href="JITTutorial1.html" title="A First Function"
              accesskey="P">previous</a> |</li>
-        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples and LLVM Tutorials</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">LLVM Tutorials</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -52,60 +55,60 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <table border="1" class="docutils">
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>layout: page</td>
-</tr>
-<tr class="row-even"><td>title: JIT Tutorial 2</td>
-</tr>
-</tbody>
-</table>
-<p>{% highlight python %} #!/usr/bin/env python</p>
-<p>from llvm.core import *</p>
-<div class="section" id="create-a-module">
-<h1>create a module<a class="headerlink" href="#create-a-module" title="Permalink to this headline">¶</a></h1>
-<p>module = Module.new (&#8220;tut2&#8221;)</p>
+  <div class="section" id="a-more-complicated-function">
+<h1>A More Complicated Function<a class="headerlink" href="#a-more-complicated-function" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+
+<span class="kn">from</span> <span class="nn">llvm.core</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="c">#create a module</span>
+<span class="n">module</span> <span class="o">=</span> <span class="n">Module</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="s">&quot;tut2&quot;</span><span class="p">)</span>
+
+<span class="c">#create a function type taking 2 integers, return a 32-bit integer</span>
+<span class="n">ty_int</span> <span class="o">=</span> <span class="n">Type</span><span class="o">.</span><span class="n">int</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+<span class="n">func_type</span> <span class="o">=</span> <span class="n">Type</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">ty_int</span><span class="p">,</span> <span class="p">(</span><span class="n">ty_int</span><span class="p">,</span> <span class="n">ty_int</span><span class="p">))</span>
+
+<span class="c">#create a function of that type</span>
+<span class="n">gcd</span> <span class="o">=</span> <span class="n">Function</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">module</span><span class="p">,</span> <span class="n">func_type</span><span class="p">,</span> <span class="s">&quot;gcd&quot;</span><span class="p">)</span>
+
+<span class="c">#name function args</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">gcd</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="n">x</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;x&quot;</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">gcd</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span> <span class="n">y</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&quot;y&quot;</span>
+
+<span class="c">#implement the function</span>
+
+<span class="c">#blocks...</span>
+<span class="n">entry</span> <span class="o">=</span> <span class="n">gcd</span><span class="o">.</span><span class="n">append_basic_block</span><span class="p">(</span><span class="s">&quot;entry&quot;</span><span class="p">)</span>
+<span class="n">ret</span> <span class="o">=</span> <span class="n">gcd</span><span class="o">.</span><span class="n">append_basic_block</span><span class="p">(</span><span class="s">&quot;return&quot;</span><span class="p">)</span>
+<span class="n">cond_false</span> <span class="o">=</span> <span class="n">gcd</span><span class="o">.</span><span class="n">append_basic_block</span><span class="p">(</span><span class="s">&quot;cond_false&quot;</span><span class="p">)</span>
+<span class="n">cond_true</span> <span class="o">=</span> <span class="n">gcd</span><span class="o">.</span><span class="n">append_basic_block</span><span class="p">(</span><span class="s">&quot;cond_true&quot;</span><span class="p">)</span>
+<span class="n">cond_false_2</span> <span class="o">=</span> <span class="n">gcd</span><span class="o">.</span><span class="n">append_basic_block</span><span class="p">(</span><span class="s">&quot;cond_false_2&quot;</span><span class="p">)</span>
+
+<span class="c">#create a llvm::IRBuilder</span>
+<span class="n">bldr</span> <span class="o">=</span> <span class="n">Builder</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span>
+<span class="n">x_eq_y</span> <span class="o">=</span> <span class="n">bldr</span><span class="o">.</span><span class="n">icmp</span><span class="p">(</span><span class="n">IPRED_EQ</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s">&quot;tmp&quot;</span><span class="p">)</span>
+<span class="n">bldr</span><span class="o">.</span><span class="n">cbranch</span><span class="p">(</span><span class="n">x_eq_y</span><span class="p">,</span> <span class="n">ret</span><span class="p">,</span> <span class="n">cond_false</span><span class="p">)</span>
+
+<span class="n">bldr</span><span class="o">.</span><span class="n">position_at_end</span> <span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+<span class="n">bldr</span><span class="o">.</span><span class="n">ret</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">bldr</span><span class="o">.</span><span class="n">position_at_end</span><span class="p">(</span><span class="n">cond_false</span><span class="p">)</span>
+<span class="n">x_lt_y</span> <span class="o">=</span> <span class="n">bldr</span><span class="o">.</span><span class="n">icmp</span><span class="p">(</span><span class="n">IPRED_ULT</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s">&quot;tmp&quot;</span><span class="p">)</span>
+<span class="n">bldr</span><span class="o">.</span><span class="n">cbranch</span><span class="p">(</span><span class="n">x_lt_y</span><span class="p">,</span> <span class="n">cond_true</span><span class="p">,</span> <span class="n">cond_false_2</span><span class="p">)</span>
+
+<span class="n">bldr</span><span class="o">.</span><span class="n">position_at_end</span><span class="p">(</span><span class="n">cond_true</span><span class="p">)</span>
+<span class="n">y_sub_x</span> <span class="o">=</span> <span class="n">bldr</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s">&quot;tmp&quot;</span><span class="p">)</span>
+<span class="n">recur_1</span> <span class="o">=</span> <span class="n">bldr</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">gcd</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y_sub_x</span><span class="p">,),</span> <span class="s">&quot;tmp&quot;</span><span class="p">)</span>
+<span class="n">bldr</span><span class="o">.</span><span class="n">ret</span><span class="p">(</span><span class="n">recur_1</span><span class="p">)</span>
+
+<span class="n">bldr</span><span class="o">.</span><span class="n">position_at_end</span><span class="p">(</span><span class="n">cond_false_2</span><span class="p">)</span>
+<span class="n">x_sub_y</span> <span class="o">=</span> <span class="n">bldr</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s">&quot;x_sub_y&quot;</span><span class="p">)</span>
+<span class="n">recur_2</span> <span class="o">=</span> <span class="n">bldr</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">gcd</span><span class="p">,</span> <span class="p">(</span><span class="n">x_sub_y</span><span class="p">,</span> <span class="n">y</span><span class="p">,),</span> <span class="s">&quot;tmp&quot;</span><span class="p">)</span>
+<span class="n">bldr</span><span class="o">.</span><span class="n">ret</span><span class="p">(</span><span class="n">recur_2</span><span class="p">)</span>
+
+<span class="k">print</span> <span class="n">module</span>
+</pre></div>
 </div>
-<div class="section" id="create-a-function-type-taking-2-integers-return-a-32-bit-integer">
-<h1>create a function type taking 2 integers, return a 32-bit integer<a class="headerlink" href="#create-a-function-type-taking-2-integers-return-a-32-bit-integer" title="Permalink to this headline">¶</a></h1>
-<p>ty_int = Type.int (32) func_type = Type.function (ty_int, (ty_int,
-ty_int))</p>
-</div>
-<div class="section" id="create-a-function-of-that-type">
-<h1>create a function of that type<a class="headerlink" href="#create-a-function-of-that-type" title="Permalink to this headline">¶</a></h1>
-<p>gcd = Function.new (module, func_type, &#8220;gcd&#8221;)</p>
-</div>
-<div class="section" id="name-function-args">
-<h1>name function args<a class="headerlink" href="#name-function-args" title="Permalink to this headline">¶</a></h1>
-<p>x = gcd.args[0]; x.name = &#8220;x&#8221; y = gcd.args[1]; y.name = &#8220;y&#8221;</p>
-</div>
-<div class="section" id="implement-the-function">
-<h1>implement the function<a class="headerlink" href="#implement-the-function" title="Permalink to this headline">¶</a></h1>
-</div>
-<div class="section" id="blocks">
-<h1>blocks...<a class="headerlink" href="#blocks" title="Permalink to this headline">¶</a></h1>
-<p>entry = gcd.append_basic_block (&#8220;entry&#8221;) ret =
-gcd.append_basic_block (&#8220;return&#8221;) cond_false =
-gcd.append_basic_block (&#8220;cond_false&#8221;) cond_true =
-gcd.append_basic_block (&#8220;cond_true&#8221;) cond_false_2 =
-gcd.append_basic_block (&#8220;cond_false_2&#8221;)</p>
-</div>
-<div class="section" id="create-a-llvm-irbuilder">
-<h1>create a llvm::IRBuilder<a class="headerlink" href="#create-a-llvm-irbuilder" title="Permalink to this headline">¶</a></h1>
-<p>bldr = Builder.new (entry) x_eq_y = bldr.icmp (IPRED_EQ, x, y, &#8220;tmp&#8221;)
-bldr.cbranch (x_eq_y, ret, cond_false)</p>
-<p>bldr.position_at_end (ret) bldr.ret(x)</p>
-<p>bldr.position_at_end (cond_false) x_lt_y = bldr.icmp (IPRED_ULT,
-x, y, &#8220;tmp&#8221;) bldr.cbranch (x_lt_y, cond_true, cond_false_2)</p>
-<p>bldr.position_at_end (cond_true) y_sub_x = bldr.sub (y, x, &#8220;tmp&#8221;)
-recur_1 = bldr.call (gcd, (x, y_sub_x,), &#8220;tmp&#8221;) bldr.ret (recur_1)</p>
-<p>bldr.position_at_end (cond_false_2) x_sub_y = bldr.sub (x, y,
-&#8220;x_sub_y&#8221;) recur_2 = bldr.call (gcd, (x_sub_y, y,), &#8220;tmp&#8221;) bldr.ret
-(recur_2)</p>
-<p>print(module) {% endhighlight %}</p>
 </div>
 
 
@@ -114,23 +117,12 @@ recur_1 = bldr.call (gcd, (x, y_sub_x,), &#8220;tmp&#8221;) bldr.ret (recur_1)</
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">create a module</a></li>
-<li><a class="reference internal" href="#create-a-function-type-taking-2-integers-return-a-32-bit-integer">create a function type taking 2 integers, return a 32-bit integer</a></li>
-<li><a class="reference internal" href="#create-a-function-of-that-type">create a function of that type</a></li>
-<li><a class="reference internal" href="#name-function-args">name function args</a></li>
-<li><a class="reference internal" href="#implement-the-function">implement the function</a></li>
-<li><a class="reference internal" href="#blocks">blocks...</a></li>
-<li><a class="reference internal" href="#create-a-llvm-irbuilder">create a llvm::IRBuilder</a></li>
-</ul>
-
   <h4>Previous topic</h4>
   <p class="topless"><a href="JITTutorial1.html"
-                        title="previous chapter">create a module</a></p>
+                        title="previous chapter">A First Function</a></p>
   <h4>Next topic</h4>
-  <p class="topless"><a href="../kaleidoscope/PythonLangImpl1.html"
-                        title="next chapter">Tutorial Introduction and the Lexer</a></p>
+  <p class="topless"><a href="../kaleidoscope/index.html"
+                        title="next chapter">Kaleidoscope</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../../_sources/doc/examples/JITTutorial2.txt"
@@ -160,12 +152,14 @@ recur_1 = bldr.call (gcd, (x, y_sub_x,), &#8220;tmp&#8221;) bldr.ret (recur_1)</
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="../kaleidoscope/PythonLangImpl1.html" title="Tutorial Introduction and the Lexer"
+          <a href="../kaleidoscope/index.html" title="Kaleidoscope"
              >next</a> |</li>
         <li class="right" >
-          <a href="JITTutorial1.html" title="create a module"
+          <a href="JITTutorial1.html" title="A First Function"
              >previous</a> |</li>
-        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples and LLVM Tutorials</a> &raquo;</li>
+          <li><a href="index.html" >LLVM Tutorials</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

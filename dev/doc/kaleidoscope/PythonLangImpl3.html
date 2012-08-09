@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Code generation to LLVM IR &mdash; llvmpy 0.8.2 documentation</title>
+    <title>3. Chapter 3: Code generation to LLVM IR &mdash; llvmpy 0.8.2 documentation</title>
     
     <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
@@ -26,7 +26,10 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <link rel="top" title="llvmpy 0.8.2 documentation" href="../../index.html" /> 
+    <link rel="top" title="llvmpy 0.8.2 documentation" href="../../index.html" />
+    <link rel="up" title="Kaleidoscope" href="index.html" />
+    <link rel="next" title="4. Chapter 4: Adding JIT and Optimizer Support" href="PythonLangImpl4.html" />
+    <link rel="prev" title="2. Chapter 2: Implementing a Parser and AST" href="PythonLangImpl2.html" /> 
   </head>
   <body>
     <div class="related">
@@ -35,7 +38,15 @@
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              accesskey="I">index</a></li>
-        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="PythonLangImpl4.html" title="4. Chapter 4: Adding JIT and Optimizer Support"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="PythonLangImpl2.html" title="2. Chapter 2: Implementing a Parser and AST"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples and LLVM Tutorials</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Kaleidoscope</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -44,31 +55,12 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <table border="1" class="docutils">
-<colgroup>
-<col width="100%" />
-</colgroup>
-<tbody valign="top">
-<tr class="row-odd"><td>layout: page</td>
-</tr>
-<tr class="row-even"><td>title: &#8220;Kaleidoscope: Chapter 3&#8221;</td>
-</tr>
-</tbody>
-</table>
-<div class="section" id="code-generation-to-llvm-ir">
-<h1>Code generation to LLVM IR<a class="headerlink" href="#code-generation-to-llvm-ir" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="chapter-3-code-generation-to-llvm-ir">
+<h1>3. Chapter 3: Code generation to LLVM IR<a class="headerlink" href="#chapter-3-code-generation-to-llvm-ir" title="Permalink to this headline">¶</a></h1>
 <p>Written by <a class="reference external" href="mailto:sabre&#37;&#52;&#48;nondot&#46;org">Chris Lattner</a> and <a class="reference external" href="http://max99x.com">Max
 Shawabkeh</a></p>
-<p><strong>Chapter 3</strong></p>
-<ul class="simple">
-<li>This will become a table of contents (this text will be scraped).
-{:toc}</li>
-</ul>
-<p><strong>`Chapter 4: Adding JIT and Optimizer
-Support &lt;PythonLangImpl4.html&gt;`_</strong></p>
-</div>
 <div class="section" id="introduction-intro">
-<h1>Introduction # {#intro}<a class="headerlink" href="#introduction-intro" title="Permalink to this headline">¶</a></h1>
+<h2>3.1. Introduction # {#intro}<a class="headerlink" href="#introduction-intro" title="Permalink to this headline">¶</a></h2>
 <p>Welcome to Chapter 3 of the <a class="reference external" href="http://www.llvm.org/docs/tutorial/index.html">Implementing a language with
 LLVM</a> tutorial. This
 chapter shows you how to transform the <a class="reference external" href="PythonLangImpl2.html">Abstract Syntax
@@ -76,16 +68,16 @@ Tree</a>, built in Chapter 2, into LLVM IR. This
 will teach you a little bit about how LLVM does things, as well as
 demonstrate how easy it is to use. It&#8217;s much more work to build a lexer
 and parser than it is to generate LLVM IR code. :)</p>
-<p><strong>Please note</strong>: the code in this chapter and later requires llvm-py 0.6
+<p><strong>Please note</strong>: the code in this chapter and later requires llvmpy 0.6
 and LLVM 2.7. Earlier versions will most likely not work with it. Also
 note that you need to use a version of this tutorial that matches your
-llvm-py release: If you are using an official llvm-py release, use the
-version of the documentation on the <a class="reference external" href="http://www.mdevan.org/llvm-py/examples.html">llvm-py examples
+llvmpy release: If you are using an official llvmpy release, use the
+version of the documentation on the <a class="reference external" href="http://www.mdevan.org/llvmpy/examples.html">llvmpy examples
 page</a></p>
 </div>
 <hr class="docutils" />
 <div class="section" id="code-generation-setup-basics">
-<h1>Code Generation Setup # {#basics}<a class="headerlink" href="#code-generation-setup-basics" title="Permalink to this headline">¶</a></h1>
+<h2>3.2. Code Generation Setup # {#basics}<a class="headerlink" href="#code-generation-setup-basics" title="Permalink to this headline">¶</a></h2>
 <p>In order to generate LLVM IR, we want some simple setup to get started.
 First we define code generation methods in each AST node class:</p>
 <p>{% highlight python %} # Expression class for numeric literals like
@@ -94,7 +86,7 @@ First we define code generation methods in each AST node class:</p>
 <p>def CodeGen(self): ...</p>
 </div>
 <div class="section" id="expression-class-for-referencing-a-variable-like-a">
-<h1>Expression class for referencing a variable, like &#8220;a&#8221;.<a class="headerlink" href="#expression-class-for-referencing-a-variable-like-a" title="Permalink to this headline">¶</a></h1>
+<h2>3.3. Expression class for referencing a variable, like &#8220;a&#8221;.<a class="headerlink" href="#expression-class-for-referencing-a-variable-like-a" title="Permalink to this headline">¶</a></h2>
 <p>class VariableExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, name): self.name = name</p>
 <p>def CodeGen(self): ...</p>
@@ -116,14 +108,14 @@ during code generation:</p>
 g_llvm_module = Module.new(&#8216;my cool jit&#8217;)</p>
 </div>
 <div class="section" id="the-llvm-instruction-builder-created-whenever-a-new-function-is-entered">
-<h1>The LLVM instruction builder. Created whenever a new function is entered.<a class="headerlink" href="#the-llvm-instruction-builder-created-whenever-a-new-function-is-entered" title="Permalink to this headline">¶</a></h1>
+<h2>3.4. The LLVM instruction builder. Created whenever a new function is entered.<a class="headerlink" href="#the-llvm-instruction-builder-created-whenever-a-new-function-is-entered" title="Permalink to this headline">¶</a></h2>
 <p>g_llvm_builder = None</p>
 </div>
 <div class="section" id="a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope">
-<h1>A dictionary that keeps track of which values are defined in the current scope<a class="headerlink" href="#a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope" title="Permalink to this headline">¶</a></h1>
+<h2>3.5. A dictionary that keeps track of which values are defined in the current scope<a class="headerlink" href="#a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="and-what-their-llvm-representation-is">
-<h1>and what their LLVM representation is.<a class="headerlink" href="#and-what-their-llvm-representation-is" title="Permalink to this headline">¶</a></h1>
+<h2>3.6. and what their LLVM representation is.<a class="headerlink" href="#and-what-their-llvm-representation-is" title="Permalink to this headline">¶</a></h2>
 <p>g_named_values = {} {% endhighlight %}</p>
 <p><tt class="docutils literal"><span class="pre">g_llvm_module</span></tt> is the LLVM construct that contains all of the
 functions and global variables in a chunk of code. In many ways, it is
@@ -147,13 +139,13 @@ that this has already been done, and we&#8217;ll just use it to emit code.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="expression-code-generation-exprs">
-<h1>Expression Code Generation # {#exprs}<a class="headerlink" href="#expression-code-generation-exprs" title="Permalink to this headline">¶</a></h1>
+<h2>3.7. Expression Code Generation # {#exprs}<a class="headerlink" href="#expression-code-generation-exprs" title="Permalink to this headline">¶</a></h2>
 <p>Generating LLVM code for expression nodes is very straightforward: less
 than 35 lines of commented code for all four of our expression nodes.
 First we&#8217;ll do numeric literals:</p>
 <p>{% highlight python %} def CodeGen(self): return
 Constant.real(Type.double(), self.value) {% endhighlight %}</p>
-<p>In llvm-py, floating point numeric constants are represented with the
+<p>In llvmpy, floating point numeric constants are represented with the
 <tt class="docutils literal"><span class="pre">llvm.core.ConstantFP</span></tt> class. To create one, we can use the static
 <tt class="docutils literal"><span class="pre">real()</span></tt> method in the <tt class="docutils literal"><span class="pre">llvm.core.Constant</span></tt> class. This code
 basically just creates and returns a <tt class="docutils literal"><span class="pre">ConstantFP</span></tt>. Note that in the
@@ -254,7 +246,7 @@ basic framework.</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="function-code-generation-funcs">
-<h1>Function Code Generation # {#funcs}<a class="headerlink" href="#function-code-generation-funcs" title="Permalink to this headline">¶</a></h1>
+<h2>3.8. Function Code Generation # {#funcs}<a class="headerlink" href="#function-code-generation-funcs" title="Permalink to this headline">¶</a></h2>
 <p>Code generation for prototypes and functions must handle a number of
 details, which make their code less beautiful than expression code
 generation, but allows us to illustrate some important points. First,
@@ -404,7 +396,7 @@ this bug; see what you can come up with! Here is a testcase:</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="driver-changes-and-closing-thoughts-driver">
-<h1>Driver Changes and Closing Thoughts # {#driver}<a class="headerlink" href="#driver-changes-and-closing-thoughts-driver" title="Permalink to this headline">¶</a></h1>
+<h2>3.9. Driver Changes and Closing Thoughts # {#driver}<a class="headerlink" href="#driver-changes-and-closing-thoughts-driver" title="Permalink to this headline">¶</a></h2>
 <p>For now, code generation to LLVM doesn&#8217;t really get us much, except that
 we can look at the pretty IR calls. The sample code inserts calls to
 CodeGen into the <tt class="docutils literal"><span class="pre">Handle*</span></tt> functions, and then dumps out the LLVM IR.
@@ -465,38 +457,38 @@ running code!</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="full-code-listing-code">
-<h1>Full Code Listing # {#code}<a class="headerlink" href="#full-code-listing-code" title="Permalink to this headline">¶</a></h1>
+<h2>3.10. Full Code Listing # {#code}<a class="headerlink" href="#full-code-listing-code" title="Permalink to this headline">¶</a></h2>
 <p>Here is the complete code listing for our running example, enhanced with
-the LLVM code generator. Because this uses the llvm-py libraries, you
+the LLVM code generator. Because this uses the llvmpy libraries, you
 need to <a class="reference external" href="../download.html">download</a> and
 <a class="reference external" href="../userguide.html#install">install</a> them.</p>
 <p>{% highlight python %} #!/usr/bin/env python</p>
 <p>import re from llvm.core import Module, Constant, Type, Function,
 Builder, FCMP_ULT</p>
 <div class="section" id="globals">
-<h2>Globals<a class="headerlink" href="#globals" title="Permalink to this headline">¶</a></h2>
+<h3>3.10.1. Globals<a class="headerlink" href="#globals" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 <div class="section" id="the-llvm-module-which-holds-all-the-ir-code">
-<h1>The LLVM module, which holds all the IR code.<a class="headerlink" href="#the-llvm-module-which-holds-all-the-ir-code" title="Permalink to this headline">¶</a></h1>
+<h2>3.11. The LLVM module, which holds all the IR code.<a class="headerlink" href="#the-llvm-module-which-holds-all-the-ir-code" title="Permalink to this headline">¶</a></h2>
 <p>g_llvm_module = Module.new(&#8216;my cool jit&#8217;)</p>
 </div>
 <div class="section" id="id1">
-<h1>The LLVM instruction builder. Created whenever a new function is entered.<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+<h2>3.12. The LLVM instruction builder. Created whenever a new function is entered.<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <p>g_llvm_builder = None</p>
 </div>
 <div class="section" id="id2">
-<h1>A dictionary that keeps track of which values are defined in the current scope<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h1>
+<h2>3.13. A dictionary that keeps track of which values are defined in the current scope<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="id3">
-<h1>and what their LLVM representation is.<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h1>
+<h2>3.14. and what their LLVM representation is.<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <p>g_named_values = {}</p>
 <div class="section" id="lexer">
-<h2>Lexer<a class="headerlink" href="#lexer" title="Permalink to this headline">¶</a></h2>
+<h3>3.14.1. Lexer<a class="headerlink" href="#lexer" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 <div class="section" id="the-lexer-yields-one-of-these-types-for-each-token">
-<h1>The lexer yields one of these types for each token.<a class="headerlink" href="#the-lexer-yields-one-of-these-types-for-each-token" title="Permalink to this headline">¶</a></h1>
+<h2>3.15. The lexer yields one of these types for each token.<a class="headerlink" href="#the-lexer-yields-one-of-these-types-for-each-token" title="Permalink to this headline">¶</a></h2>
 <p>class EOFToken(object): pass</p>
 <p>class DefToken(object): pass</p>
 <p>class ExternToken(object): pass</p>
@@ -510,7 +502,7 @@ and self.char == other.char def <strong>ne</strong>(self, other): return not sel
 == other</p>
 </div>
 <div class="section" id="regular-expressions-that-tokens-and-comments-of-our-language">
-<h1>Regular expressions that tokens and comments of our language.<a class="headerlink" href="#regular-expressions-that-tokens-and-comments-of-our-language" title="Permalink to this headline">¶</a></h1>
+<h2>3.16. Regular expressions that tokens and comments of our language.<a class="headerlink" href="#regular-expressions-that-tokens-and-comments-of-our-language" title="Permalink to this headline">¶</a></h2>
 <p>REGEX_NUMBER = re.compile(&#8216;[0-9]+(?:.[0-9]+)?&#8217;) REGEX_IDENTIFIER =
 re.compile(&#8216;[a-zA-Z][a-zA-Z0-9]<em>&#8216;) REGEX_COMMENT = re.compile(&#8216;#.</em>&#8216;)</p>
 <p>def Tokenize(string): while string: # Skip whitespace. if
@@ -546,21 +538,21 @@ string[0].isspace(): string = string[1:] continue</p>
 </div>
 <p>yield EOFToken()</p>
 <div class="section" id="abstract-syntax-tree-aka-parse-tree">
-<h2>Abstract Syntax Tree (aka Parse Tree)<a class="headerlink" href="#abstract-syntax-tree-aka-parse-tree" title="Permalink to this headline">¶</a></h2>
+<h3>3.16.1. Abstract Syntax Tree (aka Parse Tree)<a class="headerlink" href="#abstract-syntax-tree-aka-parse-tree" title="Permalink to this headline">¶</a></h3>
 </div>
 </div>
 <div class="section" id="base-class-for-all-expression-nodes">
-<h1>Base class for all expression nodes.<a class="headerlink" href="#base-class-for-all-expression-nodes" title="Permalink to this headline">¶</a></h1>
+<h2>3.17. Base class for all expression nodes.<a class="headerlink" href="#base-class-for-all-expression-nodes" title="Permalink to this headline">¶</a></h2>
 <p>class ExpressionNode(object): pass</p>
 </div>
 <div class="section" id="expression-class-for-numeric-literals-like-1-0">
-<h1>Expression class for numeric literals like &#8220;1.0&#8221;.<a class="headerlink" href="#expression-class-for-numeric-literals-like-1-0" title="Permalink to this headline">¶</a></h1>
+<h2>3.18. Expression class for numeric literals like &#8220;1.0&#8221;.<a class="headerlink" href="#expression-class-for-numeric-literals-like-1-0" title="Permalink to this headline">¶</a></h2>
 <p>class NumberExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, value): self.value = value</p>
 <p>def CodeGen(self): return Constant.real(Type.double(), self.value)</p>
 </div>
 <div class="section" id="id4">
-<h1>Expression class for referencing a variable, like &#8220;a&#8221;.<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h1>
+<h2>3.19. Expression class for referencing a variable, like &#8220;a&#8221;.<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
 <p>class VariableExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, name): self.name = name</p>
 <p>def CodeGen(self): if self.name in g_named_values: return
@@ -568,7 +560,7 @@ g_named_values[self.name] else: raise RuntimeError(&#8216;Unknown variable
 name: &#8216; + self.name)</p>
 </div>
 <div class="section" id="expression-class-for-a-binary-operator">
-<h1>Expression class for a binary operator.<a class="headerlink" href="#expression-class-for-a-binary-operator" title="Permalink to this headline">¶</a></h1>
+<h2>3.20. Expression class for a binary operator.<a class="headerlink" href="#expression-class-for-a-binary-operator" title="Permalink to this headline">¶</a></h2>
 <p>class BinaryOperatorExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, operator, left, right): self.operator = operator
 self.left = left self.right = right</p>
@@ -590,7 +582,7 @@ self.right.CodeGen()</p>
 </div>
 </div>
 <div class="section" id="expression-class-for-function-calls">
-<h1>Expression class for function calls.<a class="headerlink" href="#expression-class-for-function-calls" title="Permalink to this headline">¶</a></h1>
+<h2>3.21. Expression class for function calls.<a class="headerlink" href="#expression-class-for-function-calls" title="Permalink to this headline">¶</a></h2>
 <p>class CallExpressionNode(ExpressionNode):</p>
 <p>def <strong>init</strong>(self, callee, args): self.callee = callee self.args =
 args</p>
@@ -607,13 +599,13 @@ args</p>
 </div>
 </div>
 <div class="section" id="this-class-represents-the-prototype-for-a-function-which-captures-its-name">
-<h1>This class represents the &#8220;prototype&#8221; for a function, which captures its name,<a class="headerlink" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name" title="Permalink to this headline">¶</a></h1>
+<h2>3.22. This class represents the &#8220;prototype&#8221; for a function, which captures its name,<a class="headerlink" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function">
-<h1>and its argument names (thus implicitly the number of arguments the function<a class="headerlink" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function" title="Permalink to this headline">¶</a></h1>
+<h2>3.23. and its argument names (thus implicitly the number of arguments the function<a class="headerlink" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function" title="Permalink to this headline">¶</a></h2>
 </div>
 <div class="section" id="takes">
-<h1>takes).<a class="headerlink" href="#takes" title="Permalink to this headline">¶</a></h1>
+<h2>3.24. takes).<a class="headerlink" href="#takes" title="Permalink to this headline">¶</a></h2>
 <p>class PrototypeNode(object):</p>
 <p>def <strong>init</strong>(self, name, args): self.name = name self.args = args</p>
 <p>def CodeGen(self): # Make the function type, eg. double(double,double).
@@ -647,7 +639,7 @@ len(self.args), False)</p>
 </div>
 </div>
 <div class="section" id="this-class-represents-a-function-definition-itself">
-<h1>This class represents a function definition itself.<a class="headerlink" href="#this-class-represents-a-function-definition-itself" title="Permalink to this headline">¶</a></h1>
+<h2>3.25. This class represents a function definition itself.<a class="headerlink" href="#this-class-represents-a-function-definition-itself" title="Permalink to this headline">¶</a></h2>
 <p>class FunctionNode(object):</p>
 <p>def <strong>init</strong>(self, prototype, body): self.prototype = prototype
 self.body = body</p>
@@ -675,7 +667,7 @@ self.body = body</p>
 </pre></div>
 </div>
 <div class="section" id="parser">
-<h2>Parser<a class="headerlink" href="#parser" title="Permalink to this headline">¶</a></h2>
+<h3>3.25.1. Parser<a class="headerlink" href="#parser" title="Permalink to this headline">¶</a></h3>
 <p>class Parser(object):</p>
 <p>def <strong>init</strong>(self, tokens, binop_precedence): self.tokens = tokens
 self.binop_precedence = binop_precedence self.Next()</p>
@@ -796,7 +788,7 @@ function().CodeGen() except Exception, e: print &#8216;Error:&#8217;, e try:
 self.Next() # Skip for error recovery. except: pass</p>
 </div>
 <div class="section" id="main-driver-code">
-<h2>Main driver code.<a class="headerlink" href="#main-driver-code" title="Permalink to this headline">¶</a></h2>
+<h3>3.25.2. Main driver code.<a class="headerlink" href="#main-driver-code" title="Permalink to this headline">¶</a></h3>
 <p>def main(): # Install standard binary operators. # 1 is lowest possible
 precedence. 40 is the highest. operator_precedence = { &#8216;&lt;&#8217;: 10, &#8216;+&#8217;:
 20, &#8216;-&#8216;: 20, &#8216;*&#8217;: 40 }</p>
@@ -821,6 +813,7 @@ precedence. 40 is the highest. operator_precedence = { &#8216;&lt;&#8217;: 10, &
 <p><strong>`Next: Adding JIT and Optimizer Support &lt;PythonLangImpl4.html&gt;`_</strong></p>
 </div>
 </div>
+</div>
 
 
           </div>
@@ -830,47 +823,55 @@ precedence. 40 is the highest. operator_precedence = { &#8216;&lt;&#8217;: 10, &
         <div class="sphinxsidebarwrapper">
   <h3><a href="../../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Code generation to LLVM IR</a></li>
-<li><a class="reference internal" href="#introduction-intro">Introduction # {#intro}</a></li>
-<li><a class="reference internal" href="#code-generation-setup-basics">Code Generation Setup # {#basics}</a></li>
-<li><a class="reference internal" href="#expression-class-for-referencing-a-variable-like-a">Expression class for referencing a variable, like &#8220;a&#8221;.</a></li>
-<li><a class="reference internal" href="#the-llvm-instruction-builder-created-whenever-a-new-function-is-entered">The LLVM instruction builder. Created whenever a new function is entered.</a></li>
-<li><a class="reference internal" href="#a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope">A dictionary that keeps track of which values are defined in the current scope</a></li>
-<li><a class="reference internal" href="#and-what-their-llvm-representation-is">and what their LLVM representation is.</a></li>
-<li><a class="reference internal" href="#expression-code-generation-exprs">Expression Code Generation # {#exprs}</a></li>
-<li><a class="reference internal" href="#function-code-generation-funcs">Function Code Generation # {#funcs}</a></li>
-<li><a class="reference internal" href="#driver-changes-and-closing-thoughts-driver">Driver Changes and Closing Thoughts # {#driver}</a></li>
-<li><a class="reference internal" href="#full-code-listing-code">Full Code Listing # {#code}</a><ul>
-<li><a class="reference internal" href="#globals">Globals</a></li>
+<li><a class="reference internal" href="#">3. Chapter 3: Code generation to LLVM IR</a><ul>
+<li><a class="reference internal" href="#introduction-intro">3.1. Introduction # {#intro}</a></li>
+<li><a class="reference internal" href="#code-generation-setup-basics">3.2. Code Generation Setup # {#basics}</a></li>
+<li><a class="reference internal" href="#expression-class-for-referencing-a-variable-like-a">3.3. Expression class for referencing a variable, like &#8220;a&#8221;.</a></li>
+<li><a class="reference internal" href="#the-llvm-instruction-builder-created-whenever-a-new-function-is-entered">3.4. The LLVM instruction builder. Created whenever a new function is entered.</a></li>
+<li><a class="reference internal" href="#a-dictionary-that-keeps-track-of-which-values-are-defined-in-the-current-scope">3.5. A dictionary that keeps track of which values are defined in the current scope</a></li>
+<li><a class="reference internal" href="#and-what-their-llvm-representation-is">3.6. and what their LLVM representation is.</a></li>
+<li><a class="reference internal" href="#expression-code-generation-exprs">3.7. Expression Code Generation # {#exprs}</a></li>
+<li><a class="reference internal" href="#function-code-generation-funcs">3.8. Function Code Generation # {#funcs}</a></li>
+<li><a class="reference internal" href="#driver-changes-and-closing-thoughts-driver">3.9. Driver Changes and Closing Thoughts # {#driver}</a></li>
+<li><a class="reference internal" href="#full-code-listing-code">3.10. Full Code Listing # {#code}</a><ul>
+<li><a class="reference internal" href="#globals">3.10.1. Globals</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#the-llvm-module-which-holds-all-the-ir-code">The LLVM module, which holds all the IR code.</a></li>
-<li><a class="reference internal" href="#id1">The LLVM instruction builder. Created whenever a new function is entered.</a></li>
-<li><a class="reference internal" href="#id2">A dictionary that keeps track of which values are defined in the current scope</a></li>
-<li><a class="reference internal" href="#id3">and what their LLVM representation is.</a><ul>
-<li><a class="reference internal" href="#lexer">Lexer</a></li>
+<li><a class="reference internal" href="#the-llvm-module-which-holds-all-the-ir-code">3.11. The LLVM module, which holds all the IR code.</a></li>
+<li><a class="reference internal" href="#id1">3.12. The LLVM instruction builder. Created whenever a new function is entered.</a></li>
+<li><a class="reference internal" href="#id2">3.13. A dictionary that keeps track of which values are defined in the current scope</a></li>
+<li><a class="reference internal" href="#id3">3.14. and what their LLVM representation is.</a><ul>
+<li><a class="reference internal" href="#lexer">3.14.1. Lexer</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#the-lexer-yields-one-of-these-types-for-each-token">The lexer yields one of these types for each token.</a></li>
-<li><a class="reference internal" href="#regular-expressions-that-tokens-and-comments-of-our-language">Regular expressions that tokens and comments of our language.</a><ul>
-<li><a class="reference internal" href="#abstract-syntax-tree-aka-parse-tree">Abstract Syntax Tree (aka Parse Tree)</a></li>
+<li><a class="reference internal" href="#the-lexer-yields-one-of-these-types-for-each-token">3.15. The lexer yields one of these types for each token.</a></li>
+<li><a class="reference internal" href="#regular-expressions-that-tokens-and-comments-of-our-language">3.16. Regular expressions that tokens and comments of our language.</a><ul>
+<li><a class="reference internal" href="#abstract-syntax-tree-aka-parse-tree">3.16.1. Abstract Syntax Tree (aka Parse Tree)</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#base-class-for-all-expression-nodes">Base class for all expression nodes.</a></li>
-<li><a class="reference internal" href="#expression-class-for-numeric-literals-like-1-0">Expression class for numeric literals like &#8220;1.0&#8221;.</a></li>
-<li><a class="reference internal" href="#id4">Expression class for referencing a variable, like &#8220;a&#8221;.</a></li>
-<li><a class="reference internal" href="#expression-class-for-a-binary-operator">Expression class for a binary operator.</a></li>
-<li><a class="reference internal" href="#expression-class-for-function-calls">Expression class for function calls.</a></li>
-<li><a class="reference internal" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name">This class represents the &#8220;prototype&#8221; for a function, which captures its name,</a></li>
-<li><a class="reference internal" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function">and its argument names (thus implicitly the number of arguments the function</a></li>
-<li><a class="reference internal" href="#takes">takes).</a></li>
-<li><a class="reference internal" href="#this-class-represents-a-function-definition-itself">This class represents a function definition itself.</a><ul>
-<li><a class="reference internal" href="#parser">Parser</a></li>
-<li><a class="reference internal" href="#main-driver-code">Main driver code.</a></li>
+<li><a class="reference internal" href="#base-class-for-all-expression-nodes">3.17. Base class for all expression nodes.</a></li>
+<li><a class="reference internal" href="#expression-class-for-numeric-literals-like-1-0">3.18. Expression class for numeric literals like &#8220;1.0&#8221;.</a></li>
+<li><a class="reference internal" href="#id4">3.19. Expression class for referencing a variable, like &#8220;a&#8221;.</a></li>
+<li><a class="reference internal" href="#expression-class-for-a-binary-operator">3.20. Expression class for a binary operator.</a></li>
+<li><a class="reference internal" href="#expression-class-for-function-calls">3.21. Expression class for function calls.</a></li>
+<li><a class="reference internal" href="#this-class-represents-the-prototype-for-a-function-which-captures-its-name">3.22. This class represents the &#8220;prototype&#8221; for a function, which captures its name,</a></li>
+<li><a class="reference internal" href="#and-its-argument-names-thus-implicitly-the-number-of-arguments-the-function">3.23. and its argument names (thus implicitly the number of arguments the function</a></li>
+<li><a class="reference internal" href="#takes">3.24. takes).</a></li>
+<li><a class="reference internal" href="#this-class-represents-a-function-definition-itself">3.25. This class represents a function definition itself.</a><ul>
+<li><a class="reference internal" href="#parser">3.25.1. Parser</a></li>
+<li><a class="reference internal" href="#main-driver-code">3.25.2. Main driver code.</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="PythonLangImpl2.html"
+                        title="previous chapter">2. Chapter 2: Implementing a Parser and AST</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="PythonLangImpl4.html"
+                        title="next chapter">4. Chapter 4: Adding JIT and Optimizer Support</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../../_sources/doc/kaleidoscope/PythonLangImpl3.txt"
@@ -899,7 +900,15 @@ precedence. 40 is the highest. operator_precedence = { &#8216;&lt;&#8217;: 10, &
         <li class="right" style="margin-right: 10px">
           <a href="../../genindex.html" title="General Index"
              >index</a></li>
-        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="PythonLangImpl4.html" title="4. Chapter 4: Adding JIT and Optimizer Support"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="PythonLangImpl2.html" title="2. Chapter 2: Implementing a Parser and AST"
+             >previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.8.2 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples and LLVM Tutorials</a> &raquo;</li>
+          <li><a href="index.html" >Kaleidoscope</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

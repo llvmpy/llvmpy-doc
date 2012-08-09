@@ -64,10 +64,10 @@ Modules are created using the static method <tt class="docutils literal"><span c
 <h1>create a module<a class="headerlink" href="#create-a-module" title="Permalink to this headline">¶</a></h1>
 <p>my_module = Module.new(&#8216;my_module&#8217;) {% endhighlight %}</p>
 <p>The constructor of the Module class should <em>not</em> be used to instantiate
-a Module object. This is a common feature for all llvm-py classes.</p>
+a Module object. This is a common feature for all llvmpy classes.</p>
 <blockquote>
 <div><p><strong>Convention</strong></p>
-<p><em>All</em> llvm-py objects are instantiated using static methods of
+<p><em>All</em> llvmpy objects are instantiated using static methods of
 corresponding classes. Constructors <em>should not</em> be used.</p>
 <p>The argument <tt class="docutils literal"><span class="pre">my_module</span></tt> is a module identifier (a plain string).
 A module can also be constructed via deserialization from a bit code
@@ -233,7 +233,7 @@ converts both arguments into their LLVM assembly representations and
 compares the resultant strings.</p>
 <blockquote>
 <div><p><strong>Convention</strong></p>
-<p><em>All</em> llvm-py objects (where it makes sense), when stringified,
+<p><em>All</em> llvmpy objects (where it makes sense), when stringified,
 return the LLVM assembly representation. <tt class="docutils literal"><span class="pre">print</span> <span class="pre">module_obj</span></tt> for
 example, prints the LLVM assembly form of the entire module.</p>
 <p>Such objects, when compared for equality, internally compare these

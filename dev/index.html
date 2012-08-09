@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Documenation for llvmpy &mdash; llvmpy 0.8.2 documentation</title>
+    <title>Documentation for llvmpy &mdash; llvmpy 0.8.2 documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -27,7 +27,7 @@
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="top" title="llvmpy 0.8.2 documentation" href="#" />
-    <link rel="next" title="Introduction" href="doc/userguide.html" /> 
+    <link rel="next" title="User Guide" href="doc/userguide.html" /> 
   </head>
   <body>
     <div class="related">
@@ -37,7 +37,7 @@
           <a href="genindex.html" title="General Index"
              accesskey="I">index</a></li>
         <li class="right" >
-          <a href="doc/userguide.html" title="Introduction"
+          <a href="doc/userguide.html" title="User Guide"
              accesskey="N">next</a> |</li>
         <li><a href="#">llvmpy 0.8.2 documentation</a> &raquo;</li> 
       </ul>
@@ -48,65 +48,25 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="documenation-for-llvmpy">
-<h1>Documenation for llvmpy<a class="headerlink" href="#documenation-for-llvmpy" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="documentation-for-llvmpy">
+<h1>Documentation for llvmpy<a class="headerlink" href="#documentation-for-llvmpy" title="Permalink to this headline">¶</a></h1>
 <p>Contents:</p>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="doc/userguide.html">Introduction</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="doc/userguide.html#license">License</a></li>
-<li class="toctree-l2"><a class="reference internal" href="doc/userguide.html#platforms">Platforms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="doc/userguide.html#versions">Versions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/userguide.html">User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="doc/getting_started.html">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doc/getting_started.html#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doc/getting_started.html#uninstall">Uninstall</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doc/llvm_concepts.html">LLVM Concepts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doc/llvmpy_package.html">The llvmpy Package</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="doc/userguide.html#installation">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="doc/userguide.html#llvm-and-enable-pic">LLVM and <tt class="docutils literal"><span class="pre">--enable-pic</span></tt></a></li>
-<li class="toctree-l2"><a class="reference internal" href="doc/userguide.html#llvm-config">llvm-config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="doc/userguide.html#steps">Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="doc/examples.html">Examples and LLVM Tutorials</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="doc/firstexample.html">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doc/examples/index.html">LLVM Tutorials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="doc/kaleidoscope/index.html">Kaleidoscope</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="doc/userguide.html#uninstall-uninstall">Uninstall # {#uninstall}</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/llvmpy_package.html">llvm</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/llvmpy_package.html#llvm-core">llvm.core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/llvmpy_package.html#llvm-ee">llvm.ee</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/llvmpy_package.html#llvm-passes">llvm.passes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/llvmpy_package.html#a-note-on-the-importing-of-these-modules">A note on the importing of these modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/llvm_concepts.html">Intermediate Representation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/llvm_concepts.html#ssa-form-and-phi-nodes">SSA Form and PHI Nodes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/llvm_concepts.html#llvm-assembly-language">LLVM Assembly Language</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/llvm_concepts.html#modules">Modules</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/llvm_concepts.html#optimization-and-passes">Optimization and Passes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/llvm_concepts.html#bitcode">Bitcode</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/llvm_concepts.html#execution-engine-jit-and-interpreter">Execution Engine, JIT and Interpreter</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/types.html">An Example</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="doc/types.html#integers">integers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="doc/types.html#floats">floats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="doc/types.html#arrays-and-vectors">arrays and vectors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="doc/types.html#structures">structures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="doc/types.html#pointers">pointers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="doc/types.html#functions">functions</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="doc/types.html#another-example-recursive-type">Another Example: Recursive Type</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial1.html">create a module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial1.html#create-a-function-type-taking-3-32-bit-integers-return-a-32-bit-integer">create a function type taking 3 32-bit integers, return a 32-bit integer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial1.html#create-a-function-of-that-type">create a function of that type</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial1.html#implement-the-function">implement the function</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial1.html#new-block">new block</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial1.html#ir-builder">IR builder</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial2.html">create a module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial2.html#create-a-function-type-taking-2-integers-return-a-32-bit-integer">create a function type taking 2 integers, return a 32-bit integer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial2.html#create-a-function-of-that-type">create a function of that type</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial2.html#name-function-args">name function args</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial2.html#implement-the-function">implement the function</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial2.html#blocks">blocks...</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/examples/JITTutorial2.html#create-a-llvm-irbuilder">create a llvm::IRBuilder</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/kaleidoscope/PythonLangImpl1.html">Tutorial Introduction and the Lexer</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/kaleidoscope/PythonLangImpl1.html#introduction">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/kaleidoscope/PythonLangImpl1.html#the-basic-language-language">The Basic Language # {#language}</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/kaleidoscope/PythonLangImpl1.html#this-expression-will-compute-the-40th-number">This expression will compute the 40th number.</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/kaleidoscope/PythonLangImpl1.html#the-lexer-lexer">The Lexer # {#lexer}</a></li>
-<li class="toctree-l1"><a class="reference internal" href="doc/kaleidoscope/PythonLangImpl1.html#regular-expressions-that-tokens-and-comments-of-our-language">Regular expressions that tokens and comments of our language.</a></li>
 </ul>
 </div>
 </div>
@@ -127,7 +87,7 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Documenation for llvmpy</a><ul>
+<li><a class="reference internal" href="#">Documentation for llvmpy</a><ul>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
@@ -135,7 +95,7 @@
 
   <h4>Next topic</h4>
   <p class="topless"><a href="doc/userguide.html"
-                        title="next chapter">Introduction</a></p>
+                        title="next chapter">User Guide</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/index.txt"
@@ -165,7 +125,7 @@
           <a href="genindex.html" title="General Index"
              >index</a></li>
         <li class="right" >
-          <a href="doc/userguide.html" title="Introduction"
+          <a href="doc/userguide.html" title="User Guide"
              >next</a> |</li>
         <li><a href="#">llvmpy 0.8.2 documentation</a> &raquo;</li> 
       </ul>
