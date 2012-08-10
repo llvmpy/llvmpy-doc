@@ -151,21 +151,10 @@ double precision and the language doesn&#8217;t require type declarations.
 This gives the language a very nice and simple syntax. For example, the
 following simple example computes <a class="reference external" href="http://en.wikipedia.org/wiki/Fibonacci_number">Fibonacci
 numbers</a>:</p>
-<div class="highlight-python"><pre># Compute the x'th fibonacci number. def fib(x)
-if x &lt; 3 then 1 else fib(x-1)+fib(x-2)
-
-# This expression will compute the 40th number.
-fib(40)</pre>
-</div>
 <p>We also allow Kaleidoscope to call into standard library functions (the
 LLVM JIT makes this completely trivial). This means that you can use the
 &#8216;extern&#8217; keyword to define a function before you use it (this is also
 useful for mutually recursive functions). For example:</p>
-<div class="highlight-python"><pre>extern sin(arg); extern cos(arg); extern
-atan2(arg1 arg2);
-
-atan2(sin(0.4), cos(42))</pre>
-</div>
 <p>A more interesting example is included in Chapter 6 where we write a
 little Kaleidoscope application that
 <a class="reference external" href="PythonLangImpl6.html#example">displays</a> a Mandelbrot Set at various
@@ -182,23 +171,29 @@ traditional way to do this is to use a
 &#8216;scanner&#8217;) to break the input up into &#8220;tokens&#8221;. Each token returned by
 the lexer includes a token type and potentially some metadata (e.g. the
 numeric value of a number). First, we define the possibilities:</p>
-<div class="highlight-python"><pre># The lexer yields one of these types for each
-token. class EOFToken(object): pass
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># The lexer yields one of these types for each token.</span>
+<span class="k">class</span> <span class="nc">EOFToken</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span> <span class="k">pass</span>
 
-class DefToken(object): pass
+<span class="k">class</span> <span class="nc">DefToken</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span> <span class="k">pass</span>
 
-class ExternToken(object): pass
+<span class="k">class</span> <span class="nc">ExternToken</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span> <span class="k">pass</span>
 
-class IdentifierToken(object): def **init**\ (self, name): self.name =
-name
+<span class="k">class</span> <span class="nc">IdentifierToken</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
-class NumberToken(object): def **init**\ (self, value): self.value =
-value
+<span class="k">class</span> <span class="nc">NumberToken</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
 
-class CharacterToken(object): def **init**\ (self, char): self.char =
-char def **eq**\ (self, other): return isinstance(other, CharacterToken)
-and self.char == other.char def **ne**\ (self, other): return not self
-== other</pre>
+<span class="k">class</span> <span class="nc">CharacterToken</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">char</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">char</span> <span class="o">=</span> <span class="n">char</span>
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">CharacterToken</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">char</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">char</span>
+    <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">other</span>
+</pre></div>
 </div>
 <p>Each token yielded by our lexer will be of one of the above types. For
 simple tokens that are always the same, like the &#8220;def&#8221; keyword, the
@@ -222,19 +217,24 @@ strings of digits, optionally followed by a period and another string of
 digits. Identifiers (and keywords) are alphanumeric string starting with
 a letter and comments are anything between a hash (<tt class="docutils literal"><span class="pre">#</span></tt>) and the end of
 the line.</p>
-<div class="highlight-python"><pre>import re
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">re</span>
 
-...
+<span class="o">...</span>
 
-# Regular expressions that tokens and comments of our language.
-REGEX_NUMBER = re.compile('[0-9]+(?:.[0-9]+)?') REGEX_IDENTIFIER =
-re.compile('[a-zA-Z][a-zA-Z0-9]\ *') REGEX_COMMENT = re.compile('#.*')</pre>
+<span class="c"># Regular expressions that tokens and comments of our language.</span>
+<span class="n">REGEX_NUMBER</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&#39;[0-9]+(?:.[0-9]+)?&#39;</span><span class="p">)</span>
+<span class="n">REGEX_IDENTIFIER</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&#39;[a-zA-Z][a-zA-Z0-9]\ *&#39;</span><span class="p">)</span>
+<span class="n">REGEX_COMMENT</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&#39;#.*&#39;</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>Next, let&#8217;s start defining the <tt class="docutils literal"><span class="pre">Tokenize</span></tt> function itself. The first
 thing we need to do is set up a loop that scans the string, while
 ignoring whitespace between tokens:</p>
-<div class="highlight-python"><pre>def Tokenize(string): while string: # Skip
-whitespace. if string[0].isspace(): string = string[1:] continue
+<div class="highlight-python"><pre>def Tokenize(string):
+    while string: # Skip whitespace.
+        if string[0].isspace():
+           string = string[1:]
+           continue
 
 ::
 
@@ -244,37 +244,47 @@ whitespace. if string[0].isspace(): string = string[1:] continue
 regexes we defined above on the remainder of the string. To simplify the
 rest of the code, we run all three regexes each time. As mentioned
 above, inefficiencies are ignored for the purpose of this tutorial:</p>
-<div class="highlight-python"><pre># Run regexes. comment_match =
-REGEX_COMMENT.match(string) number_match = REGEX_NUMBER.match(string)
-identifier_match = REGEX_IDENTIFIER.match(string)</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Run regexes.</span>
+<span class="n">comment_match</span> <span class="o">=</span> <span class="n">REGEX_COMMENT</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+<span class="n">number_match</span> <span class="o">=</span> <span class="n">REGEX_NUMBER</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+<span class="n">identifier_match</span> <span class="o">=</span> <span class="n">REGEX_IDENTIFIER</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+</pre></div>
 </div>
-<p>Now se check if any of the regexes matched. For comments, we simply
+<p>Now we check if any of the regexes matched. For comments, we simply
 ignore the captured match:</p>
-<div class="highlight-python"><pre># Check if any of the regexes matched and yield
-the appropriate result. if comment_match: comment =
-comment_match.group(0) string = string[len(comment):] {% endhighlight
-python %}
-
-For numbers, we yield the captured match, converted to a float and
-tagged with the appropriate token type:
-
-{% highlight python %} elif number_match: number =
-number_match.group(0) yield NumberToken(float(number)) string =
-string[len(number):]</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Check if any of the regexes matched and yield</span>
+<span class="c"># the appropriate result.</span>
+<span class="k">if</span> <span class="n">comment_match</span><span class="p">:</span>
+   <span class="n">comment</span> <span class="o">=</span> <span class="n">comment_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+   <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">comment</span><span class="p">):]</span>
+</pre></div>
+</div>
+<p>For numbers, we yield the captured match, converted to a float and
+tagged with the appropriate token type:</p>
+<div class="highlight-python"><pre>elif number_match:
+     number = number_match.group(0)
+     yield NumberToken(float(number))
+     string = string[len(number):]</pre>
 </div>
 <p>The identifier case is a little more complex. We have to check for
 keywords to decide whether we have captured an identifier or a keyword:</p>
-<div class="highlight-python"><pre>elif identifier_match: identifier =
-identifier_match.group(0) # Check if we matched a keyword. if
-identifier == 'def': yield DefToken() elif identifier == 'extern': yield
-ExternToken() else: yield IdentifierToken(identifier) string =
-string[len(identifier):]</pre>
+<div class="highlight-python"><pre>elif identifier_match:
+    identifier = identifier_match.group(0)
+    # Check if we matched a keyword.
+    if identifier == 'def':
+       yield DefToken()
+    elif identifier == 'extern':
+       yield ExternToken()
+    else:
+       yield IdentifierToken(identifier)
+    string = string[len(identifier):]</pre>
 </div>
 <p>Finally, if we haven&#8217;t recognized a comment, a number of an identifier,
 we yield the current character as an &#8220;unknown character&#8221; token. This is
 used, for example, for operators like <tt class="docutils literal"><span class="pre">+</span></tt> or <tt class="docutils literal"><span class="pre">*</span></tt>:</p>
-<div class="highlight-python"><pre>else: # Yield the unknown character. yield
-CharacterToken(string[0]) string = string[1:]</pre>
+<div class="highlight-python"><pre>else: # Yield the unknown character.
+    yield CharacterToken(string[0])
+    string = string[1:]</pre>
 </div>
 <p>Once we&#8217;re done with the loop, we return a final end-of-file token:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="k">yield</span> <span class="n">EOFToken</span><span class="p">()</span>

@@ -113,10 +113,14 @@ following simple example computes `Fibonacci
 numbers <http://en.wikipedia.org/wiki/Fibonacci_number>`_:
 
 
-.. code-block:: python
+.. code-block::
 
-   # Compute the x'th fibonacci number. def fib(x)
-   if x < 3 then 1 else fib(x-1)+fib(x-2)
+   # Compute the x'th fibonacci number. 
+   def fib(x):
+      if x < 3:
+         return 1
+      else:
+         return fib(x-1)+fib(x-2)
    
    # This expression will compute the 40th number.
    fib(40)
@@ -129,10 +133,11 @@ LLVM JIT makes this completely trivial). This means that you can use the
 useful for mutually recursive functions). For example:
 
 
-.. code-block:: python
+.. code-block:: 
 
-   extern sin(arg); extern cos(arg); extern
-   atan2(arg1 arg2);
+   extern sin(arg); 
+   extern cos(arg); 
+   extern atan2(arg1 arg2);
    
    atan2(sin(0.4), cos(42))
 
@@ -161,24 +166,28 @@ numeric value of a number). First, we define the possibilities:
 
 .. code-block:: python
 
-   # The lexer yields one of these types for each
-   token. class EOFToken(object): pass
+   # The lexer yields one of these types for each token. 
+   class EOFToken(object): pass
    
    class DefToken(object): pass
    
    class ExternToken(object): pass
    
-   class IdentifierToken(object): def **init**\ (self, name): self.name =
-   name
+   class IdentifierToken(object):
+       def __init__(self, name):
+           self.name = name
    
-   class NumberToken(object): def **init**\ (self, value): self.value =
-   value
+   class NumberToken(object):
+       def __init__(self, value):
+           self.value = value
    
-   class CharacterToken(object): def **init**\ (self, char): self.char =
-   char def **eq**\ (self, other): return isinstance(other, CharacterToken)
-   and self.char == other.char def **ne**\ (self, other): return not self
-   == other
-
+   class CharacterToken(object):
+       def __init__(self, char):
+           self.char = char
+       def __eq__(self, other):
+           return isinstance(other, CharacterToken) and self.char == other.char
+       def __ne__(self, other):
+           return not self == other
 
 
 Each token yielded by our lexer will be of one of the above types. For
@@ -214,12 +223,10 @@ the line.
    ...
    
    # Regular expressions that tokens and comments of our language.
-   REGEX_NUMBER = re.compile('[0-9]+(?:.[0-9]+)?') REGEX_IDENTIFIER =
-   re.compile('[a-zA-Z][a-zA-Z0-9]\ *') REGEX_COMMENT = re.compile('#.*')
+   REGEX_NUMBER = re.compile('[0-9]+(?:.[0-9]+)?')
+   REGEX_IDENTIFIER = re.compile('[a-zA-Z][a-zA-Z0-9]\ *')
+   REGEX_COMMENT = re.compile('#.*')
    
-   
-
-
 
 Next, let's start defining the ``Tokenize`` function itself. The first
 thing we need to do is set up a loop that scans the string, while
@@ -228,8 +235,11 @@ ignoring whitespace between tokens:
 
 .. code-block:: python
 
-   def Tokenize(string): while string: # Skip
-   whitespace. if string[0].isspace(): string = string[1:] continue
+   def Tokenize(string):
+       while string: # Skip whitespace.
+           if string[0].isspace():
+              string = string[1:]
+              continue
    
    ::
    
@@ -247,44 +257,49 @@ above, inefficiencies are ignored for the purpose of this tutorial:
 
 .. code-block:: python
 
-   # Run regexes. comment_match =
-   REGEX_COMMENT.match(string) number_match = REGEX_NUMBER.match(string)
+   # Run regexes.
+   comment_match = REGEX_COMMENT.match(string)
+   number_match = REGEX_NUMBER.match(string)
    identifier_match = REGEX_IDENTIFIER.match(string)
 
 
-
-Now se check if any of the regexes matched. For comments, we simply
+Now we check if any of the regexes matched. For comments, we simply
 ignore the captured match:
 
 
 .. code-block:: python
 
    # Check if any of the regexes matched and yield
-   the appropriate result. if comment_match: comment =
-   comment_match.group(0) string = string[len(comment):] {% endhighlight
-   python %}
+   # the appropriate result.
+   if comment_match:
+      comment = comment_match.group(0)
+      string = string[len(comment):]
    
-   For numbers, we yield the captured match, converted to a float and
-   tagged with the appropriate token type:
+For numbers, we yield the captured match, converted to a float and
+tagged with the appropriate token type:
    
-   {% highlight python %} elif number_match: number =
-   number_match.group(0) yield NumberToken(float(number)) string =
-   string[len(number):]
-
-
+.. code-block:: python
+ 
+   elif number_match: 
+        number = number_match.group(0)
+        yield NumberToken(float(number))
+        string = string[len(number):]
 
 The identifier case is a little more complex. We have to check for
 keywords to decide whether we have captured an identifier or a keyword:
 
-
 .. code-block:: python
 
-   elif identifier_match: identifier =
-   identifier_match.group(0) # Check if we matched a keyword. if
-   identifier == 'def': yield DefToken() elif identifier == 'extern': yield
-   ExternToken() else: yield IdentifierToken(identifier) string =
-   string[len(identifier):]
-
+   elif identifier_match:
+       identifier = identifier_match.group(0)
+       # Check if we matched a keyword.
+       if identifier == 'def':
+          yield DefToken()
+       elif identifier == 'extern':
+          yield ExternToken()
+       else: 
+          yield IdentifierToken(identifier)
+       string = string[len(identifier):]
 
 
 Finally, if we haven't recognized a comment, a number of an identifier,
@@ -294,9 +309,9 @@ used, for example, for operators like ``+`` or ``*``:
 
 .. code-block:: python
 
-   else: # Yield the unknown character. yield
-   CharacterToken(string[0]) string = string[1:]
-
+   else: # Yield the unknown character.
+       yield CharacterToken(string[0])
+       string = string[1:]
 
 
 Once we're done with the loop, we return a final end-of-file token:
@@ -305,3 +320,4 @@ Once we're done with the loop, we return a final end-of-file token:
 .. code-block:: python
 
    yield EOFToken()
+
