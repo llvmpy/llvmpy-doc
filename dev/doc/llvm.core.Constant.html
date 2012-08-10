@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>llvm.core.Constant &mdash; llvmpy 0.8.2 documentation</title>
+    <title>&lt;no title&gt; &mdash; llvmpy 0.8.2 documentation</title>
     
     <link rel="stylesheet" href="../_static/default.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
@@ -61,284 +61,342 @@ created from Python constants. A constant expression is also a constant
 &#8211; given a <tt class="docutils literal"><span class="pre">Constant</span></tt> object, an operation (like addition, subtraction
 etc) can be specified, to yield a new <tt class="docutils literal"><span class="pre">Constant</span></tt> object. Let&#8217;s see
 some examples:</p>
-<p>{% highlight python %} #!/usr/bin/env python</p>
-<p>ti = Type.int() # a 32-bit int type</p>
-<p>k1 = Constant.int(ti, 42) # &#8220;int k1 = 42;&#8221; k2 = k1.add( Constant.int(
-ti, 10 ) ) # &#8220;int k2 = k1 + 10;&#8221;</p>
-<p>tr = Type.float()</p>
-<p>r1 = Constant.real(tr, &#8220;3.141592&#8221;) # create from a string r2 =
+<div class="highlight-python"><pre>#!/usr/bin/env python
+
+ti = Type.int() # a 32-bit int type
+
+k1 = Constant.int(ti, 42) # "int k1 = 42;" k2 = k1.add( Constant.int(
+ti, 10 ) ) # "int k2 = k1 + 10;"
+
+tr = Type.float()
+
+r1 = Constant.real(tr, "3.141592") # create from a string r2 =
 Constant.real(tr, 1.61803399) # create from a Python float {%
-endhighlight %}</p>
-<div class="section" id="llvm-core-constant">
-<h1>llvm.core.Constant<a class="headerlink" href="#llvm-core-constant" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li>This will become a table of contents (this text will be scraped).
-{:toc}</li>
-</ul>
-<div class="section" id="static-factory-methods">
-<h2>Static factory methods<a class="headerlink" href="#static-factory-methods" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="null-ty">
-<h3><tt class="docutils literal"><span class="pre">null(ty)</span></tt><a class="headerlink" href="#null-ty" title="Permalink to this headline">¶</a></h3>
-<p>A null value (all zeros) of type <tt class="docutils literal"><span class="pre">ty</span></tt></p>
-</div>
-<div class="section" id="all-ones-ty">
-<h3><tt class="docutils literal"><span class="pre">all_ones(ty)</span></tt><a class="headerlink" href="#all-ones-ty" title="Permalink to this headline">¶</a></h3>
-<p>All 1&#8217;s value of type <tt class="docutils literal"><span class="pre">ty</span></tt></p>
-</div>
-<div class="section" id="undef-ty">
-<h3><tt class="docutils literal"><span class="pre">undef(ty)</span></tt><a class="headerlink" href="#undef-ty" title="Permalink to this headline">¶</a></h3>
-<p>An undefined value of type <tt class="docutils literal"><span class="pre">ty</span></tt></p>
-</div>
-<div class="section" id="int-ty-value">
-<h3><tt class="docutils literal"><span class="pre">int(ty,</span> <span class="pre">value)</span></tt><a class="headerlink" href="#int-ty-value" title="Permalink to this headline">¶</a></h3>
-<p>Integer of type <tt class="docutils literal"><span class="pre">ty</span></tt>, with value <tt class="docutils literal"><span class="pre">value</span></tt> (a Python int or long)</p>
-</div>
-<div class="section" id="int-signextend-ty-value">
-<h3><tt class="docutils literal"><span class="pre">int_signextend(ty,</span> <span class="pre">value)</span></tt><a class="headerlink" href="#int-signextend-ty-value" title="Permalink to this headline">¶</a></h3>
-<p>Integer of signed type <tt class="docutils literal"><span class="pre">ty</span></tt> (use for signed types)</p>
-</div>
-<div class="section" id="real-ty-value">
-<h3><tt class="docutils literal"><span class="pre">real(ty,</span> <span class="pre">value)</span></tt><a class="headerlink" href="#real-ty-value" title="Permalink to this headline">¶</a></h3>
-<p>Floating point value of type <tt class="docutils literal"><span class="pre">ty</span></tt>, with value <tt class="docutils literal"><span class="pre">value</span></tt> (a Python
-float)</p>
-</div>
-<div class="section" id="stringz-value">
-<h3><tt class="docutils literal"><span class="pre">stringz(value)</span></tt><a class="headerlink" href="#stringz-value" title="Permalink to this headline">¶</a></h3>
-<p>A null-terminated string. <tt class="docutils literal"><span class="pre">value</span></tt> is a Python string</p>
-</div>
-<div class="section" id="string-value">
-<h3><tt class="docutils literal"><span class="pre">string(value)</span></tt><a class="headerlink" href="#string-value" title="Permalink to this headline">¶</a></h3>
-<p>As <tt class="docutils literal"><span class="pre">string(ty)</span></tt>, but not null terminated</p>
-</div>
-<div class="section" id="array-ty-consts">
-<h3><tt class="docutils literal"><span class="pre">array(ty,</span> <span class="pre">consts)</span></tt><a class="headerlink" href="#array-ty-consts" title="Permalink to this headline">¶</a></h3>
-<p>Array of type <tt class="docutils literal"><span class="pre">ty</span></tt>, initialized with <tt class="docutils literal"><span class="pre">consts</span></tt> (an iterable yielding
-<tt class="docutils literal"><span class="pre">Constant</span></tt> objects of the appropriate type)</p>
-</div>
-<div class="section" id="struct-ty-consts">
-<h3><tt class="docutils literal"><span class="pre">struct(ty,</span> <span class="pre">consts)</span></tt><a class="headerlink" href="#struct-ty-consts" title="Permalink to this headline">¶</a></h3>
-<p>Struct (unpacked) of type <tt class="docutils literal"><span class="pre">ty</span></tt>, initialized with <tt class="docutils literal"><span class="pre">consts</span></tt> (an
-iterable yielding <tt class="docutils literal"><span class="pre">Constant</span></tt> objects of the appropriate type)</p>
-</div>
-<div class="section" id="packed-struct-ty-consts">
-<h3><tt class="docutils literal"><span class="pre">packed_struct(ty,</span> <span class="pre">consts)</span></tt><a class="headerlink" href="#packed-struct-ty-consts" title="Permalink to this headline">¶</a></h3>
-<p>As <tt class="docutils literal"><span class="pre">struct(ty,</span> <span class="pre">consts)</span></tt> but packed</p>
-</div>
-<div class="section" id="vector-consts">
-<h3><tt class="docutils literal"><span class="pre">vector(consts)</span></tt><a class="headerlink" href="#vector-consts" title="Permalink to this headline">¶</a></h3>
-<p>Vector, initialized with <tt class="docutils literal"><span class="pre">consts</span></tt> (an iterable yielding <tt class="docutils literal"><span class="pre">Constant</span></tt>
-objects of the appropriate type)</p>
-</div>
-<div class="section" id="sizeof-ty">
-<h3><tt class="docutils literal"><span class="pre">sizeof(ty)</span></tt><a class="headerlink" href="#sizeof-ty" title="Permalink to this headline">¶</a></h3>
-<p>Constant value representing the sizeof the type <tt class="docutils literal"><span class="pre">ty</span></tt></p>
-</div>
-</div>
-<div class="section" id="methods">
-<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
-<p>The following operations on constants are supported. For more details on
-any operation, consult the <a class="reference external" href="http://www.llvm.org/docs/LangRef.html#constantexprs">Constant
-Expressions</a>
-section of the LLVM Language Reference.</p>
-<div class="section" id="k-neg">
-<h3><tt class="docutils literal"><span class="pre">k.neg()</span></tt><a class="headerlink" href="#k-neg" title="Permalink to this headline">¶</a></h3>
-<p>negation, same as <tt class="docutils literal"><span class="pre">0</span> <span class="pre">-</span> <span class="pre">k</span></tt></p>
-</div>
-<div class="section" id="k-not">
-<h3><tt class="docutils literal"><span class="pre">k.not_()</span></tt><a class="headerlink" href="#k-not" title="Permalink to this headline">¶</a></h3>
-<p>1&#8217;s complement of <tt class="docutils literal"><span class="pre">k</span></tt>. Note trailing underscore.</p>
-</div>
-<div class="section" id="k-add-k2">
-<h3><tt class="docutils literal"><span class="pre">k.add(k2)</span></tt><a class="headerlink" href="#k-add-k2" title="Permalink to this headline">¶</a></h3>
-<p><tt class="docutils literal"><span class="pre">k</span> <span class="pre">+</span> <span class="pre">k2</span></tt>, where <tt class="docutils literal"><span class="pre">k</span></tt> and <tt class="docutils literal"><span class="pre">k2</span></tt> are integers.</p>
-</div>
-<div class="section" id="k-fadd-k2">
-<h3><tt class="docutils literal"><span class="pre">k.fadd(k2)</span></tt><a class="headerlink" href="#k-fadd-k2" title="Permalink to this headline">¶</a></h3>
-<p><tt class="docutils literal"><span class="pre">k</span> <span class="pre">+</span> <span class="pre">k2</span></tt>, where <tt class="docutils literal"><span class="pre">k</span></tt> and <tt class="docutils literal"><span class="pre">k2</span></tt> are floating-point.</p>
-</div>
-<div class="section" id="k-sub-k2">
-<h3><tt class="docutils literal"><span class="pre">k.sub(k2)</span></tt><a class="headerlink" href="#k-sub-k2" title="Permalink to this headline">¶</a></h3>
-<p><tt class="docutils literal"><span class="pre">k</span> <span class="pre">-</span> <span class="pre">k2</span></tt>, where <tt class="docutils literal"><span class="pre">k</span></tt> and <tt class="docutils literal"><span class="pre">k2</span></tt> are integers.</p>
-</div>
-<div class="section" id="k-fsub-k2">
-<h3><tt class="docutils literal"><span class="pre">k.fsub(k2)</span></tt><a class="headerlink" href="#k-fsub-k2" title="Permalink to this headline">¶</a></h3>
-<p><tt class="docutils literal"><span class="pre">k</span> <span class="pre">-</span> <span class="pre">k2</span></tt>, where <tt class="docutils literal"><span class="pre">k</span></tt> and <tt class="docutils literal"><span class="pre">k2</span></tt> are floating-point.</p>
-</div>
-<div class="section" id="k-mul-k2">
-<h3><tt class="docutils literal"><span class="pre">k.mul(k2)</span></tt><a class="headerlink" href="#k-mul-k2" title="Permalink to this headline">¶</a></h3>
-<p><tt class="docutils literal"><span class="pre">k</span> <span class="pre">*</span> <span class="pre">k2</span></tt>, where <tt class="docutils literal"><span class="pre">k</span></tt> and <tt class="docutils literal"><span class="pre">k2</span></tt> are integers.</p>
-</div>
-<div class="section" id="k-fmul-k2">
-<h3><tt class="docutils literal"><span class="pre">k.fmul(k2)</span></tt><a class="headerlink" href="#k-fmul-k2" title="Permalink to this headline">¶</a></h3>
-<p><tt class="docutils literal"><span class="pre">k</span> <span class="pre">*</span> <span class="pre">k2</span></tt>, where <tt class="docutils literal"><span class="pre">k</span></tt> and <tt class="docutils literal"><span class="pre">k2</span></tt> are floating-point.</p>
-</div>
-<div class="section" id="k-udiv-k2">
-<h3><tt class="docutils literal"><span class="pre">k.udiv(k2)</span></tt><a class="headerlink" href="#k-udiv-k2" title="Permalink to this headline">¶</a></h3>
-<p>Quotient of unsigned division of <tt class="docutils literal"><span class="pre">k</span></tt> with <tt class="docutils literal"><span class="pre">k2</span></tt></p>
-</div>
-<div class="section" id="k-sdiv-k2">
-<h3><tt class="docutils literal"><span class="pre">k.sdiv(k2)</span></tt><a class="headerlink" href="#k-sdiv-k2" title="Permalink to this headline">¶</a></h3>
-<p>Quotient of signed division of <tt class="docutils literal"><span class="pre">k</span></tt> with <tt class="docutils literal"><span class="pre">k2</span></tt></p>
-</div>
-<div class="section" id="k-fdiv-k2">
-<h3><tt class="docutils literal"><span class="pre">k.fdiv(k2)</span></tt><a class="headerlink" href="#k-fdiv-k2" title="Permalink to this headline">¶</a></h3>
-<p>Quotient of floating point division of <tt class="docutils literal"><span class="pre">k</span></tt> with <tt class="docutils literal"><span class="pre">k2</span></tt></p>
-</div>
-<div class="section" id="k-urem-k2">
-<h3><tt class="docutils literal"><span class="pre">k.urem(k2)</span></tt><a class="headerlink" href="#k-urem-k2" title="Permalink to this headline">¶</a></h3>
-<p>Reminder of unsigned division of <tt class="docutils literal"><span class="pre">k</span></tt> with <tt class="docutils literal"><span class="pre">k2</span></tt></p>
-</div>
-<div class="section" id="k-srem-k2">
-<h3><tt class="docutils literal"><span class="pre">k.srem(k2)</span></tt><a class="headerlink" href="#k-srem-k2" title="Permalink to this headline">¶</a></h3>
-<p>Reminder of signed division of <tt class="docutils literal"><span class="pre">k</span></tt> with <tt class="docutils literal"><span class="pre">k2</span></tt></p>
-</div>
-<div class="section" id="k-frem-k2">
-<h3><tt class="docutils literal"><span class="pre">k.frem(k2)</span></tt><a class="headerlink" href="#k-frem-k2" title="Permalink to this headline">¶</a></h3>
-<p>Reminder of floating point division of <tt class="docutils literal"><span class="pre">k</span></tt> with <tt class="docutils literal"><span class="pre">k2</span></tt></p>
-</div>
-<div class="section" id="k-and-k2">
-<h3><tt class="docutils literal"><span class="pre">k.and_(k2)</span></tt><a class="headerlink" href="#k-and-k2" title="Permalink to this headline">¶</a></h3>
-<p>Bitwise and of <tt class="docutils literal"><span class="pre">k</span></tt> and <tt class="docutils literal"><span class="pre">k2</span></tt>. Note trailing underscore.</p>
-</div>
-<div class="section" id="k-or-k2">
-<h3><tt class="docutils literal"><span class="pre">k.or_(k2)</span></tt><a class="headerlink" href="#k-or-k2" title="Permalink to this headline">¶</a></h3>
-<p>Bitwise or of <tt class="docutils literal"><span class="pre">k</span></tt> and <tt class="docutils literal"><span class="pre">k2</span></tt>. Note trailing underscore.</p>
-</div>
-<div class="section" id="k-xor-k2">
-<h3><tt class="docutils literal"><span class="pre">k.xor(k2)</span></tt><a class="headerlink" href="#k-xor-k2" title="Permalink to this headline">¶</a></h3>
-<p>Bitwise exclusive-or of <tt class="docutils literal"><span class="pre">k</span></tt> and <tt class="docutils literal"><span class="pre">k2</span></tt>.</p>
-</div>
-<div class="section" id="k-icmp-icmp-k2">
-<h3><tt class="docutils literal"><span class="pre">k.icmp(icmp,</span> <span class="pre">k2)</span></tt><a class="headerlink" href="#k-icmp-icmp-k2" title="Permalink to this headline">¶</a></h3>
-<p>Compare <tt class="docutils literal"><span class="pre">k</span></tt> with <tt class="docutils literal"><span class="pre">k2</span></tt> using the predicate <tt class="docutils literal"><span class="pre">icmp</span></tt>. See
-<a class="reference external" href="comparision.html#icmp">here</a> for list of predicates for integer
-operands.</p>
-</div>
-<div class="section" id="k-fcmp-fcmp-k2">
-<h3><tt class="docutils literal"><span class="pre">k.fcmp(fcmp,</span> <span class="pre">k2)</span></tt><a class="headerlink" href="#k-fcmp-fcmp-k2" title="Permalink to this headline">¶</a></h3>
-<p>Compare <tt class="docutils literal"><span class="pre">k</span></tt> with <tt class="docutils literal"><span class="pre">k2</span></tt> using the predicate <tt class="docutils literal"><span class="pre">fcmp</span></tt>. See
-<a class="reference external" href="comparision.html#fcmp">here</a> for list of predicates for real
-operands.</p>
-</div>
-<div class="section" id="k-shl-k2">
-<h3><tt class="docutils literal"><span class="pre">k.shl(k2)</span></tt><a class="headerlink" href="#k-shl-k2" title="Permalink to this headline">¶</a></h3>
-<p>Shift <tt class="docutils literal"><span class="pre">k</span></tt> left by <tt class="docutils literal"><span class="pre">k2</span></tt> bits.</p>
-</div>
-<div class="section" id="k-lshr-k2">
-<h3><tt class="docutils literal"><span class="pre">k.lshr(k2)</span></tt><a class="headerlink" href="#k-lshr-k2" title="Permalink to this headline">¶</a></h3>
-<p>Shift <tt class="docutils literal"><span class="pre">k</span></tt> logically right by <tt class="docutils literal"><span class="pre">k2</span></tt> bits (new bits are 0s).</p>
-</div>
-<div class="section" id="k-ashr-k2">
-<h3><tt class="docutils literal"><span class="pre">k.ashr(k2)</span></tt><a class="headerlink" href="#k-ashr-k2" title="Permalink to this headline">¶</a></h3>
-<p>Shift <tt class="docutils literal"><span class="pre">k</span></tt> arithmetically right by <tt class="docutils literal"><span class="pre">k2</span></tt> bits (new bits are same as
-previous sign bit).</p>
-</div>
-<div class="section" id="k-gep-indices">
-<h3><tt class="docutils literal"><span class="pre">k.gep(indices)</span></tt><a class="headerlink" href="#k-gep-indices" title="Permalink to this headline">¶</a></h3>
-<p>GEP, see <a class="reference external" href="http://www.llvm.org/docs/GetElementPtr.html">LLVM docs</a>.</p>
-</div>
-<div class="section" id="k-trunc-ty">
-<h3><tt class="docutils literal"><span class="pre">k.trunc(ty)</span></tt><a class="headerlink" href="#k-trunc-ty" title="Permalink to this headline">¶</a></h3>
-<p>Truncate <tt class="docutils literal"><span class="pre">k</span></tt> to a type <tt class="docutils literal"><span class="pre">ty</span></tt> of lower bitwidth.</p>
-</div>
-<div class="section" id="k-sext-ty">
-<h3><tt class="docutils literal"><span class="pre">k.sext(ty)</span></tt><a class="headerlink" href="#k-sext-ty" title="Permalink to this headline">¶</a></h3>
-<p>Sign extend <tt class="docutils literal"><span class="pre">k</span></tt> to a type <tt class="docutils literal"><span class="pre">ty</span></tt> of higher bitwidth, while extending
-the sign bit.</p>
-</div>
-<div class="section" id="k-zext-ty">
-<h3><tt class="docutils literal"><span class="pre">k.zext(ty)</span></tt><a class="headerlink" href="#k-zext-ty" title="Permalink to this headline">¶</a></h3>
-<p>Sign extend <tt class="docutils literal"><span class="pre">k</span></tt> to a type <tt class="docutils literal"><span class="pre">ty</span></tt> of higher bitwidth, all new bits are
-0s.</p>
-</div>
-<div class="section" id="k-fptrunc-ty">
-<h3><tt class="docutils literal"><span class="pre">k.fptrunc(ty)</span></tt><a class="headerlink" href="#k-fptrunc-ty" title="Permalink to this headline">¶</a></h3>
-<p>Truncate floating point constant <tt class="docutils literal"><span class="pre">k</span></tt> to floating point type <tt class="docutils literal"><span class="pre">ty</span></tt> of
-lower size than k&#8217;s.</p>
-</div>
-<div class="section" id="k-fpext-ty">
-<h3><tt class="docutils literal"><span class="pre">k.fpext(ty)</span></tt><a class="headerlink" href="#k-fpext-ty" title="Permalink to this headline">¶</a></h3>
-<p>Extend floating point constant <tt class="docutils literal"><span class="pre">k</span></tt> to floating point type <tt class="docutils literal"><span class="pre">ty</span></tt> of
-higher size than k&#8217;s.</p>
-</div>
-<div class="section" id="k-uitofp-ty">
-<h3><tt class="docutils literal"><span class="pre">k.uitofp(ty)</span></tt><a class="headerlink" href="#k-uitofp-ty" title="Permalink to this headline">¶</a></h3>
-<p>Convert an unsigned integer constant <tt class="docutils literal"><span class="pre">k</span></tt> to floating point constant of
-type <tt class="docutils literal"><span class="pre">ty</span></tt>.</p>
-</div>
-<div class="section" id="k-sitofp-ty">
-<h3><tt class="docutils literal"><span class="pre">k.sitofp(ty)</span></tt><a class="headerlink" href="#k-sitofp-ty" title="Permalink to this headline">¶</a></h3>
-<p>Convert a signed integer constant <tt class="docutils literal"><span class="pre">k</span></tt> to floating point constant of
-type <tt class="docutils literal"><span class="pre">ty</span></tt>.</p>
-</div>
-<div class="section" id="k-fptoui-ty">
-<h3><tt class="docutils literal"><span class="pre">k.fptoui(ty)</span></tt><a class="headerlink" href="#k-fptoui-ty" title="Permalink to this headline">¶</a></h3>
-<p>Convert a floating point constant <tt class="docutils literal"><span class="pre">k</span></tt> to an unsigned integer constant
-of type <tt class="docutils literal"><span class="pre">ty</span></tt>.</p>
-</div>
-<div class="section" id="k-fptosi-ty">
-<h3><tt class="docutils literal"><span class="pre">k.fptosi(ty)</span></tt><a class="headerlink" href="#k-fptosi-ty" title="Permalink to this headline">¶</a></h3>
-<p>Convert a floating point constant <tt class="docutils literal"><span class="pre">k</span></tt> to a signed integer constant of
-type <tt class="docutils literal"><span class="pre">ty</span></tt>.</p>
-</div>
-<div class="section" id="k-ptrtoint-ty">
-<h3><tt class="docutils literal"><span class="pre">k.ptrtoint(ty)</span></tt><a class="headerlink" href="#k-ptrtoint-ty" title="Permalink to this headline">¶</a></h3>
-<p>Convert a pointer constant <tt class="docutils literal"><span class="pre">k</span></tt> to an integer constant of type <tt class="docutils literal"><span class="pre">ty</span></tt>.</p>
-</div>
-<div class="section" id="k-inttoptr-ty">
-<h3><tt class="docutils literal"><span class="pre">k.inttoptr(ty)</span></tt><a class="headerlink" href="#k-inttoptr-ty" title="Permalink to this headline">¶</a></h3>
-<p>Convert an integer constant <tt class="docutils literal"><span class="pre">k</span></tt> to a pointer constant of type <tt class="docutils literal"><span class="pre">ty</span></tt>.</p>
-</div>
-<div class="section" id="k-bitcast-ty">
-<h3><tt class="docutils literal"><span class="pre">k.bitcast(ty)</span></tt><a class="headerlink" href="#k-bitcast-ty" title="Permalink to this headline">¶</a></h3>
-<p>Convert <tt class="docutils literal"><span class="pre">k</span></tt> to a (equal-width) constant of type <tt class="docutils literal"><span class="pre">ty</span></tt>.</p>
-</div>
-<div class="section" id="k-select-cond-k2-k3">
-<h3><tt class="docutils literal"><span class="pre">k.select(cond,k2,k3)</span></tt><a class="headerlink" href="#k-select-cond-k2-k3" title="Permalink to this headline">¶</a></h3>
-<p>Replace value with <tt class="docutils literal"><span class="pre">k2</span></tt> if the 1-bit integer constant <tt class="docutils literal"><span class="pre">cond</span></tt> is 1,
-else with <tt class="docutils literal"><span class="pre">k3</span></tt>.</p>
-</div>
-<div class="section" id="k-extract-element-idx">
-<h3><tt class="docutils literal"><span class="pre">k.extract_element(idx)</span></tt><a class="headerlink" href="#k-extract-element-idx" title="Permalink to this headline">¶</a></h3>
-<p>Extract value at <tt class="docutils literal"><span class="pre">idx</span></tt> (integer constant) from a vector constant
-<tt class="docutils literal"><span class="pre">k</span></tt>.</p>
-</div>
-<div class="section" id="k-insert-element-k2-idx">
-<h3><tt class="docutils literal"><span class="pre">k.insert_element(k2,idx)</span></tt><a class="headerlink" href="#k-insert-element-k2-idx" title="Permalink to this headline">¶</a></h3>
-<p>Insert value <tt class="docutils literal"><span class="pre">k2</span></tt> (scalar constant) at index <tt class="docutils literal"><span class="pre">idx</span></tt> (integer
-constant) of vector constant <tt class="docutils literal"><span class="pre">k</span></tt>.</p>
-</div>
-<div class="section" id="k-shuffle-vector-k2-mask">
-<h3><tt class="docutils literal"><span class="pre">k.shuffle_vector(k2,mask)</span></tt><a class="headerlink" href="#k-shuffle-vector-k2-mask" title="Permalink to this headline">¶</a></h3>
-<p>Shuffle vector constant <tt class="docutils literal"><span class="pre">k</span></tt> based on vector constants <tt class="docutils literal"><span class="pre">k2</span></tt> and
-<tt class="docutils literal"><span class="pre">mask</span></tt>.</p>
-</div>
-</div>
-</div>
-<hr class="docutils" />
-<div class="section" id="other-constant-classes">
-<h1>Other Constant Classes<a class="headerlink" href="#other-constant-classes" title="Permalink to this headline">¶</a></h1>
-<p>The following subclasses of <tt class="docutils literal"><span class="pre">Constant</span></tt> do not provide additional
-methods, <strong>they serve only to provide richer type information.</strong></p>
-<p>Subclass | LLVM C++ Class | Remarks |
-&#8212;&#8212;&#8212;|&#8212;&#8212;&#8212;&#8212;&#8212;-|&#8212;&#8212;&#8212;| <tt class="docutils literal"><span class="pre">ConstantExpr</span></tt> |
-<tt class="docutils literal"><span class="pre">llvmConstantExpr</span></tt> | A constant expression |
-<tt class="docutils literal"><span class="pre">ConstantAggregateZero</span></tt>| <tt class="docutils literal"><span class="pre">llvmConstantAggregateZero</span></tt>| All-zero
-constant | <tt class="docutils literal"><span class="pre">ConstantInt</span></tt>| <tt class="docutils literal"><span class="pre">llvmConstantInt</span></tt>| An integer
-constant | <tt class="docutils literal"><span class="pre">ConstantFP</span></tt>| <tt class="docutils literal"><span class="pre">llvmConstantFP</span></tt>| A floating-point
-constant | <tt class="docutils literal"><span class="pre">ConstantArray</span></tt>| <tt class="docutils literal"><span class="pre">llvmConstantArray</span></tt>| An array
-constant | <tt class="docutils literal"><span class="pre">ConstantStruct</span></tt>| <tt class="docutils literal"><span class="pre">llvmConstantStruct</span></tt>| A
-structure constant | <tt class="docutils literal"><span class="pre">ConstantVector</span></tt>| <tt class="docutils literal"><span class="pre">llvmConstantVector</span></tt>|
-A vector constant | <tt class="docutils literal"><span class="pre">ConstantPointerNull</span></tt>|
-<tt class="docutils literal"><span class="pre">llvmConstantPointerNull</span></tt>| All-zero pointer constant |
-<tt class="docutils literal"><span class="pre">UndefValue</span></tt>| <tt class="docutils literal"><span class="pre">llvmUndefValue</span></tt>| corresponds to <tt class="docutils literal"><span class="pre">undef</span></tt> of
-LLVM IR |</p>
-<p>These types are helpful in <tt class="docutils literal"><span class="pre">isinstance</span></tt> checks, like so:</p>
-<p>{% highlight python %} ti = Type.int(32) k1 = Constant.int(ti, 42) #
+endhighlight %}
+
+# llvm.core.Constant
+-  This will become a table of contents (this text will be scraped).
+{:toc}
+
+Static factory methods
+----------------------
+
+``null(ty)``
+~~~~~~~~~~~~
+
+A null value (all zeros) of type ``ty``
+
+``all_ones(ty)``
+~~~~~~~~~~~~~~~~
+
+All 1's value of type ``ty``
+
+``undef(ty)``
+~~~~~~~~~~~~~
+
+An undefined value of type ``ty``
+
+``int(ty, value)``
+~~~~~~~~~~~~~~~~~~
+
+Integer of type ``ty``, with value ``value`` (a Python int or long)
+
+``int_signextend(ty, value)``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Integer of signed type ``ty`` (use for signed types)
+
+``real(ty, value)``
+~~~~~~~~~~~~~~~~~~~
+
+Floating point value of type ``ty``, with value ``value`` (a Python
+float)
+
+``stringz(value)``
+~~~~~~~~~~~~~~~~~~
+
+A null-terminated string. ``value`` is a Python string
+
+``string(value)``
+~~~~~~~~~~~~~~~~~
+
+As ``string(ty)``, but not null terminated
+
+``array(ty, consts)``
+~~~~~~~~~~~~~~~~~~~~~
+
+Array of type ``ty``, initialized with ``consts`` (an iterable yielding
+``Constant`` objects of the appropriate type)
+
+``struct(ty, consts)``
+~~~~~~~~~~~~~~~~~~~~~~
+
+Struct (unpacked) of type ``ty``, initialized with ``consts`` (an
+iterable yielding ``Constant`` objects of the appropriate type)
+
+``packed_struct(ty, consts)``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+As ``struct(ty, consts)`` but packed
+
+``vector(consts)``
+~~~~~~~~~~~~~~~~~~
+
+Vector, initialized with ``consts`` (an iterable yielding ``Constant``
+objects of the appropriate type)
+
+``sizeof(ty)``
+~~~~~~~~~~~~~~
+
+Constant value representing the sizeof the type ``ty``
+
+Methods
+-------
+
+The following operations on constants are supported. For more details on
+any operation, consult the `Constant
+Expressions &lt;http://www.llvm.org/docs/LangRef.html#constantexprs&gt;`_
+section of the LLVM Language Reference.
+
+``k.neg()``
+~~~~~~~~~~~
+
+negation, same as ``0 - k``
+
+``k.not_()``
+~~~~~~~~~~~~
+
+1's complement of ``k``. Note trailing underscore.
+
+``k.add(k2)``
+~~~~~~~~~~~~~
+
+``k + k2``, where ``k`` and ``k2`` are integers.
+
+``k.fadd(k2)``
+~~~~~~~~~~~~~~
+
+``k + k2``, where ``k`` and ``k2`` are floating-point.
+
+``k.sub(k2)``
+~~~~~~~~~~~~~
+
+``k - k2``, where ``k`` and ``k2`` are integers.
+
+``k.fsub(k2)``
+~~~~~~~~~~~~~~
+
+``k - k2``, where ``k`` and ``k2`` are floating-point.
+
+``k.mul(k2)``
+~~~~~~~~~~~~~
+
+``k * k2``, where ``k`` and ``k2`` are integers.
+
+``k.fmul(k2)``
+~~~~~~~~~~~~~~
+
+``k * k2``, where ``k`` and ``k2`` are floating-point.
+
+``k.udiv(k2)``
+~~~~~~~~~~~~~~
+
+Quotient of unsigned division of ``k`` with ``k2``
+
+``k.sdiv(k2)``
+~~~~~~~~~~~~~~
+
+Quotient of signed division of ``k`` with ``k2``
+
+``k.fdiv(k2)``
+~~~~~~~~~~~~~~
+
+Quotient of floating point division of ``k`` with ``k2``
+
+``k.urem(k2)``
+~~~~~~~~~~~~~~
+
+Reminder of unsigned division of ``k`` with ``k2``
+
+``k.srem(k2)``
+~~~~~~~~~~~~~~
+
+Reminder of signed division of ``k`` with ``k2``
+
+``k.frem(k2)``
+~~~~~~~~~~~~~~
+
+Reminder of floating point division of ``k`` with ``k2``
+
+``k.and_(k2)``
+~~~~~~~~~~~~~~
+
+Bitwise and of ``k`` and ``k2``. Note trailing underscore.
+
+``k.or_(k2)``
+~~~~~~~~~~~~~
+
+Bitwise or of ``k`` and ``k2``. Note trailing underscore.
+
+``k.xor(k2)``
+~~~~~~~~~~~~~
+
+Bitwise exclusive-or of ``k`` and ``k2``.
+
+``k.icmp(icmp, k2)``
+~~~~~~~~~~~~~~~~~~~~
+
+Compare ``k`` with ``k2`` using the predicate ``icmp``. See
+`here &lt;comparision.html#icmp&gt;`_ for list of predicates for integer
+operands.
+
+``k.fcmp(fcmp, k2)``
+~~~~~~~~~~~~~~~~~~~~
+
+Compare ``k`` with ``k2`` using the predicate ``fcmp``. See
+`here &lt;comparision.html#fcmp&gt;`_ for list of predicates for real
+operands.
+
+``k.shl(k2)``
+~~~~~~~~~~~~~
+
+Shift ``k`` left by ``k2`` bits.
+
+``k.lshr(k2)``
+~~~~~~~~~~~~~~
+
+Shift ``k`` logically right by ``k2`` bits (new bits are 0s).
+
+``k.ashr(k2)``
+~~~~~~~~~~~~~~
+
+Shift ``k`` arithmetically right by ``k2`` bits (new bits are same as
+previous sign bit).
+
+``k.gep(indices)``
+~~~~~~~~~~~~~~~~~~
+
+GEP, see `LLVM docs &lt;http://www.llvm.org/docs/GetElementPtr.html&gt;`_.
+
+``k.trunc(ty)``
+~~~~~~~~~~~~~~~
+
+Truncate ``k`` to a type ``ty`` of lower bitwidth.
+
+``k.sext(ty)``
+~~~~~~~~~~~~~~
+
+Sign extend ``k`` to a type ``ty`` of higher bitwidth, while extending
+the sign bit.
+
+``k.zext(ty)``
+~~~~~~~~~~~~~~
+
+Sign extend ``k`` to a type ``ty`` of higher bitwidth, all new bits are
+0s.
+
+``k.fptrunc(ty)``
+~~~~~~~~~~~~~~~~~
+
+Truncate floating point constant ``k`` to floating point type ``ty`` of
+lower size than k's.
+
+``k.fpext(ty)``
+~~~~~~~~~~~~~~~
+
+Extend floating point constant ``k`` to floating point type ``ty`` of
+higher size than k's.
+
+``k.uitofp(ty)``
+~~~~~~~~~~~~~~~~
+
+Convert an unsigned integer constant ``k`` to floating point constant of
+type ``ty``.
+
+``k.sitofp(ty)``
+~~~~~~~~~~~~~~~~
+
+Convert a signed integer constant ``k`` to floating point constant of
+type ``ty``.
+
+``k.fptoui(ty)``
+~~~~~~~~~~~~~~~~
+
+Convert a floating point constant ``k`` to an unsigned integer constant
+of type ``ty``.
+
+``k.fptosi(ty)``
+~~~~~~~~~~~~~~~~
+
+Convert a floating point constant ``k`` to a signed integer constant of
+type ``ty``.
+
+``k.ptrtoint(ty)``
+~~~~~~~~~~~~~~~~~~
+
+Convert a pointer constant ``k`` to an integer constant of type ``ty``.
+
+``k.inttoptr(ty)``
+~~~~~~~~~~~~~~~~~~
+
+Convert an integer constant ``k`` to a pointer constant of type ``ty``.
+
+``k.bitcast(ty)``
+~~~~~~~~~~~~~~~~~
+
+Convert ``k`` to a (equal-width) constant of type ``ty``.
+
+``k.select(cond,k2,k3)``
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+Replace value with ``k2`` if the 1-bit integer constant ``cond`` is 1,
+else with ``k3``.
+
+``k.extract_element(idx)``
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Extract value at ``idx`` (integer constant) from a vector constant
+``k``.
+
+``k.insert_element(k2,idx)``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Insert value ``k2`` (scalar constant) at index ``idx`` (integer
+constant) of vector constant ``k``.
+
+``k.shuffle_vector(k2,mask)``
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Shuffle vector constant ``k`` based on vector constants ``k2`` and
+``mask``.
+
+--------------
+
+# Other Constant Classes
+The following subclasses of ``Constant`` do not provide additional
+methods, **they serve only to provide richer type information.**
+
+Subclass \| LLVM C++ Class \| Remarks \|
+---------\|----------------\|---------\| ``ConstantExpr`` \|
+``llvmConstantExpr`` \| A constant expression \|
+``ConstantAggregateZero``\ \| ``llvmConstantAggregateZero``\ \| All-zero
+constant \| ``ConstantInt``\ \| ``llvmConstantInt``\ \| An integer
+constant \| ``ConstantFP``\ \| ``llvmConstantFP``\ \| A floating-point
+constant \| ``ConstantArray``\ \| ``llvmConstantArray``\ \| An array
+constant \| ``ConstantStruct``\ \| ``llvmConstantStruct``\ \| A
+structure constant \| ``ConstantVector``\ \| ``llvmConstantVector``\ \|
+A vector constant \| ``ConstantPointerNull``\ \|
+``llvmConstantPointerNull``\ \| All-zero pointer constant \|
+``UndefValue``\ \| ``llvmUndefValue``\ \| corresponds to ``undef`` of
+LLVM IR \|
+
+These types are helpful in ``isinstance`` checks, like so:
+
+{% highlight python %} ti = Type.int(32) k1 = Constant.int(ti, 42) #
 int32_t k1 = 42; k2 = Constant.array(ti, [k1, k1]) # int32_t k2[] = {
-k1, k1 };</p>
-<p>assert isinstance(k1, ConstantInt) assert isinstance(k2, ConstantArray)
-{% endhighlight %}</p>
+k1, k1 };
+
+assert isinstance(k1, ConstantInt) assert isinstance(k2, ConstantArray)</pre>
 </div>
 
 
@@ -347,72 +405,6 @@ k1, k1 };</p>
       </div>
       <div class="sphinxsidebar">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="../index.html">Table Of Contents</a></h3>
-  <ul>
-<li><a class="reference internal" href="#">llvm.core.Constant</a><ul>
-<li><a class="reference internal" href="#static-factory-methods">Static factory methods</a><ul>
-<li><a class="reference internal" href="#null-ty"><tt class="docutils literal"><span class="pre">null(ty)</span></tt></a></li>
-<li><a class="reference internal" href="#all-ones-ty"><tt class="docutils literal"><span class="pre">all_ones(ty)</span></tt></a></li>
-<li><a class="reference internal" href="#undef-ty"><tt class="docutils literal"><span class="pre">undef(ty)</span></tt></a></li>
-<li><a class="reference internal" href="#int-ty-value"><tt class="docutils literal"><span class="pre">int(ty,</span> <span class="pre">value)</span></tt></a></li>
-<li><a class="reference internal" href="#int-signextend-ty-value"><tt class="docutils literal"><span class="pre">int_signextend(ty,</span> <span class="pre">value)</span></tt></a></li>
-<li><a class="reference internal" href="#real-ty-value"><tt class="docutils literal"><span class="pre">real(ty,</span> <span class="pre">value)</span></tt></a></li>
-<li><a class="reference internal" href="#stringz-value"><tt class="docutils literal"><span class="pre">stringz(value)</span></tt></a></li>
-<li><a class="reference internal" href="#string-value"><tt class="docutils literal"><span class="pre">string(value)</span></tt></a></li>
-<li><a class="reference internal" href="#array-ty-consts"><tt class="docutils literal"><span class="pre">array(ty,</span> <span class="pre">consts)</span></tt></a></li>
-<li><a class="reference internal" href="#struct-ty-consts"><tt class="docutils literal"><span class="pre">struct(ty,</span> <span class="pre">consts)</span></tt></a></li>
-<li><a class="reference internal" href="#packed-struct-ty-consts"><tt class="docutils literal"><span class="pre">packed_struct(ty,</span> <span class="pre">consts)</span></tt></a></li>
-<li><a class="reference internal" href="#vector-consts"><tt class="docutils literal"><span class="pre">vector(consts)</span></tt></a></li>
-<li><a class="reference internal" href="#sizeof-ty"><tt class="docutils literal"><span class="pre">sizeof(ty)</span></tt></a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#methods">Methods</a><ul>
-<li><a class="reference internal" href="#k-neg"><tt class="docutils literal"><span class="pre">k.neg()</span></tt></a></li>
-<li><a class="reference internal" href="#k-not"><tt class="docutils literal"><span class="pre">k.not_()</span></tt></a></li>
-<li><a class="reference internal" href="#k-add-k2"><tt class="docutils literal"><span class="pre">k.add(k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-fadd-k2"><tt class="docutils literal"><span class="pre">k.fadd(k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-sub-k2"><tt class="docutils literal"><span class="pre">k.sub(k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-fsub-k2"><tt class="docutils literal"><span class="pre">k.fsub(k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-mul-k2"><tt class="docutils literal"><span class="pre">k.mul(k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-fmul-k2"><tt class="docutils literal"><span class="pre">k.fmul(k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-udiv-k2"><tt class="docutils literal"><span class="pre">k.udiv(k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-sdiv-k2"><tt class="docutils literal"><span class="pre">k.sdiv(k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-fdiv-k2"><tt class="docutils literal"><span class="pre">k.fdiv(k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-urem-k2"><tt class="docutils literal"><span class="pre">k.urem(k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-srem-k2"><tt class="docutils literal"><span class="pre">k.srem(k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-frem-k2"><tt class="docutils literal"><span class="pre">k.frem(k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-and-k2"><tt class="docutils literal"><span class="pre">k.and_(k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-or-k2"><tt class="docutils literal"><span class="pre">k.or_(k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-xor-k2"><tt class="docutils literal"><span class="pre">k.xor(k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-icmp-icmp-k2"><tt class="docutils literal"><span class="pre">k.icmp(icmp,</span> <span class="pre">k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-fcmp-fcmp-k2"><tt class="docutils literal"><span class="pre">k.fcmp(fcmp,</span> <span class="pre">k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-shl-k2"><tt class="docutils literal"><span class="pre">k.shl(k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-lshr-k2"><tt class="docutils literal"><span class="pre">k.lshr(k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-ashr-k2"><tt class="docutils literal"><span class="pre">k.ashr(k2)</span></tt></a></li>
-<li><a class="reference internal" href="#k-gep-indices"><tt class="docutils literal"><span class="pre">k.gep(indices)</span></tt></a></li>
-<li><a class="reference internal" href="#k-trunc-ty"><tt class="docutils literal"><span class="pre">k.trunc(ty)</span></tt></a></li>
-<li><a class="reference internal" href="#k-sext-ty"><tt class="docutils literal"><span class="pre">k.sext(ty)</span></tt></a></li>
-<li><a class="reference internal" href="#k-zext-ty"><tt class="docutils literal"><span class="pre">k.zext(ty)</span></tt></a></li>
-<li><a class="reference internal" href="#k-fptrunc-ty"><tt class="docutils literal"><span class="pre">k.fptrunc(ty)</span></tt></a></li>
-<li><a class="reference internal" href="#k-fpext-ty"><tt class="docutils literal"><span class="pre">k.fpext(ty)</span></tt></a></li>
-<li><a class="reference internal" href="#k-uitofp-ty"><tt class="docutils literal"><span class="pre">k.uitofp(ty)</span></tt></a></li>
-<li><a class="reference internal" href="#k-sitofp-ty"><tt class="docutils literal"><span class="pre">k.sitofp(ty)</span></tt></a></li>
-<li><a class="reference internal" href="#k-fptoui-ty"><tt class="docutils literal"><span class="pre">k.fptoui(ty)</span></tt></a></li>
-<li><a class="reference internal" href="#k-fptosi-ty"><tt class="docutils literal"><span class="pre">k.fptosi(ty)</span></tt></a></li>
-<li><a class="reference internal" href="#k-ptrtoint-ty"><tt class="docutils literal"><span class="pre">k.ptrtoint(ty)</span></tt></a></li>
-<li><a class="reference internal" href="#k-inttoptr-ty"><tt class="docutils literal"><span class="pre">k.inttoptr(ty)</span></tt></a></li>
-<li><a class="reference internal" href="#k-bitcast-ty"><tt class="docutils literal"><span class="pre">k.bitcast(ty)</span></tt></a></li>
-<li><a class="reference internal" href="#k-select-cond-k2-k3"><tt class="docutils literal"><span class="pre">k.select(cond,k2,k3)</span></tt></a></li>
-<li><a class="reference internal" href="#k-extract-element-idx"><tt class="docutils literal"><span class="pre">k.extract_element(idx)</span></tt></a></li>
-<li><a class="reference internal" href="#k-insert-element-k2-idx"><tt class="docutils literal"><span class="pre">k.insert_element(k2,idx)</span></tt></a></li>
-<li><a class="reference internal" href="#k-shuffle-vector-k2-mask"><tt class="docutils literal"><span class="pre">k.shuffle_vector(k2,mask)</span></tt></a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a class="reference internal" href="#other-constant-classes">Other Constant Classes</a></li>
-</ul>
-
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="../_sources/doc/llvm.core.Constant.txt"

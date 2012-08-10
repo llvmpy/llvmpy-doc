@@ -102,40 +102,38 @@ Type.label() | <a class="reference external" href="llvm.core.Type.html">Type</a>
 <div class="section" id="an-example">
 <h1>An Example<a class="headerlink" href="#an-example" title="Permalink to this headline">¶</a></h1>
 <p>Here is an example that demonstrates the creation of types:</p>
-<p>{% highlight python %} #!/usr/bin/env python</p>
-<div class="section" id="integers">
-<h2>integers<a class="headerlink" href="#integers" title="Permalink to this headline">¶</a></h2>
-<p>int_ty = Type.int() bool_ty = Type.int(1) int_64bit = Type.int(64)</p>
-</div>
-<div class="section" id="floats">
-<h2>floats<a class="headerlink" href="#floats" title="Permalink to this headline">¶</a></h2>
-<p>sprec_real = Type.float() dprec_real = Type.double()</p>
-</div>
-<div class="section" id="arrays-and-vectors">
-<h2>arrays and vectors<a class="headerlink" href="#arrays-and-vectors" title="Permalink to this headline">¶</a></h2>
-<p>intar_ty = Type.array( int_ty, 10 ) # &#8220;typedef int intar_ty[10];&#8221;
-twodim = Type.array( intar_ty , 10 ) # &#8220;typedef int twodim[10][10];&#8221;
-vec = Type.array( int_ty, 10 )</p>
-</div>
-<div class="section" id="structures">
-<h2>structures<a class="headerlink" href="#structures" title="Permalink to this headline">¶</a></h2>
-<p>s1_ty = Type.struct( [ int_ty, sprec_real ] ) # &#8220;struct s1_ty { int
-v1; float v2; };&#8221;</p>
-</div>
-<div class="section" id="pointers">
-<h2>pointers<a class="headerlink" href="#pointers" title="Permalink to this headline">¶</a></h2>
-<p>intptr_ty = Type.pointer(int_ty) # &#8220;typedef int *intptr_ty;&#8221;</p>
-</div>
-<div class="section" id="functions">
-<h2>functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
-<p>f1 = Type.function( int_ty, [ int_ty ] ) # functions that take 1
-int_ty and return 1 int_ty</p>
-<p>f2 = Type.function( Type.void(), [ int_ty, int_ty ] ) # functions that
-take 2 int_tys and return nothing</p>
-<p>f3 = Type.function( Type.void(), ( int_ty, int_ty ) ) # same as f2;
-any iterable can be used</p>
-<p>fnargs = [ Type.pointer( Type.int(8) ) ] printf = Type.function(
-Type.int(), fnargs, True ) # variadic function {% endhighlight %}</p>
+<div class="highlight-python"><pre>#!/usr/bin/env python
+
+# integers
+int_ty = Type.int() bool_ty = Type.int(1) int_64bit = Type.int(64)
+
+# floats
+sprec_real = Type.float() dprec_real = Type.double()
+
+# arrays and vectors
+intar_ty = Type.array( int_ty, 10 ) # "typedef int intar_ty[10];"
+twodim = Type.array( intar_ty , 10 ) # "typedef int twodim[10][10];"
+vec = Type.array( int_ty, 10 )
+
+# structures
+s1_ty = Type.struct( [ int_ty, sprec_real ] ) # "struct s1_ty { int
+v1; float v2; };"
+
+# pointers
+intptr_ty = Type.pointer(int_ty) # "typedef int \*intptr_ty;"
+
+# functions
+f1 = Type.function( int_ty, [ int_ty ] ) # functions that take 1
+int_ty and return 1 int_ty
+
+f2 = Type.function( Type.void(), [ int_ty, int_ty ] ) # functions that
+take 2 int_tys and return nothing
+
+f3 = Type.function( Type.void(), ( int_ty, int_ty ) ) # same as f2;
+any iterable can be used
+
+fnargs = [ Type.pointer( Type.int(8) ) ] printf = Type.function(
+Type.int(), fnargs, True ) # variadic function</pre>
 </div>
 </div>
 <hr class="docutils" />
@@ -151,17 +149,10 @@ for detail about the new type system.)</p>
 <p>The following code defines a opaque structure, named &#8220;mystruct&#8221;. The
 body is defined after the construction using <tt class="docutils literal"><span class="pre">StructType.set_body</span></tt>.
 The second subtype is a pointer to a &#8220;mystruct&#8221; type.</p>
-<p>{% highlight python %} ts = Type.opaque(&#8216;mystruct&#8217;)
-ts.set_body([Type.int(), Type.pointer(ts)]) {% endhighlight %}</p>
-<hr class="docutils" />
-<p><strong>Related Links</strong> <a class="reference external" href="llvm.core.Type.html">llvm.core.Type</a>,
-<a class="reference external" href="llvm.core.IntegerType.html">llvm.core.IntegerType</a>,
-<a class="reference external" href="llvm.core.FunctionType.html">llvm.core.FunctionType</a>,
-<a class="reference external" href="llvm.core.StructType.html">llvm.core.StructType</a>,
-<a class="reference external" href="llvm.core.ArrayType.html">llvm.core.ArrayType</a>,
-<a class="reference external" href="llvm.core.PointerType.html">llvm.core.PointerType</a>,
-<a class="reference external" href="llvm.core.VectorType.html">llvm.core.VectorType</a>,
-<a class="reference external" href="llvm.core.TypeHandle.html">llvm.core.TypeHandle</a></p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">ts</span> <span class="o">=</span> <span class="n">Type</span><span class="o">.</span><span class="n">opaque</span><span class="p">(</span><span class="s">&#39;mystruct&#39;</span><span class="p">)</span>
+<span class="n">ts</span><span class="o">.</span><span class="n">set_body</span><span class="p">([</span><span class="n">Type</span><span class="o">.</span><span class="n">int</span><span class="p">(),</span> <span class="n">Type</span><span class="o">.</span><span class="n">pointer</span><span class="p">(</span><span class="n">ts</span><span class="p">)])</span>
+</pre></div>
+</div>
 </div>
 
 
@@ -172,15 +163,7 @@ ts.set_body([Type.int(), Type.pointer(ts)]) {% endhighlight %}</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="../index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">An Example</a><ul>
-<li><a class="reference internal" href="#integers">integers</a></li>
-<li><a class="reference internal" href="#floats">floats</a></li>
-<li><a class="reference internal" href="#arrays-and-vectors">arrays and vectors</a></li>
-<li><a class="reference internal" href="#structures">structures</a></li>
-<li><a class="reference internal" href="#pointers">pointers</a></li>
-<li><a class="reference internal" href="#functions">functions</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#">An Example</a></li>
 <li><a class="reference internal" href="#another-example-recursive-type">Another Example: Recursive Type</a></li>
 </ul>
 

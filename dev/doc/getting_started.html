@@ -119,8 +119,9 @@ object files. It is therefore required that the LLVM libraries and
 object files be built with the <tt class="docutils literal"><span class="pre">-fPIC</span></tt> option (generate position
 independent code). Be sure to use the <tt class="docutils literal"><span class="pre">--enable-pic</span></tt> option while
 configuring LLVM (default is no PIC), like this:</p>
-<p>{% highlight bash %} ~/llvm$ ./configure &#8211;enable-pic &#8211;enable-optimized
-{% endhighlight %}</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>~/llvm ./configure --enable-pic --enable-optimized
+</pre></div>
+</div>
 </div>
 <div class="section" id="llvm-config">
 <h2>llvm-config<a class="headerlink" href="#llvm-config" title="Permalink to this headline">¶</a></h2>
@@ -139,43 +140,11 @@ is different from that of &#8216;root&#8217;, so even if <tt class="docutils lit
 <p>Get 3.1 version of LLVM, build it. Make sure &#8216;&#8211;enable-pic&#8217; is passed to
 LLVM&#8217;s &#8216;configure&#8217;.</p>
 <p>Get llvmpy and install it:</p>
-<p>{% highlight bash %} $ git clone <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:numba/llvmpy.git $ cd
-llvmpy $ python setup.py install {% endhighlight %}</p>
-<p>If you need to tell the build script where <tt class="docutils literal"><span class="pre">llvm-config</span></tt> is, do it
-this way:</p>
-<p>{% highlight bash %} $ python setup.py install &#8211;user
-&#8211;llvm-config=/home/mdevan/llvm/Release/bin/llvm-config {% endhighlight
-%}</p>
-<p>To build a debug version of llvmpy, that links against the debug
-libraries of LLVM, use this:</p>
-<p>{% highlight bash %} $ python setup.py build -g
-&#8211;llvm-config=/home/mdevan/llvm/Debug/bin/llvm-config $ python setup.py
-install &#8211;user &#8211;llvm-config=/home/mdevan/llvm/Debug/bin/llvm-config {%
-endhighlight %}</p>
-<p>Be warned that debug binaries will be huge (100MB+) ! They are required
-only if you need to debug into LLVM also.</p>
-<p><tt class="docutils literal"><span class="pre">setup.py</span></tt> is a standard Python distutils script. See the Python
-documentation regarding <a class="reference external" href="http://docs.python.org/inst/inst.html">Installing Python
-Modules</a> and <a class="reference external" href="http://docs.python.org/dist/dist.html">Distributing
-Python Modules</a> for more
-information on such scripts.</p>
+<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>git clone git@github.com:numba/llvmpy.git <span class="nv">$ </span><span class="nb">cd</span>
+llvmpy <span class="nv">$ </span>python setup.py install
+</pre></div>
 </div>
 </div>
-<div class="section" id="uninstall">
-<h1>Uninstall<a class="headerlink" href="#uninstall" title="Permalink to this headline">¶</a></h1>
-<p>If you&#8217;d installed llvmpy with the <tt class="docutils literal"><span class="pre">--user</span></tt> option, then llvmpy
-would be present under <tt class="docutils literal"><span class="pre">~/.local/lib/python2.7/site-packages</span></tt>.
-Otherwise, it might be under <tt class="docutils literal"><span class="pre">/usr/lib/python2.7/site-packages</span></tt> or
-<tt class="docutils literal"><span class="pre">/usr/local/lib/python2.7/site-packages</span></tt>. The directory would vary
-with your Python version and OS flavour. Look around.</p>
-<p>Once you&#8217;ve located the site-packages directory, the modules and the
-&#8220;egg&#8221; can be removed like so:</p>
-<p>{% highlight bash %} $ rm -rf /llvm /llvm_py-.egg-info {% endhighlight
-%}</p>
-<p>See the <a class="reference external" href="http://docs.python.org/install/index.html">Python
-documentation</a> for more
-information.</p>
-<hr class="docutils" />
 </div>
 
 
@@ -198,7 +167,6 @@ information.</p>
 <li><a class="reference internal" href="#steps">Steps</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#uninstall">Uninstall</a></li>
 </ul>
 
   <h4>Previous topic</h4>
