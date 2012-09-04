@@ -59,8 +59,8 @@
 <h1>2. Chapter 2: Implementing a Parser and AST<a class="headerlink" href="#chapter-2-implementing-a-parser-and-ast" title="Permalink to this headline">¶</a></h1>
 <p>Written by <a class="reference external" href="mailto:sabre&#37;&#52;&#48;nondot&#46;org">Chris Lattner</a> and <a class="reference external" href="http://max99x.com">Max
 Shawabkeh</a></p>
-<div class="section" id="introduction-intro">
-<h2>2.1. Introduction # {#intro}<a class="headerlink" href="#introduction-intro" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="introduction">
+<h2>2.1. Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
 <p>Welcome to Chapter 2 of the <a class="reference external" href="http://www.llvm.org/docs/tutorial/index.html">Implementing a language with
 LLVM</a> tutorial. This
 chapter shows you how to use the lexer, built in <a class="reference external" href="PythonLangImpl1.html">Chapter
@@ -77,20 +77,22 @@ the former for everything else). Before we get to parsing though, lets
 talk about the output of the parser: the Abstract Syntax Tree.</p>
 </div>
 <hr class="docutils" />
-<div class="section" id="the-abstract-syntax-tree-ast-ast">
-<h2>2.2. The Abstract Syntax Tree (AST) # {#ast}<a class="headerlink" href="#the-abstract-syntax-tree-ast-ast" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="the-abstract-syntax-tree-ast">
+<h2>2.2. The Abstract Syntax Tree (AST)<a class="headerlink" href="#the-abstract-syntax-tree-ast" title="Permalink to this headline">¶</a></h2>
 <p>The AST for a program captures its behavior in such a way that it is
 easy for later stages of the compiler (e.g. code generation) to
 interpret. We basically want one object for each construct in the
 language, and the AST should closely model the language. In
 Kaleidoscope, we have expressions, a prototype, and a function object.
 We&#8217;ll start with expressions first:</p>
-<div class="highlight-python"><pre># Base class for all expression nodes. class
-ExpressionNode(object): pass
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Base class for all expression nodes.</span>
+<span class="k">class</span> <span class="nc">ExpressionNode</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span> <span class="k">pass</span>
 
-# Expression class for numeric literals like "1.0".
-class NumberExpressionNode(ExpressionNode): def **init**\ (self, value):
-self.value = value</pre>
+<span class="c"># Expression class for numeric literals like &quot;1.0&quot;.</span>
+<span class="k">class</span> <span class="nc">NumberExpressionNode</span><span class="p">(</span><span class="n">ExpressionNode</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+</pre></div>
 </div>
 <p>The code above shows the definition of the base ExpressionNode class and
 one subclass which we use for numeric literals. The important thing to
@@ -101,18 +103,24 @@ phases of the compiler to know what the stored numeric value is.</p>
 them. It would be very easy to add a virtual method to pretty print the
 code, for example. Here are the other expression AST node definitions
 that we&#8217;ll use in the basic form of the Kaleidoscope language:</p>
-<div class="highlight-python"><pre># Expression class for referencing a variable,
-like "a". class VariableExpressionNode(ExpressionNode): def
-**init**\ (self, name): self.name = name
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Expression class for referencing a variable, like &quot;a&quot;.</span>
+<span class="k">class</span> <span class="nc">VariableExpressionNode</span><span class="p">(</span><span class="n">ExpressionNode</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
 
-# Expression class for a binary operator.
-class BinaryOperatorExpressionNode(ExpressionNode): def **init**\ (self,
-operator, left, right): self.operator = operator self.left = left
-self.right = right
+<span class="c"># Expression class for a binary operator.</span>
+<span class="k">class</span> <span class="nc">BinaryOperatorExpressionNode</span><span class="p">(</span><span class="n">ExpressionNode</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">operator</span> <span class="o">=</span> <span class="n">operator</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>
 
-# Expression class for function calls.
-class CallExpressionNode(ExpressionNode): def **init**\ (self, callee,
-args): self.callee = callee self.args = args</pre>
+<span class="c"># Expression class for function calls.</span>
+<span class="k">class</span> <span class="nc">CallExpressionNode</span><span class="p">(</span><span class="n">ExpressionNode</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callee</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">callee</span> <span class="o">=</span> <span class="n">callee</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+</pre></div>
 </div>
 <p>This is all (intentionally) rather straight-forward: variables capture
 the variable name, binary operators capture their opcode (e.g. &#8216;+&#8217;), and
@@ -126,15 +134,20 @@ define. Because it doesn&#8217;t have conditional control flow, it isn&#8217;t
 Turing-complete; we&#8217;ll fix that in a later installment. The two things
 we need next are a way to talk about the interface to a function, and a
 way to talk about functions themselves:</p>
-<div class="highlight-python"><pre># This class represents the "prototype" for a
-function, which captures its name, # and its argument names (thus
-implicitly the number of arguments the function # takes). class
-PrototypeNode(object): def **init**\ (self, name, args): self.name =
-name self.args = args
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># This class represents the &quot;prototype&quot; for a function, which captures its name,</span>
+<span class="c"># and its argument names (thus implicitly the number of arguments the function</span>
+<span class="c"># takes).</span>
+<span class="k">class</span> <span class="nc">PrototypeNode</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
 
-# This class represents a function definition itself.
-class FunctionNode(object): def **init**\ (self, prototype, body):
-self.prototype = prototype self.body = body</pre>
+<span class="c"># This class represents a function definition itself.</span>
+<span class="k">class</span> <span class="nc">FunctionNode</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prototype</span><span class="p">,</span> <span class="n">body</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">prototype</span> <span class="o">=</span> <span class="n">prototype</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">body</span>
+</pre></div>
 </div>
 <p>In Kaleidoscope, functions are typed with just a count of their
 arguments. Since all values are double precision floating point, the
@@ -145,47 +158,55 @@ probably have a type field.</p>
 function bodies in Kaleidoscope.</p>
 </div>
 <hr class="docutils" />
-<div class="section" id="parser-basics-parserbasics">
-<h2>2.3. Parser Basics # {#parserbasics}<a class="headerlink" href="#parser-basics-parserbasics" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="parser-basics">
+<h2>2.3. Parser Basics<a class="headerlink" href="#parser-basics" title="Permalink to this headline">¶</a></h2>
 <p>Now that we have an AST to build, we need to define the parser code to
 build it. The idea here is that we want to parse something like
 <tt class="docutils literal"><span class="pre">x</span> <span class="pre">+</span> <span class="pre">y</span></tt> (which is returned as three tokens by the lexer) into an AST
 that could be generated with calls like this:</p>
-<div class="highlight-python"><pre>x = VariableExpressionNode('x') y =
-VariableExpressionNode('y') result = BinaryOperatorExpressionNode('+',
-x, y)</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">x</span> <span class="o">=</span> <span class="n">VariableExpressionNode</span><span class="p">(</span><span class="s">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">VariableExpressionNode</span><span class="p">(</span><span class="s">&#39;y&#39;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">BinaryOperatorExpressionNode</span><span class="p">(</span><span class="s">&#39;+&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>In order to do this, we&#8217;ll start by defining a lightweight <tt class="docutils literal"><span class="pre">Parser</span></tt>
 class with some basic helper routines:</p>
-<div class="highlight-python"><pre>class Parser(object):
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Parser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
 
-def **init**\ (self, tokens, binop_precedence): self.tokens = tokens
-self.binop_precedence = binop_precedence self.Next()
+   <span class="k">def</span> <span class="nf">__init__</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">binop_precedence</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span> <span class="o">=</span> <span class="n">tokens</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">binop_precedence</span> <span class="o">=</span> <span class="n">binop_precedence</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>
 
-# Provide a simple token buffer. Parser.current is the current token the
-# parser is looking at. Parser.Next() reads another token from the lexer
-and # updates Parser.current with its results. def Next(self):
-self.current = self.tokens.next()</pre>
+<span class="c"># Provide a simple token buffer. Parser.current is the current token the</span>
+<span class="c"># parser is looking at. Parser.Next() reads another token from the lexer and</span>
+<span class="c"># updates Parser.current with its results.</span>
+<span class="k">def</span> <span class="nf">Next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+</pre></div>
 </div>
 <p>This implements a simple token buffer around the lexer. This allows us
 to look one token ahead at what the lexer is returning. Every function
 in our parser will assume that <tt class="docutils literal"><span class="pre">self.current</span></tt> is the current token
 that needs to be parsed. Note that the first token is read as soon as
 the parser is instantiated. Let us ignore the <tt class="docutils literal"><span class="pre">binop_precedence</span></tt>
-parameter for now. It will be explained when we start <a class="reference external" href="#parserbinops">parsing binary
-operators</a>.</p>
+parameter for now. It will be explained when we start parsing binary
+operators.</p>
 <p>With these basic helper functions, we can implement the first piece of
 our grammar: numeric literals.</p>
 </div>
 <hr class="docutils" />
-<div class="section" id="basic-expression-parsing-parserprimexprs">
-<h2>2.4. Basic Expression Parsing # {#parserprimexprs}<a class="headerlink" href="#basic-expression-parsing-parserprimexprs" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="basic-expression-parsing">
+<h2>2.4. Basic Expression Parsing<a class="headerlink" href="#basic-expression-parsing" title="Permalink to this headline">¶</a></h2>
 <p>We start with numeric literals, because they are the simplest to
 process. For each production in our grammar, we&#8217;ll define a function
 which parses that production. For numeric literals, we have:</p>
-<div class="highlight-python"><pre># numberexpr ::= number def
-ParseNumberExpr(self): result = NumberExpressionNode(self.current.value)
-self.Next() # consume the number. return result</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># numberexpr ::= number</span>
+<span class="k">def</span> <span class="nf">ParseNumberExpr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="n">result</span> <span class="o">=</span> <span class="n">NumberExpressionNode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+   <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span> <span class="c"># consume the number.</span>
+   <span class="k">return</span> <span class="n">result</span>
+</pre></div>
 </div>
 <p>This method is very simple: it expects to be called when the current
 token is a <tt class="docutils literal"><span class="pre">NumberToken</span></tt>. It takes the current number value, creates a
@@ -197,18 +218,19 @@ production and returns the lexer buffer with the next token (which is
 not part of the grammar production) ready to go. This is a fairly
 standard way to go for recursive descent parsers. For a better example,
 the parenthesis operator is defined like this:</p>
-<div class="highlight-python"><pre># parenexpr ::= '(' expression ')' def
-ParseParenExpr(self): self.Next() # eat '('.
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># parenexpr ::= &#39;(&#39; expression &#39;)&#39;</span>
+<span class="k">def</span> <span class="nf">ParseParenExpr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span> <span class="c"># eat &#39;(&#39;.</span>
 
-::
 
-contents = self.ParseExpression()
+<span class="n">contents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParseExpression</span><span class="p">()</span>
 
-if self.current != CharacterToken(')'):
-raise RuntimeError('Expected ")".')
-self.Next()  # eat ')'.
+<span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">!=</span> <span class="n">CharacterToken</span><span class="p">(</span><span class="s">&#39;)&#39;</span><span class="p">):</span>
+   <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Expected &quot;)&quot;.&#39;</span><span class="p">)</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>  <span class="c"># eat &#39;)&#39;.</span>
 
-return contents</pre>
+<span class="k">return</span> <span class="n">contents</span>
+</pre></div>
 </div>
 <p>This function illustrates an interesting aspect of the parser. The
 function uses recursion by calling <tt class="docutils literal"><span class="pre">ParseExpression</span></tt> (we will soon see
@@ -221,29 +243,30 @@ grouping. Once the parser constructs the AST, parentheses are not
 needed.</p>
 <p>The next simple production is for handling variable references and
 function calls:</p>
-<div class="highlight-python"><pre># identifierexpr ::= identifier \| identifier '('
-expression\* ')' def ParseIdentifierExpr(self): identifier_name =
-self.current.name self.Next() # eat identifier.
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># identifierexpr ::= identifier | identifier &#39;(&#39; expression* &#39;)&#39;</span>
+<span class="k">def</span> <span class="nf">ParseIdentifierExpr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="n">identifier_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">name</span>
+   <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span> <span class="c"># eat identifier.</span>
 
-::
 
-if self.current != CharacterToken('('):  # Simple variable reference.
-return VariableExpressionNode(identifier_name);
+   <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">!=</span> <span class="n">CharacterToken</span><span class="p">(</span><span class="s">&#39;(&#39;</span><span class="p">):</span>  <span class="c"># Simple variable reference.</span>
+      <span class="k">return</span> <span class="n">VariableExpressionNode</span><span class="p">(</span><span class="n">identifier_name</span><span class="p">);</span>
 
-# Call.
-self.Next()  # eat '('.
-args = []
-if self.current != CharacterToken(')'):
-while True:
-args.append(self.ParseExpression())
-if self.current == CharacterToken(')'):
-break
-elif self.current != CharacterToken(','):
-raise RuntimeError('Expected ")" or "," in argument list.')
-self.Next()
+   <span class="c"># Call.</span>
+   <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>  <span class="c"># eat &#39;(&#39;.</span>
+   <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+   <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">!=</span> <span class="n">CharacterToken</span><span class="p">(</span><span class="s">&#39;)&#39;</span><span class="p">):</span>
+      <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+         <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ParseExpression</span><span class="p">())</span>
+         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">==</span> <span class="n">CharacterToken</span><span class="p">(</span><span class="s">&#39;)&#39;</span><span class="p">):</span>
+            <span class="k">break</span>
+         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">!=</span> <span class="n">CharacterToken</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Expected &quot;)&quot; or &quot;,&quot; in argument list.&#39;</span><span class="p">)</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>
 
-self.Next()  # eat ')'.
-return CallExpressionNode(identifier_name, args)</pre>
+   <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>  <span class="c"># eat &#39;)&#39;.</span>
+   <span class="k">return</span> <span class="n">CallExpressionNode</span><span class="p">(</span><span class="n">identifier_name</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>This routine follows the same style as the other routines. It expects to
 be called if the current token is an <tt class="docutils literal"><span class="pre">IdentifierToken</span></tt>. It also has
@@ -259,12 +282,17 @@ We call this class of expressions &#8220;primary&#8221; expressions, for reasons
 that will become more clear <a class="reference external" href="PythonLangImpl6.html#unary">later in the
 tutorial</a>. In order to parse an arbitrary
 primary expression, we need to determine what sort of expression it is:</p>
-<div class="highlight-python"><pre># primary ::= identifierexpr \| numberexpr \|
-parenexpr def ParsePrimary(self): if isinstance(self.current,
-IdentifierToken): return self.ParseIdentifierExpr() elif
-isinstance(self.current, NumberToken): return self.ParseNumberExpr();
-elif self.current == CharacterToken('('): return self.ParseParenExpr()
-else: raise RuntimeError('Unknown token when expecting an expression.')</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># primary ::= identifierexpr | numberexpr | parenexpr</span>
+<span class="k">def</span> <span class="nf">ParsePrimary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="p">,</span> <span class="n">IdentifierToken</span><span class="p">):</span>
+       <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParseIdentifierExpr</span><span class="p">()</span>
+   <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="p">,</span> <span class="n">NumberToken</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParseNumberExpr</span><span class="p">();</span>
+   <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">==</span> <span class="n">CharacterToken</span><span class="p">(</span><span class="s">&#39;(&#39;</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParseParenExpr</span><span class="p">()</span>
+   <span class="k">else</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Unknown token when expecting an expression.&#39;</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>Now that you see the definition of this function, it is more obvious why
 we can assume the state of <tt class="docutils literal"><span class="pre">Parser.current</span></tt> in the various functions.
@@ -274,8 +302,8 @@ inspected, and then parses it with a function call.</p>
 expressions. They are a bit more complex.</p>
 </div>
 <hr class="docutils" />
-<div class="section" id="binary-expression-parsing-parserbinops">
-<h2>2.5. Binary Expression Parsing # {#parserbinops}<a class="headerlink" href="#binary-expression-parsing-parserbinops" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="binary-expression-parsing">
+<h2>2.5. Binary Expression Parsing<a class="headerlink" href="#binary-expression-parsing" title="Permalink to this headline">¶</a></h2>
 <p>Binary expressions are significantly harder to parse because they are
 often ambiguous. For example, when given the string <tt class="docutils literal"><span class="pre">x+y*z</span></tt>, the
 parser can choose to parse it as either <tt class="docutils literal"><span class="pre">(x+y)*z</span></tt> or <tt class="docutils literal"><span class="pre">x+(y*z)</span></tt>. With
@@ -288,17 +316,23 @@ This parsing technique uses the precedence of binary operators to guide
 recursion. To start with, we need a table of precedences. Remember the
 <tt class="docutils literal"><span class="pre">binop_precedence</span></tt> parameter we passed to the <tt class="docutils literal"><span class="pre">Parser</span></tt> constructor?
 Now is the time to use it:</p>
-<div class="highlight-python"><pre>def main(): # Install standard binary operators.
-# 1 is lowest possible precedence. 40 is the highest.
-operator_precedence = { '&lt;': 10, '+': 20, '-': 20, '\*': 40 }
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+   <span class="c"># Install standard binary operators.</span>
+   <span class="c"># 1 is lowest possible precedence. 40 is the highest.</span>
+   <span class="n">operator_precedence</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s">&#39;&lt;&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+      <span class="s">&#39;+&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+      <span class="s">&#39;-&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+      <span class="s">&#39;*&#39;</span><span class="p">:</span> <span class="mi">40</span>
+   <span class="p">}</span>
 
-# Run the main ``interpreter loop``. while True:
+   <span class="c"># Run the main ``interpreter loop``.</span>
+   <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
 
-::
+      <span class="o">...</span>
 
-...
-
-parser = Parser(Tokenize(raw), operator_precedence)</pre>
+      <span class="n">parser</span> <span class="o">=</span> <span class="n">Parser</span><span class="p">(</span><span class="n">Tokenize</span><span class="p">(</span><span class="n">raw</span><span class="p">),</span> <span class="n">operator_precedence</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>For the basic form of Kaleidoscope, we will only support 4 binary
 operators (this can obviously be extended by you, our brave and intrepid
@@ -308,11 +342,14 @@ operators involved, but it would be easy enough to eliminate the map and
 hardcode the comparisons.</p>
 <p>We also define a helper function to get the precedence of the current
 token, or -1 if the token is not a binary operator:</p>
-<div class="highlight-python"><pre># Gets the precedence of the current token, or -1
-if the token is not a binary # operator. def
-GetCurrentTokenPrecedence(self): if isinstance(self.current,
-CharacterToken): return self.binop_precedence.get(self.current.char,
--1) else: return -1</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Gets the precedence of the current token, or -1 if the token is not a binary</span>
+<span class="c"># operator.</span>
+<span class="k">def</span> <span class="nf">GetCurrentTokenPrecedence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="p">,</span> <span class="n">CharacterToken</span><span class="p">):</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">binop_precedence</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">char</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+   <span class="k">else</span><span class="p">:</span>
+      <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+</pre></div>
 </div>
 <p>With the helper above defined, we can now start parsing binary
 expressions. The basic idea of operator precedence parsing is to break
@@ -326,9 +363,11 @@ parentheses are primary expressions, the binary expression parser
 doesn&#8217;t need to worry about nested subexpressions like (c+d) at all.</p>
 <p>To start, an expression is a primary expression potentially followed by
 a sequence of <tt class="docutils literal"><span class="pre">[binop,primaryexpr]</span></tt> pairs:</p>
-<div class="highlight-python"><pre># expression ::= primary binoprhs def
-ParseExpression(self): left = self.ParsePrimary() return
-self.ParseBinOpRHS(left, 0)</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># expression ::= primary binoprhs</span>
+<span class="k">def</span> <span class="nf">ParseExpression</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParsePrimary</span><span class="p">()</span>
+   <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParseBinOpRHS</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
 </div>
 <p><tt class="docutils literal"><span class="pre">ParseBinOpRHS</span></tt> is the function that parses the sequence of pairs for
 us. It takes a precedence and a pointer to an expression for the part
@@ -338,22 +377,22 @@ it returns the expression that is passed into it. In our example above,
 the code passes the expression for <tt class="docutils literal"><span class="pre">a</span></tt> into <tt class="docutils literal"><span class="pre">ParseBinOpRHS</span></tt> and the
 current token is <tt class="docutils literal"><span class="pre">+</span></tt>.</p>
 <p>The precedence value passed into <tt class="docutils literal"><span class="pre">ParseBinOpRHS</span></tt> indicates the *
-minimal operator precedence* that the function is allowed to eat. For
+minimal operator precedence * that the function is allowed to eat. For
 example, if the current pair stream is <tt class="docutils literal"><span class="pre">[+,</span> <span class="pre">x]</span></tt> and <tt class="docutils literal"><span class="pre">ParseBinOpRHS</span></tt>
 is passed in a precedence of 40, it will not consume any tokens (because
 the precedence of &#8216;+&#8217; is only 20). With this in mind, <tt class="docutils literal"><span class="pre">ParseBinOpRHS</span></tt>
 starts with:</p>
-<div class="highlight-python"><pre># binoprhs ::= (operator primary)\* def
-ParseBinOpRHS(self, left, left_precedence): # If this is a binary
-operator, find its precedence. while True: precedence =
-self.GetCurrentTokenPrecedence()
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># binoprhs ::= (operator primary)*</span>
+<span class="k">def</span> <span class="nf">ParseBinOpRHS</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">left_precedence</span><span class="p">):</span>
+<span class="c"># If this is a binary operator, find its precedence.</span>
+   <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+      <span class="n">precedence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetCurrentTokenPrecedence</span><span class="p">()</span>
 
-::
-
-# If this is a binary operator that binds at least as tightly as the
-# current one, consume it; otherwise we are done.
-if precedence &lt; left_precedence:
-return left</pre>
+      <span class="c"># If this is a binary operator that binds at least as tightly as the</span>
+      <span class="c"># current one, consume it; otherwise we are done.</span>
+      <span class="k">if</span> <span class="n">precedence</span> <span class="o">&lt;</span> <span class="n">left_precedence</span><span class="p">:</span>
+         <span class="k">return</span> <span class="n">left</span>
+</pre></div>
 </div>
 <p>This code gets the precedence of the current token and checks to see if
 if is too low. Because we defined invalid tokens to have a precedence of
@@ -361,13 +400,13 @@ if is too low. Because we defined invalid tokens to have a precedence of
 stream runs out of binary operators. If this check succeeds, we know
 that the token is a binary operator and that it will be included in this
 expression:</p>
-<div class="highlight-python"><pre>binary_operator = self.current.char self.Next()
-# eat the operator.
+<div class="highlight-python"><div class="highlight"><pre><span class="n">binary_operator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">char</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>  <span class="c"># eat the operator.</span>
 
-::
 
-# Parse the primary expression after the binary operator.
-right = self.ParsePrimary()</pre>
+<span class="c"># Parse the primary expression after the binary operator.</span>
+<span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParsePrimary</span><span class="p">()</span>
+</pre></div>
 </div>
 <p>As such, this code eats (and remembers) the binary operator and then
 parses the primary expression that follows. This builds up the whole
@@ -378,10 +417,12 @@ In particular, we could have <tt class="docutils literal"><span class="pre">(a+b
 <tt class="docutils literal"><span class="pre">a</span> <span class="pre">+</span> <span class="pre">(b</span> <span class="pre">binop</span> <span class="pre">unparsed)</span></tt>. To determine this, we look ahead at
 <tt class="docutils literal"><span class="pre">binop</span></tt> to determine its precedence and compare it to BinOp&#8217;s
 precedence (which is &#8216;+&#8217; in this case):</p>
-<div class="highlight-python"><pre># If binary_operator binds less tightly with
-right than the operator after # right, let the pending operator take
-right as its left. next_precedence = self.GetCurrentTokenPrecedence()
-if precedence &lt; next_precedence:</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># If binary_operator binds less tightly with right than the operator after</span>
+<span class="c"># right, let the pending operator take right as its left.</span>
+<span class="n">next_precedence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetCurrentTokenPrecedence</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">precedence</span> <span class="o">&lt;</span> <span class="n">next_precedence</span><span class="p">:</span>
+   <span class="o">...</span>
+</pre></div>
 </div>
 <p>If the precedence of the binop to the right of <tt class="docutils literal"><span class="pre">RHS</span></tt> is lower or equal
 to the precedence of our current operator, then we know that the
@@ -389,13 +430,12 @@ parentheses associate as <tt class="docutils literal"><span class="pre">(a+b)</s
 current operator is <tt class="docutils literal"><span class="pre">+</span></tt> and the next operator is <tt class="docutils literal"><span class="pre">+</span></tt>, we know that
 they have the same precedence. In this case we&#8217;ll create the AST node
 for <tt class="docutils literal"><span class="pre">a+b</span></tt>, and then continue parsing:</p>
-<div class="highlight-python"><pre>if precedence &lt; next_precedence: ... if body
-omitted ...
+<div class="highlight-python"><div class="highlight"><pre><span class="k">if</span> <span class="n">precedence</span> <span class="o">&lt;</span> <span class="n">next_precedence</span><span class="p">:</span>
+   <span class="o">...</span> <span class="k">if</span> <span class="n">body</span> <span class="n">omitted</span> <span class="o">...</span>
 
-::
-
-# Merge left/right.
-left = BinaryOperatorExpressionNode(binary_operator, left, right);</pre>
+<span class="c"># Merge left/right.</span>
+<span class="n">left</span> <span class="o">=</span> <span class="n">BinaryOperatorExpressionNode</span><span class="p">(</span><span class="n">binary_operator</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">);</span>
+</pre></div>
 </div>
 <p>In our example above, this will turn <tt class="docutils literal"><span class="pre">a+b+</span></tt> into <tt class="docutils literal"><span class="pre">(a+b)</span></tt> and execute
 the next iteration of the loop, with <tt class="docutils literal"><span class="pre">+</span></tt> as the current token. The
@@ -410,16 +450,16 @@ particular, to build the AST correctly for our example, it needs to get
 all of <tt class="docutils literal"><span class="pre">(</span> <span class="pre">c</span> <span class="pre">+</span> <span class="pre">d</span> <span class="pre">)</span> <span class="pre">*</span> <span class="pre">e</span> <span class="pre">*</span> <span class="pre">f</span></tt> as the RHS expression variable. The code to
 do this is surprisingly simple (code from the above two blocks
 duplicated for context):</p>
-<div class="highlight-python"><pre># If binary_operator binds less tightly with
-right than the operator after # right, let the pending operator take
-right as its left. next_precedence = self.GetCurrentTokenPrecedence()
-if precedence &lt; next_precedence: right = self.ParseBinOpRHS(right,
-precedence + 1)
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># If binary_operator binds less tightly with right than the operator after</span>
+<span class="c"># right, let the pending operator take right as its left.</span>
+<span class="n">next_precedence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetCurrentTokenPrecedence</span><span class="p">()</span>
+<span class="k">if</span> <span class="n">precedence</span> <span class="o">&lt;</span> <span class="n">next_precedence</span><span class="p">:</span>
+   <span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParseBinOpRHS</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">precedence</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 
-::
 
-# Merge left/right.
-left = BinaryOperatorExpressionNode(binary_operator, left, right)</pre>
+<span class="c"># Merge left/right.</span>
+<span class="n">left</span> <span class="o">=</span> <span class="n">BinaryOperatorExpressionNode</span><span class="p">(</span><span class="n">binary_operator</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>At this point, we know that the binary operator to the RHS of our
 primary has higher precedence than the binop we are currently parsing.
@@ -442,382 +482,469 @@ stopping at the first token that is not part of the expression. Next up
 we need to handle function definitions, etc.</p>
 </div>
 <hr class="docutils" />
-<div class="section" id="parsing-the-rest-parsertop">
-<h2>2.6. Parsing the Rest # {#parsertop}<a class="headerlink" href="#parsing-the-rest-parsertop" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="parsing-the-rest">
+<h2>2.6. Parsing the Rest<a class="headerlink" href="#parsing-the-rest" title="Permalink to this headline">¶</a></h2>
 <p>The next thing missing is handling of function prototypes. In
 Kaleidoscope, these are used both for &#8216;extern&#8217; function declarations as
 well as function body definitions. The code to do this is
 straight-forward and not very interesting (once you&#8217;ve survived
 expressions):</p>
-<div class="highlight-python"><pre># prototype ::= id '(' id\* ')' def
-ParsePrototype(self): if not isinstance(self.current, IdentifierToken):
-raise RuntimeError('Expected function name in prototype.')
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># prototype ::= id &#39;(&#39; id* &#39;)&#39;</span>
+<span class="k">def</span> <span class="nf">ParsePrototype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="p">,</span> <span class="n">IdentifierToken</span><span class="p">):</span>
+      <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Expected function name in prototype.&#39;</span><span class="p">)</span>
 
-::
 
-function_name = self.current.name
-self.Next()  # eat function name.
+   <span class="n">function_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">name</span>
+   <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>  <span class="c"># eat function name.</span>
 
-if self.current != CharacterToken('('):
-raise RuntimeError('Expected "(" in prototype.')
-self.Next()  # eat '('.
+   <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">!=</span> <span class="n">CharacterToken</span><span class="p">(</span><span class="s">&#39;(&#39;</span><span class="p">):</span>
+      <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Expected &quot;(&quot; in prototype.&#39;</span><span class="p">)</span>
+   <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>  <span class="c"># eat &#39;(&#39;.</span>
 
-arg_names = []
-while isinstance(self.current, IdentifierToken):
-arg_names.append(self.current.name)
-self.Next()
+   <span class="n">arg_names</span> <span class="o">=</span> <span class="p">[]</span>
+   <span class="k">while</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="p">,</span> <span class="n">IdentifierToken</span><span class="p">):</span>
+      <span class="n">arg_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>
 
-if self.current != CharacterToken(')'):
-raise RuntimeError('Expected ")" in prototype.')
+   <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">!=</span> <span class="n">CharacterToken</span><span class="p">(</span><span class="s">&#39;)&#39;</span><span class="p">):</span>
+      <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Expected &quot;)&quot; in prototype.&#39;</span><span class="p">)</span>
 
-# Success.
-self.Next()  # eat ')'.
+   <span class="c"># Success.</span>
+   <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>  <span class="c"># eat &#39;)&#39;.</span>
 
-return PrototypeNode(function_name, arg_names)</pre>
+   <span class="k">return</span> <span class="n">PrototypeNode</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">arg_names</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>Given this, a function definition is very simple, just a prototype plus
 an expression to implement the body:</p>
-<div class="highlight-python"><pre># definition ::= 'def' prototype expression def
-ParseDefinition(self): self.Next() # eat def. proto =
-self.ParsePrototype() body = self.ParseExpression() return
-FunctionNode(proto, body)</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># definition ::= &#39;def&#39; prototype expression</span>
+<span class="k">def</span> <span class="nf">ParseDefinition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span> <span class="c"># eat def.</span>
+   <span class="n">proto</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParsePrototype</span><span class="p">()</span>
+   <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParseExpression</span><span class="p">()</span>
+   <span class="k">return</span> <span class="n">FunctionNode</span><span class="p">(</span><span class="n">proto</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>In addition, we support &#8216;extern&#8217; to declare functions like &#8216;sin&#8217; and
 &#8216;cos&#8217; as well as to support forward declaration of user functions. These
 &#8216;extern&#8217;s are just prototypes with no body:</p>
-<div class="highlight-python"><pre># external ::= 'extern' prototype def
-ParseExtern(self): self.Next() # eat extern. return
-self.ParsePrototype()</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># external ::= &#39;extern&#39; prototype</span>
+<span class="k">def</span> <span class="nf">ParseExtern</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span> <span class="c"># eat extern.</span>
+   <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParsePrototype</span><span class="p">()</span>
+</pre></div>
 </div>
 <p>Finally, we&#8217;ll also let the user type in arbitrary top-level expressions
 and evaluate them on the fly. We will handle this by defining anonymous
 nullary (zero argument) functions for them:</p>
-<div class="highlight-python"><pre># toplevelexpr ::= expression def
-ParseTopLevelExpr(self): proto = PrototypeNode('', []) return
-FunctionNode(proto, self.ParseExpression())</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># toplevelexpr ::= expression</span>
+<span class="k">def</span> <span class="nf">ParseTopLevelExpr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+   <span class="n">proto</span> <span class="o">=</span> <span class="n">PrototypeNode</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="p">[])</span>
+   <span class="k">return</span> <span class="n">FunctionNode</span><span class="p">(</span><span class="n">proto</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParseExpression</span><span class="p">())</span>
+</pre></div>
 </div>
 <p>Now that we have all the pieces, let&#8217;s build a little driver that will
 let us actually <em>execute</em> this code we&#8217;ve built!</p>
 </div>
 <hr class="docutils" />
-<div class="section" id="the-driver-driver">
-<h2>2.7. The Driver # {#driver}<a class="headerlink" href="#the-driver-driver" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="the-driver">
+<h2>2.7. The Driver<a class="headerlink" href="#the-driver" title="Permalink to this headline">¶</a></h2>
 <p>The driver for this simply invokes all of the parsing pieces with a
 top-level dispatch loop. There isn&#8217;t much interesting here, so I&#8217;ll just
-include the top-level loop. See <a class="reference external" href="#code">below</a> for full code.</p>
-<div class="highlight-python"><pre># Run the main "interpreter loop". while True:
-print 'ready&gt;', try: raw = raw_input() except KeyboardInterrupt: return
+include the top-level loop. See <a class="reference internal" href="PythonLangImpl7.html#code"><em>below</em></a> for full code.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Run the main &quot;interpreter loop&quot;.</span>
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+   <span class="k">print</span> <span class="s">&#39;ready&gt;&#39;</span><span class="p">,</span>
+   <span class="k">try</span><span class="p">:</span>
+      <span class="n">raw</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">()</span>
+   <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+      <span class="k">return</span>
 
-::
 
-parser = Parser(Tokenize(raw), operator_precedence)
-while True:
-# top ::= definition | external | expression | EOF
-if isinstance(parser.current, EOFToken):
-break
-if isinstance(parser.current, DefToken):
-parser.HandleDefinition()
-elif isinstance(parser.current, ExternToken):
-parser.HandleExtern()
-else:
-parser.HandleTopLevelExpression()</pre>
+   <span class="n">parser</span> <span class="o">=</span> <span class="n">Parser</span><span class="p">(</span><span class="n">Tokenize</span><span class="p">(</span><span class="n">raw</span><span class="p">),</span> <span class="n">operator_precedence</span><span class="p">)</span>
+   <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+      <span class="c"># top ::= definition | external | expression | EOF</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">current</span><span class="p">,</span> <span class="n">EOFToken</span><span class="p">):</span>
+         <span class="k">break</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">current</span><span class="p">,</span> <span class="n">DefToken</span><span class="p">):</span>
+         <span class="n">parser</span><span class="o">.</span><span class="n">HandleDefinition</span><span class="p">()</span>
+      <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">current</span><span class="p">,</span> <span class="n">ExternToken</span><span class="p">):</span>
+         <span class="n">parser</span><span class="o">.</span><span class="n">HandleExtern</span><span class="p">()</span>
+      <span class="k">else</span><span class="p">:</span>
+         <span class="n">parser</span><span class="o">.</span><span class="n">HandleTopLevelExpression</span><span class="p">()</span>
+</pre></div>
 </div>
 <p>Here we create a new <tt class="docutils literal"><span class="pre">Parser</span></tt> for each line read, and try to parse out
 all the expressions, declarations and definitions in the line. We also
 allow the user to quit using Ctrl+C.</p>
 </div>
 <hr class="docutils" />
-<div class="section" id="conclusions-conclusions">
-<h2>2.8. Conclusions # {#conclusions}<a class="headerlink" href="#conclusions-conclusions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="conclusions">
+<h2>2.8. Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this headline">¶</a></h2>
 <p>With just under 330 lines of commented code (200 lines of non-comment,
 non-blank code), we fully defined our minimal language, including a
 lexer, parser, and AST builder. With this done, the executable will
 validate Kaleidoscope code and tell us if it is grammatically invalid.
 For example, here is a sample interaction:</p>
-<div class="highlight-python"><pre>$ python kaleidoscope.py ready&gt; def foo(x y)
-x+foo(y, 4.0) Parsed a function definition. ready&gt; def foo(x y) x+y y
-Parsed a function definition. Parsed a top-level expression. ready&gt; def
-foo(x y) x+y ) Parsed a function definition. Error: Unknown token when
-expecting an expression. ready&gt; extern sin(a); Parsed an extern. ready&gt;
-^C $</pre>
+<div class="highlight-bash"><pre>$ python kaleidoscope.py
+ready&gt; def foo(x y) x+foo(y, 4.0)
+Parsed a function definition.
+ready&gt; def foo(x y) x+y y
+Parsed a function definition.
+Parsed a top-level expression.
+ready&gt; def foo(x y) x+y )
+Parsed a function definition.
+Error: Unknown token when expecting an expression.
+ready&gt; extern sin(a);
+Parsed an extern.
+ready&gt; ^C
+$</pre>
 </div>
 <p>There is a lot of room for extension here. You can define new AST nodes,
 extend the language in many ways, etc. In the <a class="reference external" href="PythonLangImpl3.html">next
 installment</a>, we will describe how to generate
 LLVM Intermediate Representation (IR) from the AST.</p>
-</div>
 <hr class="docutils" />
-<div class="section" id="full-code-listing-code">
-<h2>2.9. Full Code Listing # {#code}<a class="headerlink" href="#full-code-listing-code" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="full-code-listing">
+<span id="code"></span><h2>2.9. Full Code Listing<a class="headerlink" href="#full-code-listing" title="Permalink to this headline">¶</a></h2>
 <p>Here is the complete code listing for this and the previous chapter.
 Note that it is fully self-contained: you don&#8217;t need LLVM or any
 external libraries at all for this.</p>
-<div class="highlight-python"><pre>#!/usr/bin/env python
-
-import re
-
-Lexer
------
-
-# The lexer yields one of these types for each token.
-class EOFToken(object): pass
-
-class DefToken(object): pass
-
-class ExternToken(object): pass
-
-class IdentifierToken(object): def **init**\ (self, name): self.name =
-name
-
-class NumberToken(object): def **init**\ (self, value): self.value =
-value
-
-class CharacterToken(object): def **init**\ (self, char): self.char =
-char def **eq**\ (self, other): return isinstance(other, CharacterToken)
-and self.char == other.char def **ne**\ (self, other): return not self
-== other
-
-# Regular expressions that tokens and comments of our language.
-REGEX_NUMBER = re.compile('[0-9]+(?:.[0-9]+)?') REGEX_IDENTIFIER =
-re.compile('[a-zA-Z][a-zA-Z0-9]\ *') REGEX_COMMENT = re.compile('#.*')
-
-def Tokenize(string): while string: # Skip whitespace. if
-string[0].isspace(): string = string[1:] continue
-
-::
-
-# Run regexes.
-comment_match = REGEX_COMMENT.match(string)
-number_match = REGEX_NUMBER.match(string)
-identifier_match = REGEX_IDENTIFIER.match(string)
-
-# Check if any of the regexes matched and yield the appropriate result.
-if comment_match:
-comment = comment_match.group(0)
-string = string[len(comment):]
-elif number_match:
-number = number_match.group(0)
-yield NumberToken(float(number))
-string = string[len(number):]
-elif identifier_match:
-identifier = identifier_match.group(0)
-# Check if we matched a keyword.
-if identifier == 'def':
-yield DefToken()
-elif identifier == 'extern':
-yield ExternToken()
-else:
-yield IdentifierToken(identifier)
-string = string[len(identifier):]
-else:
-# Yield the ASCII value of the unknown character.
-yield CharacterToken(string[0])
-string = string[1:]
-
-yield EOFToken()
-
-Abstract Syntax Tree (aka Parse Tree)
--------------------------------------
-
-# Base class for all expression nodes.
-class ExpressionNode(object): pass
-
-# Expression class for numeric literals like "1.0".
-class NumberExpressionNode(ExpressionNode): def **init**\ (self, value):
-self.value = value
-
-# Expression class for referencing a variable, like "a".
-class VariableExpressionNode(ExpressionNode): def **init**\ (self,
-name): self.name = name
-
-# Expression class for a binary operator.
-class BinaryOperatorExpressionNode(ExpressionNode): def **init**\ (self,
-operator, left, right): self.operator = operator self.left = left
-self.right = right
-
-# Expression class for function calls.
-class CallExpressionNode(ExpressionNode): def **init**\ (self, callee,
-args): self.callee = callee self.args = args
-
-# This class represents the "prototype" for a function, which captures its name,
-# and its argument names (thus implicitly the number of arguments the function
-# takes).
-class PrototypeNode(object): def **init**\ (self, name, args): self.name
-= name self.args = args
-
-# This class represents a function definition itself.
-class FunctionNode(object): def **init**\ (self, prototype, body):
-self.prototype = prototype self.body = body
-
-Parser
-------
-
-class Parser(object):
-
-def **init**\ (self, tokens, binop_precedence): self.tokens = tokens
-self.binop_precedence = binop_precedence self.Next()
-
-# Provide a simple token buffer. Parser.current is the current token the
-# parser is looking at. Parser.Next() reads another token from the lexer
-and # updates Parser.current with its results. def Next(self):
-self.current = self.tokens.next()
-
-# Gets the precedence of the current token, or -1 if the token is not a
-binary # operator. def GetCurrentTokenPrecedence(self): if
-isinstance(self.current, CharacterToken): return
-self.binop_precedence.get(self.current.char, -1) else: return -1
-
-# identifierexpr ::= identifier \| identifier '(' expression\* ')' def
-ParseIdentifierExpr(self): identifier_name = self.current.name
-self.Next() # eat identifier.
-
-::
-
-if self.current != CharacterToken('('):  # Simple variable reference.
-return VariableExpressionNode(identifier_name)
-
-# Call.
-self.Next()  # eat '('.
-args = []
-if self.current != CharacterToken(')'):
-while True:
-args.append(self.ParseExpression())
-if self.current == CharacterToken(')'):
-break
-elif self.current != CharacterToken(','):
-raise RuntimeError('Expected ")" or "," in argument list.')
-self.Next()
-
-self.Next()  # eat ')'.
-return CallExpressionNode(identifier_name, args)
-
-# numberexpr ::= number def ParseNumberExpr(self): result =
-NumberExpressionNode(self.current.value) self.Next() # consume the
-number. return result
-
-# parenexpr ::= '(' expression ')' def ParseParenExpr(self): self.Next()
-# eat '('.
-
-::
-
-contents = self.ParseExpression()
-
-if self.current != CharacterToken(')'):
-raise RuntimeError('Expected ")".')
-self.Next()  # eat ')'.
-
-return contents
-
-# primary ::= identifierexpr \| numberexpr \| parenexpr def
-ParsePrimary(self): if isinstance(self.current, IdentifierToken): return
-self.ParseIdentifierExpr() elif isinstance(self.current, NumberToken):
-return self.ParseNumberExpr() elif self.current == CharacterToken('('):
-return self.ParseParenExpr() else: raise RuntimeError('Unknown token
-when expecting an expression.')
-
-# binoprhs ::= (operator primary)\* def ParseBinOpRHS(self, left,
-left_precedence): # If this is a binary operator, find its precedence.
-while True: precedence = self.GetCurrentTokenPrecedence()
-
-::
-
-# If this is a binary operator that binds at least as tightly as the
-# current one, consume it; otherwise we are done.
-if precedence &lt; left_precedence:
-return left
-
-binary_operator = self.current.char
-self.Next()  # eat the operator.
-
-# Parse the primary expression after the binary operator.
-right = self.ParsePrimary()
-
-# If binary_operator binds less tightly with right than the operator after
-# right, let the pending operator take right as its left.
-next_precedence = self.GetCurrentTokenPrecedence()
-if precedence &lt; next_precedence:
-right = self.ParseBinOpRHS(right, precedence + 1)
-
-# Merge left/right.
-left = BinaryOperatorExpressionNode(binary_operator, left, right)
-
-# expression ::= primary binoprhs def ParseExpression(self): left =
-self.ParsePrimary() return self.ParseBinOpRHS(left, 0)
-
-# prototype ::= id '(' id\* ')' def ParsePrototype(self): if not
-isinstance(self.current, IdentifierToken): raise RuntimeError('Expected
-function name in prototype.')
-
-::
-
-function_name = self.current.name
-self.Next()  # eat function name.
-
-if self.current != CharacterToken('('):
-raise RuntimeError('Expected "(" in prototype.')
-self.Next()  # eat '('.
-
-arg_names = []
-while isinstance(self.current, IdentifierToken):
-arg_names.append(self.current.name)
-self.Next()
-
-if self.current != CharacterToken(')'):
-raise RuntimeError('Expected ")" in prototype.')
-
-# Success.
-self.Next()  # eat ')'.
-
-return PrototypeNode(function_name, arg_names)
-
-# definition ::= 'def' prototype expression def ParseDefinition(self):
-self.Next() # eat def. proto = self.ParsePrototype() body =
-self.ParseExpression() return FunctionNode(proto, body)
-
-# toplevelexpr ::= expression def ParseTopLevelExpr(self): proto =
-PrototypeNode('', []) return FunctionNode(proto, self.ParseExpression())
-
-# external ::= 'extern' prototype def ParseExtern(self): self.Next() #
-eat extern. return self.ParsePrototype()
-
-# Top-Level parsing def HandleDefinition(self):
-self.Handle(self.ParseDefinition, 'Parsed a function definition.')
-
-def HandleExtern(self): self.Handle(self.ParseExtern, 'Parsed an
-extern.')
-
-def HandleTopLevelExpression(self): self.Handle(self.ParseTopLevelExpr,
-'Parsed a top-level expression.')
-
-def Handle(self, function, message): try: function() print message
-except Exception, e: print 'Error:', e try: self.Next() # Skip for error
-recovery. except: pass
-
-Main driver code.
------------------
-
-def main(): # Install standard binary operators. # 1 is lowest possible
-precedence. 40 is the highest. operator_precedence = { '&lt;': 10, '+':
-20, '-': 20, '\*': 40 }
-
-# Run the main "interpreter loop". while True: print 'ready&gt;', try: raw
-= raw_input() except KeyboardInterrupt: return
-
-::
-
-parser = Parser(Tokenize(raw), operator_precedence)
-while True:
-# top ::= definition | external | expression | EOF
-if isinstance(parser.current, EOFToken):
-break
-if isinstance(parser.current, DefToken):
-parser.HandleDefinition()
-elif isinstance(parser.current, ExternToken):
-parser.HandleExtern()
-else:
-parser.HandleTopLevelExpression()
-
-if **name** == '**main**\ ': main()</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="c">#!/usr/bin/env python</span>
+
+<span class="kn">import</span> <span class="nn">re</span>
+</pre></div>
+</div>
+<div class="section" id="lexer">
+<h3>2.9.1. Lexer<a class="headerlink" href="#lexer" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># The lexer yields one of these types for each token.</span>
+<span class="k">class</span> <span class="nc">EOFToken</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+   <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">DefToken</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+   <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">ExternToken</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+   <span class="k">pass</span>
+
+<span class="k">class</span> <span class="nc">IdentifierToken</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+<span class="k">class</span> <span class="nc">NumberToken</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+
+<span class="k">class</span> <span class="nc">CharacterToken</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">char</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">char</span> <span class="o">=</span> <span class="n">char</span>
+   <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+      <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">CharacterToken</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">char</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">char</span>
+   <span class="k">def</span> <span class="nf">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+      <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">other</span>
+
+<span class="c"># Regular expressions that tokens and comments of our language.</span>
+<span class="n">REGEX_NUMBER</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&#39;[0-9]+(?:\.[0-9]+)?&#39;</span><span class="p">)</span>
+<span class="n">REGEX_IDENTIFIER</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&#39;[a-zA-Z][a-zA-Z0-9] *&#39;</span><span class="p">)</span>
+<span class="n">REGEX_COMMENT</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="s">&#39;#.*&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">Tokenize</span><span class="p">(</span><span class="n">string</span><span class="p">):</span>
+   <span class="k">while</span> <span class="n">string</span><span class="p">:</span>
+      <span class="c"># Skip whitespace.</span>
+      <span class="k">if</span> <span class="n">string</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">isspace</span><span class="p">():</span>
+         <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+         <span class="k">continue</span>
+
+
+      <span class="c"># Run regexes.</span>
+      <span class="n">comment_match</span> <span class="o">=</span> <span class="n">REGEX_COMMENT</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+      <span class="n">number_match</span> <span class="o">=</span> <span class="n">REGEX_NUMBER</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+      <span class="n">identifier_match</span> <span class="o">=</span> <span class="n">REGEX_IDENTIFIER</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+
+      <span class="c"># Check if any of the regexes matched and yield the appropriate result.</span>
+      <span class="k">if</span> <span class="n">comment_match</span><span class="p">:</span>
+         <span class="n">comment</span> <span class="o">=</span> <span class="n">comment_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+         <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">comment</span><span class="p">):]</span>
+      <span class="k">elif</span> <span class="n">number_match</span><span class="p">:</span>
+         <span class="n">number</span> <span class="o">=</span> <span class="n">number_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+         <span class="k">yield</span> <span class="n">NumberToken</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">number</span><span class="p">))</span>
+         <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">number</span><span class="p">):]</span>
+      <span class="k">elif</span> <span class="n">identifier_match</span><span class="p">:</span>
+         <span class="n">identifier</span> <span class="o">=</span> <span class="n">identifier_match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+         <span class="c"># Check if we matched a keyword.</span>
+         <span class="k">if</span> <span class="n">identifier</span> <span class="o">==</span> <span class="s">&#39;def&#39;</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">DefToken</span><span class="p">()</span>
+         <span class="k">elif</span> <span class="n">identifier</span> <span class="o">==</span> <span class="s">&#39;extern&#39;</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">ExternToken</span><span class="p">()</span>
+         <span class="k">else</span><span class="p">:</span>
+            <span class="k">yield</span> <span class="n">IdentifierToken</span><span class="p">(</span><span class="n">identifier</span><span class="p">)</span>
+         <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">identifier</span><span class="p">):]</span>
+      <span class="k">else</span><span class="p">:</span>
+         <span class="c"># Yield the ASCII value of the unknown character.</span>
+         <span class="k">yield</span> <span class="n">CharacterToken</span><span class="p">(</span><span class="n">string</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+         <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+<span class="k">yield</span> <span class="n">EOFToken</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="abstract-syntax-tree-aka-parse-tree">
+<h3>2.9.2. Abstract Syntax Tree (aka Parse Tree)<a class="headerlink" href="#abstract-syntax-tree-aka-parse-tree" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="c"># Base class for all expression nodes.</span>
+<span class="k">class</span> <span class="nc">ExpressionNode</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+   <span class="k">pass</span>
+
+<span class="c"># Expression class for numeric literals like &quot;1.0&quot;.</span>
+<span class="k">class</span> <span class="nc">NumberExpressionNode</span><span class="p">(</span><span class="n">ExpressionNode</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">value</span>
+
+<span class="c"># Expression class for referencing a variable, like &quot;a&quot;.</span>
+<span class="k">class</span> <span class="nc">VariableExpressionNode</span><span class="p">(</span><span class="n">ExpressionNode</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+<span class="c"># Expression class for a binary operator.</span>
+<span class="k">class</span> <span class="nc">BinaryOperatorExpressionNode</span><span class="p">(</span><span class="n">ExpressionNode</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">operator</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">operator</span> <span class="o">=</span> <span class="n">operator</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="n">left</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="n">right</span>
+
+<span class="c"># Expression class for function calls.</span>
+<span class="k">class</span> <span class="nc">CallExpressionNode</span><span class="p">(</span><span class="n">ExpressionNode</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callee</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">callee</span> <span class="o">=</span> <span class="n">callee</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+
+<span class="c"># This class represents the &quot;prototype&quot; for a function, which captures its name,</span>
+<span class="c"># and its argument names (thus implicitly the number of arguments the function</span>
+<span class="c"># takes).</span>
+<span class="k">class</span> <span class="nc">PrototypeNode</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="o">=</span> <span class="n">args</span>
+
+<span class="c"># This class represents a function definition itself.</span>
+<span class="k">class</span> <span class="nc">FunctionNode</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prototype</span><span class="p">,</span> <span class="n">body</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">prototype</span> <span class="o">=</span> <span class="n">prototype</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">body</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h3>2.9.3. Parser<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Parser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokens</span><span class="p">,</span> <span class="n">binop_precedence</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span> <span class="o">=</span> <span class="n">tokens</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">binop_precedence</span> <span class="o">=</span> <span class="n">binop_precedence</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>
+
+   <span class="c"># Provide a simple token buffer. Parser.current is the current token the</span>
+   <span class="c"># parser is looking at. Parser.Next() reads another token from the lexer and</span>
+   <span class="c"># updates Parser.current with its results.</span>
+   <span class="k">def</span> <span class="nf">Next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokens</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
+
+   <span class="c"># Gets the precedence of the current token, or -1 if the token is not a binary</span>
+   <span class="c"># operator.</span>
+   <span class="k">def</span> <span class="nf">GetCurrentTokenPrecedence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="p">,</span> <span class="n">CharacterToken</span><span class="p">):</span>
+         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">binop_precedence</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">char</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+         <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+
+   <span class="c"># identifierexpr ::= identifier | identifier &#39;(&#39; expression* &#39;)&#39;</span>
+   <span class="k">def</span> <span class="nf">ParseIdentifierExpr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">identifier_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">name</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>  <span class="c"># eat identifier.</span>
+
+
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">!=</span> <span class="n">CharacterToken</span><span class="p">(</span><span class="s">&#39;(&#39;</span><span class="p">):</span>  <span class="c"># Simple variable reference.</span>
+         <span class="k">return</span> <span class="n">VariableExpressionNode</span><span class="p">(</span><span class="n">identifier_name</span><span class="p">)</span>
+
+      <span class="c"># Call.</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>  <span class="c"># eat &#39;(&#39;.</span>
+      <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">!=</span> <span class="n">CharacterToken</span><span class="p">(</span><span class="s">&#39;)&#39;</span><span class="p">):</span>
+         <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ParseExpression</span><span class="p">())</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">==</span> <span class="n">CharacterToken</span><span class="p">(</span><span class="s">&#39;)&#39;</span><span class="p">):</span>
+               <span class="k">break</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">!=</span> <span class="n">CharacterToken</span><span class="p">(</span><span class="s">&#39;,&#39;</span><span class="p">):</span>
+               <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Expected &quot;)&quot; or &quot;,&quot; in argument list.&#39;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>
+
+      <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>  <span class="c"># eat &#39;)&#39;.</span>
+      <span class="k">return</span> <span class="n">CallExpressionNode</span><span class="p">(</span><span class="n">identifier_name</span><span class="p">,</span> <span class="n">args</span><span class="p">)</span>
+
+   <span class="c"># numberexpr ::= number</span>
+   <span class="k">def</span> <span class="nf">ParseNumberExpr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">result</span> <span class="o">=</span> <span class="n">NumberExpressionNode</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>  <span class="c"># consume the number.</span>
+      <span class="k">return</span> <span class="n">result</span>
+
+   <span class="c"># parenexpr ::= &#39;(&#39; expression &#39;)&#39;</span>
+   <span class="k">def</span> <span class="nf">ParseParenExpr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>   <span class="c"># eat &#39;(&#39;.</span>
+
+      <span class="n">contents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParseExpression</span><span class="p">()</span>
+
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">!=</span> <span class="n">CharacterToken</span><span class="p">(</span><span class="s">&#39;)&#39;</span><span class="p">):</span>
+         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Expected &quot;)&quot;.&#39;</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>  <span class="c"># eat &#39;)&#39;.</span>
+
+      <span class="k">return</span> <span class="n">contents</span>
+
+   <span class="c"># primary ::= identifierexpr | numberexpr | parenexpr</span>
+   <span class="k">def</span> <span class="nf">ParsePrimary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="p">,</span> <span class="n">IdentifierToken</span><span class="p">):</span>
+         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParseIdentifierExpr</span><span class="p">()</span>
+      <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="p">,</span> <span class="n">NumberToken</span><span class="p">):</span>
+         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParseNumberExpr</span><span class="p">()</span>
+      <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">==</span> <span class="n">CharacterToken</span><span class="p">(</span><span class="s">&#39;(&#39;</span><span class="p">):</span>
+         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParseParenExpr</span><span class="p">()</span>
+      <span class="k">else</span><span class="p">:</span>
+         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Unknown token when expecting an expression.&#39;</span><span class="p">)</span>
+
+   <span class="c"># binoprhs ::= (operator primary)*</span>
+   <span class="k">def</span> <span class="nf">ParseBinOpRHS</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">left_precedence</span><span class="p">):</span>
+      <span class="c"># If this is a binary operator, find its precedence.</span>
+      <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+         <span class="n">precedence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetCurrentTokenPrecedence</span><span class="p">()</span>
+
+
+         <span class="c"># If this is a binary operator that binds at least as tightly as the</span>
+         <span class="c"># current one, consume it; otherwise we are done.</span>
+         <span class="k">if</span> <span class="n">precedence</span> <span class="o">&lt;</span> <span class="n">left_precedence</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">left</span>
+
+         <span class="n">binary_operator</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">char</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>  <span class="c"># eat the operator.</span>
+
+         <span class="c"># Parse the primary expression after the binary operator.</span>
+         <span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParsePrimary</span><span class="p">()</span>
+
+         <span class="c"># If binary_operator binds less tightly with right than the operator after</span>
+         <span class="c"># right, let the pending operator take right as its left.</span>
+         <span class="n">next_precedence</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetCurrentTokenPrecedence</span><span class="p">()</span>
+         <span class="k">if</span> <span class="n">precedence</span> <span class="o">&lt;</span> <span class="n">next_precedence</span><span class="p">:</span>
+            <span class="n">right</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParseBinOpRHS</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">precedence</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+         <span class="c"># Merge left/right.</span>
+         <span class="n">left</span> <span class="o">=</span> <span class="n">BinaryOperatorExpressionNode</span><span class="p">(</span><span class="n">binary_operator</span><span class="p">,</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+
+   <span class="c"># expression ::= primary binoprhs</span>
+   <span class="k">def</span> <span class="nf">ParseExpression</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">left</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParsePrimary</span><span class="p">()</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParseBinOpRHS</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+   <span class="c"># prototype ::= id &#39;(&#39; id* &#39;)&#39;</span>
+   <span class="k">def</span> <span class="nf">ParsePrototype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="p">,</span> <span class="n">IdentifierToken</span><span class="p">):</span>
+         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Expected function name in prototype.&#39;</span><span class="p">)</span>
+
+
+      <span class="n">function_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">name</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>  <span class="c"># eat function name.</span>
+
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">!=</span> <span class="n">CharacterToken</span><span class="p">(</span><span class="s">&#39;(&#39;</span><span class="p">):</span>
+         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Expected &quot;(&quot; in prototype.&#39;</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>  <span class="c"># eat &#39;(&#39;.</span>
+
+      <span class="n">arg_names</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="k">while</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="p">,</span> <span class="n">IdentifierToken</span><span class="p">):</span>
+         <span class="n">arg_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+         <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>
+
+      <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current</span> <span class="o">!=</span> <span class="n">CharacterToken</span><span class="p">(</span><span class="s">&#39;)&#39;</span><span class="p">):</span>
+         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s">&#39;Expected &quot;)&quot; in prototype.&#39;</span><span class="p">)</span>
+
+      <span class="c"># Success.</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>  <span class="c"># eat &#39;)&#39;.</span>
+
+      <span class="k">return</span> <span class="n">PrototypeNode</span><span class="p">(</span><span class="n">function_name</span><span class="p">,</span> <span class="n">arg_names</span><span class="p">)</span>
+
+   <span class="c"># definition ::= &#39;def&#39; prototype expression</span>
+   <span class="k">def</span> <span class="nf">ParseDefinition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>  <span class="c"># eat def.</span>
+      <span class="n">proto</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParsePrototype</span><span class="p">()</span>
+      <span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParseExpression</span><span class="p">()</span>
+      <span class="k">return</span> <span class="n">FunctionNode</span><span class="p">(</span><span class="n">proto</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span>
+
+   <span class="c"># toplevelexpr ::= expression</span>
+   <span class="k">def</span> <span class="nf">ParseTopLevelExpr</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="n">proto</span> <span class="o">=</span> <span class="n">PrototypeNode</span><span class="p">(</span><span class="s">&#39;&#39;</span><span class="p">,</span> <span class="p">[])</span>
+      <span class="k">return</span> <span class="n">FunctionNode</span><span class="p">(</span><span class="n">proto</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParseExpression</span><span class="p">())</span>
+
+   <span class="c"># external ::= &#39;extern&#39; prototype</span>
+   <span class="k">def</span> <span class="nf">ParseExtern</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>  <span class="c"># eat extern.</span>
+      <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ParsePrototype</span><span class="p">()</span>
+
+   <span class="c"># Top-Level parsing</span>
+   <span class="k">def</span> <span class="nf">HandleDefinition</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">Handle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ParseDefinition</span><span class="p">,</span> <span class="s">&#39;Parsed a function definition.&#39;</span><span class="p">)</span>
+
+   <span class="k">def</span> <span class="nf">HandleExtern</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">Handle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ParseExtern</span><span class="p">,</span> <span class="s">&#39;Parsed an extern.&#39;</span><span class="p">)</span>
+
+   <span class="k">def</span> <span class="nf">HandleTopLevelExpression</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">Handle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ParseTopLevelExpr</span><span class="p">,</span> <span class="s">&#39;Parsed a top-level expression.&#39;</span><span class="p">)</span>
+
+   <span class="k">def</span> <span class="nf">Handle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">function</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+      <span class="k">try</span><span class="p">:</span>
+         <span class="n">function</span><span class="p">()</span>
+         <span class="k">print</span> <span class="n">message</span>
+      <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+         <span class="k">print</span> <span class="s">&#39;Error:&#39;</span><span class="p">,</span> <span class="n">e</span>
+         <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Next</span><span class="p">()</span>  <span class="c"># Skip for error recovery.</span>
+         <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="main-driver-code">
+<h3>2.9.4. Main driver code.<a class="headerlink" href="#main-driver-code" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+   <span class="c"># Install standard binary operators.</span>
+   <span class="c"># 1 is lowest possible precedence. 40 is the highest.</span>
+   <span class="n">operator_precedence</span> <span class="o">=</span> <span class="p">{</span>
+       <span class="s">&#39;&lt;&#39;</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+       <span class="s">&#39;+&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+       <span class="s">&#39;-&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+       <span class="s">&#39;*&#39;</span><span class="p">:</span> <span class="mi">40</span>
+   <span class="p">}</span>
+
+   <span class="c"># Run the main &quot;interpreter loop&quot;.</span>
+   <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+      <span class="k">print</span> <span class="s">&#39;ready&gt;&#39;</span><span class="p">,</span>
+      <span class="k">try</span><span class="p">:</span>
+         <span class="n">raw</span> <span class="o">=</span> <span class="nb">raw_input</span><span class="p">()</span>
+      <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+         <span class="k">return</span>
+
+      <span class="n">parser</span> <span class="o">=</span> <span class="n">Parser</span><span class="p">(</span><span class="n">Tokenize</span><span class="p">(</span><span class="n">raw</span><span class="p">),</span> <span class="n">operator_precedence</span><span class="p">)</span>
+      <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+         <span class="c"># top ::= definition | external | expression | EOF</span>
+         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">current</span><span class="p">,</span> <span class="n">EOFToken</span><span class="p">):</span>
+            <span class="k">break</span>
+         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">current</span><span class="p">,</span> <span class="n">DefToken</span><span class="p">):</span>
+            <span class="n">parser</span><span class="o">.</span><span class="n">HandleDefinition</span><span class="p">()</span>
+         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">parser</span><span class="o">.</span><span class="n">current</span><span class="p">,</span> <span class="n">ExternToken</span><span class="p">):</span>
+            <span class="n">parser</span><span class="o">.</span><span class="n">HandleExtern</span><span class="p">()</span>
+         <span class="k">else</span><span class="p">:</span>
+            <span class="n">parser</span><span class="o">.</span><span class="n">HandleTopLevelExpression</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+   <span class="n">main</span><span class="p">()</span>
+</pre></div>
+</div>
 </div>
 </div>
 </div>
@@ -831,15 +958,21 @@ if **name** == '**main**\ ': main()</pre>
   <h3><a href="../../index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">2. Chapter 2: Implementing a Parser and AST</a><ul>
-<li><a class="reference internal" href="#introduction-intro">2.1. Introduction # {#intro}</a></li>
-<li><a class="reference internal" href="#the-abstract-syntax-tree-ast-ast">2.2. The Abstract Syntax Tree (AST) # {#ast}</a></li>
-<li><a class="reference internal" href="#parser-basics-parserbasics">2.3. Parser Basics # {#parserbasics}</a></li>
-<li><a class="reference internal" href="#basic-expression-parsing-parserprimexprs">2.4. Basic Expression Parsing # {#parserprimexprs}</a></li>
-<li><a class="reference internal" href="#binary-expression-parsing-parserbinops">2.5. Binary Expression Parsing # {#parserbinops}</a></li>
-<li><a class="reference internal" href="#parsing-the-rest-parsertop">2.6. Parsing the Rest # {#parsertop}</a></li>
-<li><a class="reference internal" href="#the-driver-driver">2.7. The Driver # {#driver}</a></li>
-<li><a class="reference internal" href="#conclusions-conclusions">2.8. Conclusions # {#conclusions}</a></li>
-<li><a class="reference internal" href="#full-code-listing-code">2.9. Full Code Listing # {#code}</a></li>
+<li><a class="reference internal" href="#introduction">2.1. Introduction</a></li>
+<li><a class="reference internal" href="#the-abstract-syntax-tree-ast">2.2. The Abstract Syntax Tree (AST)</a></li>
+<li><a class="reference internal" href="#parser-basics">2.3. Parser Basics</a></li>
+<li><a class="reference internal" href="#basic-expression-parsing">2.4. Basic Expression Parsing</a></li>
+<li><a class="reference internal" href="#binary-expression-parsing">2.5. Binary Expression Parsing</a></li>
+<li><a class="reference internal" href="#parsing-the-rest">2.6. Parsing the Rest</a></li>
+<li><a class="reference internal" href="#the-driver">2.7. The Driver</a></li>
+<li><a class="reference internal" href="#conclusions">2.8. Conclusions</a></li>
+<li><a class="reference internal" href="#full-code-listing">2.9. Full Code Listing</a><ul>
+<li><a class="reference internal" href="#lexer">2.9.1. Lexer</a></li>
+<li><a class="reference internal" href="#abstract-syntax-tree-aka-parse-tree">2.9.2. Abstract Syntax Tree (aka Parse Tree)</a></li>
+<li><a class="reference internal" href="#id2">2.9.3. Parser</a></li>
+<li><a class="reference internal" href="#main-driver-code">2.9.4. Main driver code.</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
