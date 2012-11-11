@@ -1,0 +1,169 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introducing LLPython &mdash; llvmpy 0.9.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.9.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="llvmpy 0.9.0 documentation" href="../../index.html" />
+    <link rel="up" title="LLPython Articles" href="articles.html" />
+    <link rel="next" title="nobitey: Using ctypes and llvmpy to Bypass ctypes" href="nobitey_dev.html" />
+    <link rel="prev" title="LLPython Articles" href="articles.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="nobitey_dev.html" title="nobitey: Using ctypes and llvmpy to Bypass ctypes"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="articles.html" title="LLPython Articles"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >LLPython Documentation</a> &raquo;</li>
+          <li><a href="articles.html" accesskey="U">LLPython Articles</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="introducing-llpython">
+<h1>Introducing LLPython<a class="headerlink" href="#introducing-llpython" title="Permalink to this headline">¶</a></h1>
+<p>In this article, we introduce the llpython package.  The primary goal
+of the llpython package is to provide a Python dialect/subset that
+maps directly to LLVM code.  LLPython differs from its originating
+LLVM translator, Numba, in the following aspects:</p>
+<blockquote>
+<div><ul class="simple">
+<li>LLPython code is not intended to work in Python if not translated
+and wrapped.</li>
+<li>The LLPython translator only uses LLVM types.</li>
+<li>LLPython is explicitly typed, and does not support type inference.
+LLPython does not support implicit casts, all casts must be explicit.</li>
+<li>LLPython supports code that directly calls the C API, the Python C
+API, and the llvm.core.Builder methods.</li>
+</ul>
+</div></blockquote>
+<p>Additionally, we designed the sub-package to have the following
+engineering properties:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Usable from Python 2.7, and 3.X.  At the time of writing, we plan
+to support Python 2.6.</li>
+<li>Clean from Numba dependencies (other than llvmpy), and can be used
+as a standalone code generator without a full Numba installation.</li>
+<li>Provides a series of Python bytecode passes that can be easily
+used by other projects.</li>
+</ul>
+</div></blockquote>
+<div class="section" id="llpython-origins">
+<h2>LLPython Origins<a class="headerlink" href="#llpython-origins" title="Permalink to this headline">¶</a></h2>
+<p>We developed LLPython with the initial goal of simplifying writing
+LLVM code.</p>
+</div>
+<div class="section" id="llpython-internals">
+<h2>LLPython Internals<a class="headerlink" href="#llpython-internals" title="Permalink to this headline">¶</a></h2>
+<p>In this section, we describe the various passes performed by the
+LLPython translator.</p>
+</div>
+<div class="section" id="conclusions">
+<h2>Conclusions<a class="headerlink" href="#conclusions" title="Permalink to this headline">¶</a></h2>
+<p>LLPython is neat.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Introducing LLPython</a><ul>
+<li><a class="reference internal" href="#llpython-origins">LLPython Origins</a></li>
+<li><a class="reference internal" href="#llpython-internals">LLPython Internals</a></li>
+<li><a class="reference internal" href="#conclusions">Conclusions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="articles.html"
+                        title="previous chapter">LLPython Articles</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="nobitey_dev.html"
+                        title="next chapter">nobitey: Using ctypes and llvmpy to Bypass ctypes</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/doc/llpython/intro_llpython.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="nobitey_dev.html" title="nobitey: Using ctypes and llvmpy to Bypass ctypes"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="articles.html" title="LLPython Articles"
+             >previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.9.0 documentation</a> &raquo;</li>
+          <li><a href="index.html" >LLPython Documentation</a> &raquo;</li>
+          <li><a href="articles.html" >LLPython Articles</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Mahadevan R (2008-2010), Continuum Analytics (2012).
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
