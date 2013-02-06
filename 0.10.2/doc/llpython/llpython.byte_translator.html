@@ -1,0 +1,160 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>llpython.byte_translator &mdash; llvmpy 0.10.2 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.10.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="llvmpy 0.10.2 documentation" href="../../index.html" />
+    <link rel="up" title="LLPython Module Reference" href="reference.html" />
+    <link rel="next" title="llpython.bytetype" href="llpython.bytetype.html" />
+    <link rel="prev" title="llpython.byte_flow" href="llpython.byte_flow.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="llpython.bytetype.html" title="llpython.bytetype"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="llpython.byte_flow.html" title="llpython.byte_flow"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.10.2 documentation</a> &raquo;</li>
+          <li><a href="index.html" >LLPython Documentation</a> &raquo;</li>
+          <li><a href="reference.html" accesskey="U">LLPython Module Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-llpython.byte_translator">
+<span id="llpython-byte-translator"></span><h1>llpython.byte_translator<a class="headerlink" href="#module-llpython.byte_translator" title="Permalink to this headline">¶</a></h1>
+<p>Defines a bytecode based LLVM translator for llpython code.</p>
+<dl class="class">
+<dt id="llpython.byte_translator.LLVMTranslator">
+<em class="property">class </em><tt class="descclassname">llpython.byte_translator.</tt><tt class="descname">LLVMTranslator</tt><big>(</big><em>llvm_module=None</em>, <em>*args</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#llpython.byte_translator.LLVMTranslator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transformer responsible for visiting a set of bytecode flow
+trees, emitting LLVM code.</p>
+<p>Unlike other translators in <a class="reference internal" href="llpython.html#module-llpython" title="llpython"><tt class="xref py py-mod docutils literal"><span class="pre">llpython</span></tt></a>, this
+incorporates the full transformation chain, starting with
+<a class="reference internal" href="llpython.byte_flow.html#llpython.byte_flow.BytecodeFlowBuilder" title="llpython.byte_flow.BytecodeFlowBuilder"><tt class="xref py py-class docutils literal"><span class="pre">llpython.byte_flow.BytecodeFlowBuilder</span></tt></a>, then
+<a class="reference internal" href="llpython.byte_control.html#llpython.byte_control.ControlFlowBuilder" title="llpython.byte_control.ControlFlowBuilder"><tt class="xref py py-class docutils literal"><span class="pre">llpython.byte_control.ControlFlowBuilder</span></tt></a>, and
+then <a class="reference internal" href="llpython.phi_injector.html#llpython.phi_injector.PhiInjector" title="llpython.phi_injector.PhiInjector"><tt class="xref py py-class docutils literal"><span class="pre">llpython.phi_injector.PhiInjector</span></tt></a>.</p>
+<dl class="method">
+<dt id="llpython.byte_translator.LLVMTranslator.translate">
+<tt class="descname">translate</tt><big>(</big><em>function</em>, <em>llvm_type=None</em>, <em>llvm_function=None</em>, <em>env=None</em><big>)</big><a class="headerlink" href="#llpython.byte_translator.LLVMTranslator.translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate a function to the given LLVM function type.</p>
+<p>If no type is given, then assume the function is of LLVM type
+&#8220;void ()&#8221;.</p>
+<p>The optional env parameter allows extension of the global
+environment.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="llpython.byte_translator.llpython">
+<tt class="descclassname">llpython.byte_translator.</tt><tt class="descname">llpython</tt><big>(</big><em>lltype</em>, <em>llvm_module=None</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#llpython.byte_translator.llpython" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decorator version of translate_function().</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="llpython.byte_translator.translate_function">
+<tt class="descclassname">llpython.byte_translator.</tt><tt class="descname">translate_function</tt><big>(</big><em>func</em>, <em>lltype</em>, <em>llvm_module=None</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#llpython.byte_translator.translate_function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a function and an LLVM function type, emit LLVM code for
+that function using a new LLVMTranslator instance.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="llpython.byte_flow.html"
+                        title="previous chapter">llpython.byte_flow</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="llpython.bytetype.html"
+                        title="next chapter">llpython.bytetype</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/doc/llpython/llpython.byte_translator.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="llpython.bytetype.html" title="llpython.bytetype"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="llpython.byte_flow.html" title="llpython.byte_flow"
+             >previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.10.2 documentation</a> &raquo;</li>
+          <li><a href="index.html" >LLPython Documentation</a> &raquo;</li>
+          <li><a href="reference.html" >LLPython Module Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2012, Mahadevan R (2008-2010), Continuum Analytics (2012).
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
