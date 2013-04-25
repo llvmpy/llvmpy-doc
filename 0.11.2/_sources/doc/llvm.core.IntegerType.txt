@@ -1,0 +1,30 @@
++----------------------------------+
+| layout: page                     |
++----------------------------------+
+| title: IntegerType (llvm.core)   |
++----------------------------------+
+
+llvm.core.IntegerType
+=====================
+
+Base Class
+----------
+
+-  `llvm.core.Type <llvm.core.Type.html>`_
+
+Properties
+----------
+
+``width``
+~~~~~~~~~
+
+[read-only]
+
+The width of the integer type, in number of bits.
+
+
+Automatically Generated Documentation
+-------------------------------------
+.. autoclass:: llvm.core.IntegerType
+   :members:
+   :undoc-members:
