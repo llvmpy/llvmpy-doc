@@ -89,7 +89,7 @@ supported, for a variety of reasons.</p>
 </div>
 <div class="section" id="versions">
 <h2>Versions<a class="headerlink" href="#versions" title="Permalink to this headline">¶</a></h2>
-<p>llvmpy 0.9 requires version 3.1 of LLVM. It may not work with
+<p>llvmpy 0.11.2 uses LLVM 3.2 (or at least 3.1). It may not work with
 previous versions.</p>
 <p>llvmpy has been built and tested with Python 2.7 and 3.2. It should work with
 earlier versions.</p>
@@ -112,19 +112,6 @@ your distro&#8217;s repository has the appropriate version of LLVM!</p>
 <p>It does not matter which compiler LLVM itself was built with (<tt class="docutils literal"><span class="pre">g++</span></tt>,
 <tt class="docutils literal"><span class="pre">llvm-g++</span></tt> or any other); llvmpy can be built with any compiler. It
 has been tried only with gcc/g++ though.</p>
-<div class="section" id="llvm-and-enable-pic">
-<h2>LLVM and <tt class="docutils literal"><span class="pre">--enable-pic</span></tt><a class="headerlink" href="#llvm-and-enable-pic" title="Permalink to this headline">¶</a></h2>
-<p>The result of an LLVM build is a set of static libraries and object
-files. The llvmpy contains an extension package that is built into a
-shared object (_core.so) which links to these static libraries and
-object files. It is therefore required that the LLVM libraries and
-object files be built with the <tt class="docutils literal"><span class="pre">-fPIC</span></tt> option (generate position
-independent code). Be sure to use the <tt class="docutils literal"><span class="pre">--enable-pic</span></tt> option while
-configuring LLVM (default is no PIC), like this:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>~/llvm ./configure --enable-pic --enable-optimized
-</pre></div>
-</div>
-</div>
 <div class="section" id="llvm-config">
 <h2>llvm-config<a class="headerlink" href="#llvm-config" title="Permalink to this headline">¶</a></h2>
 <p>In order to build llvmpy, it&#8217;s build script needs to know from where it
@@ -139,13 +126,40 @@ is different from that of &#8216;root&#8217;, so even if <tt class="docutils lit
 </div>
 <div class="section" id="steps">
 <h2>Steps<a class="headerlink" href="#steps" title="Permalink to this headline">¶</a></h2>
-<p>Get 3.1 version of LLVM, build it. Make sure &#8216;&#8211;enable-pic&#8217; is passed to
-LLVM&#8217;s &#8216;configure&#8217;.</p>
-<p>Get llvmpy and install it:</p>
-<div class="highlight-bash"><div class="highlight"><pre><span class="nv">$ </span>git clone git@github.com:numba/llvmpy.git
-<span class="nv">$ </span><span class="nb">cd </span>llvmpy <span class="nv">$ </span>python setup.py install
-</pre></div>
+<ol class="arabic">
+<li><p class="first">Get and extract LLVM 3.2 source tarball from
+<a class="reference external" href="http://llvm.org/releases/download.html#3.2">llvm.org</a>.  Then, <tt class="docutils literal"><span class="pre">cd</span></tt> into
+the extracted directory.</p>
+</li>
+<li><p class="first">Run <tt class="docutils literal"><span class="pre">./configure</span> <span class="pre">--enable-optimized</span> <span class="pre">--prefix=LLVM_INSTALL_PATH</span></tt>.</p>
+<blockquote>
+<div><p><strong>Note</strong>: Without the <tt class="docutils literal"><span class="pre">--enable-optimized</span></tt> flag, debug build will be
+selected.  Unless you are developing LLVM or llvmpy, it is recommended
+that the flag is used to reduce build time and binary size.</p>
+<p><strong>Note</strong>: Use prefix to select the installation path.  It is recommended
+to separate your custom build from the default system package.  Please
+replace <tt class="docutils literal"><span class="pre">LLVM_INSTALL_PATH</span></tt> with your own path.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Run <tt class="docutils literal"><span class="pre">REQUIRES_RTTI=1</span> <span class="pre">make</span></tt> to build.</p>
+<blockquote>
+<div><p><strong>Note</strong>: With LLVM 3.2, the default build configuration has C++ RTTI
+disabled.  However, llvmpy requires RTTI.</p>
+</div></blockquote>
+</li>
+<li><p class="first">Get llvm-py and install it:</p>
+<div class="highlight-python"><pre>$ git clone git@github.com:llvmpy/llvmpy.git
+$ cd llvmpy
+$ LLVM_CONFIG_PATH=LLVM_INSTALL_PATH/bin/llvm-config python setup.py install</pre>
 </div>
+<p>Run the tests:</p>
+<div class="highlight-python"><pre>$ python -c "import llvm; llvm.test()"</pre>
+</div>
+</li>
+<li><p class="first">See documentation at &#8216;<a class="reference external" href="http://www.llvmpy.org">http://www.llvmpy.org</a>&#8216; and examples
+under &#8216;test&#8217;.</p>
+</li>
+</ol>
 </div>
 </div>
 
@@ -164,7 +178,6 @@ LLVM&#8217;s &#8216;configure&#8217;.</p>
 </ul>
 </li>
 <li><a class="reference internal" href="#installation">Installation</a><ul>
-<li><a class="reference internal" href="#llvm-and-enable-pic">LLVM and <tt class="docutils literal"><span class="pre">--enable-pic</span></tt></a></li>
 <li><a class="reference internal" href="#llvm-config">llvm-config</a></li>
 <li><a class="reference internal" href="#steps">Steps</a></li>
 </ul>
