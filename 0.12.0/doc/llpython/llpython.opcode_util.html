@@ -1,0 +1,140 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>llpython.opcode_util &mdash; llvmpy unknown-release documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     'unknown-release',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="llvmpy unknown-release documentation" href="../../index.html" />
+    <link rel="up" title="LLPython Module Reference" href="reference.html" />
+    <link rel="next" title="llpython.phi_injector" href="llpython.phi_injector.html" />
+    <link rel="prev" title="llpython.nobitey" href="llpython.nobitey.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="llpython.phi_injector.html" title="llpython.phi_injector"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="llpython.nobitey.html" title="llpython.nobitey"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">llvmpy unknown-release documentation</a> &raquo;</li>
+          <li><a href="index.html" >LLPython Documentation</a> &raquo;</li>
+          <li><a href="reference.html" accesskey="U">LLPython Module Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-llpython.opcode_util">
+<span id="llpython-opcode-util"></span><h1>llpython.opcode_util<a class="headerlink" href="#module-llpython.opcode_util" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="llpython.opcode_util.extendlabels">
+<tt class="descclassname">llpython.opcode_util.</tt><tt class="descname">extendlabels</tt><big>(</big><em>code</em>, <em>labels=None</em><big>)</big><a class="headerlink" href="#llpython.opcode_util.extendlabels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extend the set of jump target labels to account for the
+passthrough targets of conditional branches.</p>
+<p>This allows us to create a control flow graph where there is at
+most one branch per basic block.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="llpython.opcode_util.itercode">
+<tt class="descclassname">llpython.opcode_util.</tt><tt class="descname">itercode</tt><big>(</big><em>code</em>, <em>start=0</em><big>)</big><a class="headerlink" href="#llpython.opcode_util.itercode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a generator of byte-offset, opcode, and argument
+from a byte-code-string</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="llpython.nobitey.html"
+                        title="previous chapter">llpython.nobitey</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="llpython.phi_injector.html"
+                        title="next chapter">llpython.phi_injector</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/doc/llpython/llpython.opcode_util.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="llpython.phi_injector.html" title="llpython.phi_injector"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="llpython.nobitey.html" title="llpython.nobitey"
+             >previous</a> |</li>
+        <li><a href="../../index.html">llvmpy unknown-release documentation</a> &raquo;</li>
+          <li><a href="index.html" >LLPython Documentation</a> &raquo;</li>
+          <li><a href="reference.html" >LLPython Module Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Mahadevan R (2008-2010), Continuum Analytics (2012-2013).
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
+    </div>
+  </body>
+</html>
