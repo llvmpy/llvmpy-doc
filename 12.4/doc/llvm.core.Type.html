@@ -1,0 +1,387 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>llvm.core.Type &mdash; llvmpy 0.12.4 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.12.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="llvmpy 0.12.4 documentation" href="../index.html" />
+    <link rel="up" title="llvm.core" href="llvmcore.html" />
+    <link rel="next" title="llvm.core.User # {#user}" href="llvm.core.User.html" />
+    <link rel="prev" title="llvm.core.StructType" href="llvm.core.StructType.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="llvm.core.User.html" title="llvm.core.User # {#user}"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="llvm.core.StructType.html" title="llvm.core.StructType"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">llvmpy 0.12.4 documentation</a> &raquo;</li>
+          <li><a href="llvmcore.html" accesskey="U">llvm.core</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <table border="1" class="docutils">
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>layout: page</td>
+</tr>
+<tr class="row-even"><td>title: Type (llvm.core)</td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="llvm-core-type">
+<h1>llvm.core.Type<a class="headerlink" href="#llvm-core-type" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li>This will become a table of contents (this text will be scraped).
+{:toc}</li>
+</ul>
+<div class="section" id="static-constructors">
+<h2>Static Constructors<a class="headerlink" href="#static-constructors" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="int-n">
+<h3><tt class="docutils literal"><span class="pre">int(n)</span></tt><a class="headerlink" href="#int-n" title="Permalink to this headline">¶</a></h3>
+<p>Create an integer type of bit width <tt class="docutils literal"><span class="pre">n</span></tt>.</p>
+</div>
+<div class="section" id="float">
+<h3><tt class="docutils literal"><span class="pre">float()</span></tt><a class="headerlink" href="#float" title="Permalink to this headline">¶</a></h3>
+<p>Create a 32-bit floating point type.</p>
+</div>
+<div class="section" id="double">
+<h3><tt class="docutils literal"><span class="pre">double()</span></tt><a class="headerlink" href="#double" title="Permalink to this headline">¶</a></h3>
+<p>Create a 64-bit floating point type.</p>
+</div>
+<div class="section" id="x86-fp80">
+<h3><tt class="docutils literal"><span class="pre">x86_fp80()</span></tt><a class="headerlink" href="#x86-fp80" title="Permalink to this headline">¶</a></h3>
+<p>Create a 80-bit 80x87-style floating point type.</p>
+</div>
+<div class="section" id="fp128">
+<h3><tt class="docutils literal"><span class="pre">fp128()</span></tt><a class="headerlink" href="#fp128" title="Permalink to this headline">¶</a></h3>
+<p>Create a 128-bit floating point type (112-bit mantissa).</p>
+</div>
+<div class="section" id="ppc-fp128">
+<h3><tt class="docutils literal"><span class="pre">ppc_fp128()</span></tt><a class="headerlink" href="#ppc-fp128" title="Permalink to this headline">¶</a></h3>
+<p>Create a 128-bit float (two 64-bits).</p>
+</div>
+<div class="section" id="function-ret-params-vararg-false">
+<h3><tt class="docutils literal"><span class="pre">function(ret,</span> <span class="pre">params,</span> <span class="pre">vararg=False)</span></tt><a class="headerlink" href="#function-ret-params-vararg-false" title="Permalink to this headline">¶</a></h3>
+<p>Create a function type, having the return type <tt class="docutils literal"><span class="pre">ret</span></tt> (must be a
+<tt class="docutils literal"><span class="pre">Type</span></tt>), accepting the parameters <tt class="docutils literal"><span class="pre">params</span></tt>, where <tt class="docutils literal"><span class="pre">params</span></tt> is an
+iterable, that yields <tt class="docutils literal"><span class="pre">Type</span></tt> objects representing the type of each
+function argument in order. If <tt class="docutils literal"><span class="pre">vararg</span></tt> is <tt class="docutils literal"><span class="pre">True</span></tt>, function is
+variadic.</p>
+</div>
+<div class="section" id="struct-eltys-name">
+<h3><tt class="docutils literal"><span class="pre">struct(eltys,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#struct-eltys-name" title="Permalink to this headline">¶</a></h3>
+<p>Create an unpacked structure. <tt class="docutils literal"><span class="pre">eltys</span></tt> is an iterable, that yields
+<tt class="docutils literal"><span class="pre">Type</span></tt> objects representing the type of each element in order.</p>
+<p>If <tt class="docutils literal"><span class="pre">name</span></tt> is evaulates <tt class="docutils literal"><span class="pre">True</span></tt> (not empty), create an <em>identified
+structure</em>; otherwise, create a <em>literal structure</em> by default.</p>
+</div>
+<div class="section" id="packed-struct-eltys-name">
+<h3><tt class="docutils literal"><span class="pre">packed_struct(eltys,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#packed-struct-eltys-name" title="Permalink to this headline">¶</a></h3>
+<p>Like <tt class="docutils literal"><span class="pre">struct(eltys)</span></tt>, but creates a packed struct.</p>
+</div>
+<div class="section" id="array-elty-count">
+<h3><tt class="docutils literal"><span class="pre">array(elty,</span> <span class="pre">count)</span></tt><a class="headerlink" href="#array-elty-count" title="Permalink to this headline">¶</a></h3>
+<p>Creates an array type, holding <tt class="docutils literal"><span class="pre">count</span></tt> elements, each of type <tt class="docutils literal"><span class="pre">elty</span></tt>
+(which should be a <tt class="docutils literal"><span class="pre">Type</span></tt>).</p>
+</div>
+<div class="section" id="pointer-pty-addrspc-0">
+<h3><tt class="docutils literal"><span class="pre">pointer(pty,</span> <span class="pre">addrspc=0)</span></tt><a class="headerlink" href="#pointer-pty-addrspc-0" title="Permalink to this headline">¶</a></h3>
+<p>Create a pointer to type <tt class="docutils literal"><span class="pre">pty</span></tt> (which should be a <tt class="docutils literal"><span class="pre">Type</span></tt>).
+<tt class="docutils literal"><span class="pre">addrspc</span></tt> is an integer that represents the address space of the
+pointer (see LLVM docs or ask on llvm-dev for more info).</p>
+</div>
+<div class="section" id="void">
+<h3><tt class="docutils literal"><span class="pre">void()</span></tt><a class="headerlink" href="#void" title="Permalink to this headline">¶</a></h3>
+<p>Creates a void type. Used for function return types.</p>
+</div>
+<div class="section" id="label">
+<h3><tt class="docutils literal"><span class="pre">label()</span></tt><a class="headerlink" href="#label" title="Permalink to this headline">¶</a></h3>
+<p>Creates a label type.</p>
+</div>
+<div class="section" id="opaque-name">
+<h3><tt class="docutils literal"><span class="pre">opaque(name)</span></tt><a class="headerlink" href="#opaque-name" title="Permalink to this headline">¶</a></h3>
+<p>Opaque <a class="reference external" href="llvm.core.StructType.html">StructType</a>, used for creating
+self-referencing types.</p>
+</div>
+</div>
+<div class="section" id="properties">
+<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="kind">
+<h3><tt class="docutils literal"><span class="pre">kind</span></tt><a class="headerlink" href="#kind" title="Permalink to this headline">¶</a></h3>
+<p>[read-only]</p>
+<p>A value (enum) representing the &#8220;type&#8221; of the object. It will be one of
+the following constants defined in <tt class="docutils literal"><span class="pre">llvm.core</span></tt>:</p>
+<div class="highlight-python"><pre># Warning: do not rely on actual numerical
+values! TYPE_VOID = 0 TYPE_FLOAT = 1 TYPE_DOUBLE = 2 TYPE_X86_FP80
+= 3 TYPE_FP128 = 4 TYPE_PPC_FP128 = 5 TYPE_LABEL = 6 TYPE_INTEGER =
+7 TYPE_FUNCTION = 8 TYPE_STRUCT = 9 TYPE_ARRAY = 10 TYPE_POINTER =
+11 TYPE_OPAQUE = 12 TYPE_VECTOR = 13 TYPE_METADATA = 14 TYPE_UNION =
+15</pre>
+</div>
+<div class="section" id="example">
+<h4>Example:<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h4>
+<div class="highlight-python"><pre>assert Type.int().kind == TYPE_INTEGER assert
+Type.void().kind == TYPE_VOID</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="automatically-generated-documentation">
+<h2>Automatically Generated Documentation<a class="headerlink" href="#automatically-generated-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="llvm.core.Type">
+<em class="property">class </em><tt class="descclassname">llvm.core.</tt><tt class="descname">Type</tt><big>(</big><em>ptr</em><big>)</big><a class="headerlink" href="#llvm.core.Type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a type, like a 32-bit integer or an 80-bit x86 float.</p>
+<p>Use one of the static methods to create an instance. Example:
+ty = Type.double()</p>
+<dl class="staticmethod">
+<dt id="llvm.core.Type.array">
+<em class="property">static </em><tt class="descname">array</tt><big>(</big><em>element_ty</em>, <em>count</em><big>)</big><a class="headerlink" href="#llvm.core.Type.array" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an array type.</p>
+<p>Creates a type for an array of elements of type <a href="#id1"><span class="problematic" id="id2">`</span></a>element_ty&#8217;,
+having &#8216;count&#8217; elements.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="llvm.core.Type.double">
+<em class="property">static </em><tt class="descname">double</tt><big>(</big><big>)</big><a class="headerlink" href="#llvm.core.Type.double" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a 64-bit floating point type.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="llvm.core.Type.float">
+<em class="property">static </em><tt class="descname">float</tt><big>(</big><big>)</big><a class="headerlink" href="#llvm.core.Type.float" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a 32-bit floating point type.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="llvm.core.Type.fp128">
+<em class="property">static </em><tt class="descname">fp128</tt><big>(</big><big>)</big><a class="headerlink" href="#llvm.core.Type.fp128" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a 128-bit floating point type (with 112-bit
+mantissa).</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="llvm.core.Type.function">
+<em class="property">static </em><tt class="descname">function</tt><big>(</big><em>return_ty</em>, <em>param_tys</em>, <em>var_arg=False</em><big>)</big><a class="headerlink" href="#llvm.core.Type.function" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a function type.</p>
+<p>Creates a function type that returns a value of type
+<a href="#id3"><span class="problematic" id="id4">`</span></a>return_ty&#8217;, takes arguments of types as given in the iterable
+<a href="#id5"><span class="problematic" id="id6">`</span></a>param_tys&#8217;. Set <a href="#id7"><span class="problematic" id="id8">`</span></a>var_arg&#8217; to True (default is False) for a
+variadic function.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="llvm.core.Type.int">
+<em class="property">static </em><tt class="descname">int</tt><big>(</big><em>bits=32</em><big>)</big><a class="headerlink" href="#llvm.core.Type.int" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an integer type having the given bit width.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="llvm.core.Type.kind">
+<tt class="descname">kind</tt><a class="headerlink" href="#llvm.core.Type.kind" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="llvm.core.Type.label">
+<em class="property">static </em><tt class="descname">label</tt><big>(</big><big>)</big><a class="headerlink" href="#llvm.core.Type.label" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a label type.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="llvm.core.Type.opaque">
+<em class="property">static </em><tt class="descname">opaque</tt><big>(</big><em>name</em><big>)</big><a class="headerlink" href="#llvm.core.Type.opaque" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a opaque StructType</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="llvm.core.Type.packed_struct">
+<em class="property">static </em><tt class="descname">packed_struct</tt><big>(</big><em>element_tys</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Type.packed_struct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a (packed) structure type.</p>
+<p>Creates a structure type with elements of types as given in the
+iterable <a href="#id9"><span class="problematic" id="id10">`</span></a>element_tys&#8217;. This method creates a packed
+structure. For an unpacked one, use the struct() method.</p>
+<p>If name is not &#8216;&#8217;, creates a identified type;
+otherwise, creates a literal type.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="llvm.core.Type.pointer">
+<em class="property">static </em><tt class="descname">pointer</tt><big>(</big><em>pointee_ty</em>, <em>addr_space=0</em><big>)</big><a class="headerlink" href="#llvm.core.Type.pointer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a pointer type.</p>
+<p>Creates a pointer type, which can point to values of type
+<a href="#id11"><span class="problematic" id="id12">`</span></a>pointee_ty&#8217;, in the address space <a href="#id13"><span class="problematic" id="id14">`</span></a>addr_space&#8217;.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="llvm.core.Type.ppc_fp128">
+<em class="property">static </em><tt class="descname">ppc_fp128</tt><big>(</big><big>)</big><a class="headerlink" href="#llvm.core.Type.ppc_fp128" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a 128-bit floating point type (two 64-bits).</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="llvm.core.Type.struct">
+<em class="property">static </em><tt class="descname">struct</tt><big>(</big><em>element_tys</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Type.struct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a (unpacked) structure type.</p>
+<p>Creates a structure type with elements of types as given in the
+iterable <a href="#id15"><span class="problematic" id="id16">`</span></a>element_tys&#8217;. This method creates a unpacked
+structure. For a packed one, use the packed_struct() method.</p>
+<p>If name is not &#8216;&#8217;, creates a identified type;
+otherwise, creates a literal type.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="llvm.core.Type.vector">
+<em class="property">static </em><tt class="descname">vector</tt><big>(</big><em>element_ty</em>, <em>count</em><big>)</big><a class="headerlink" href="#llvm.core.Type.vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a vector type.</p>
+<p>Creates a type for a vector of elements of type <a href="#id17"><span class="problematic" id="id18">`</span></a>element_ty&#8217;,
+having <a href="#id19"><span class="problematic" id="id20">`</span></a>count&#8217; elements.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="llvm.core.Type.void">
+<em class="property">static </em><tt class="descname">void</tt><big>(</big><big>)</big><a class="headerlink" href="#llvm.core.Type.void" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a void type.</p>
+<p>Represents the <a href="#id21"><span class="problematic" id="id22">`</span></a>void&#8217; type.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="llvm.core.Type.x86_fp80">
+<em class="property">static </em><tt class="descname">x86_fp80</tt><big>(</big><big>)</big><a class="headerlink" href="#llvm.core.Type.x86_fp80" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a 80-bit x86 floating point type.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">llvm.core.Type</a><ul>
+<li><a class="reference internal" href="#static-constructors">Static Constructors</a><ul>
+<li><a class="reference internal" href="#int-n"><tt class="docutils literal"><span class="pre">int(n)</span></tt></a></li>
+<li><a class="reference internal" href="#float"><tt class="docutils literal"><span class="pre">float()</span></tt></a></li>
+<li><a class="reference internal" href="#double"><tt class="docutils literal"><span class="pre">double()</span></tt></a></li>
+<li><a class="reference internal" href="#x86-fp80"><tt class="docutils literal"><span class="pre">x86_fp80()</span></tt></a></li>
+<li><a class="reference internal" href="#fp128"><tt class="docutils literal"><span class="pre">fp128()</span></tt></a></li>
+<li><a class="reference internal" href="#ppc-fp128"><tt class="docutils literal"><span class="pre">ppc_fp128()</span></tt></a></li>
+<li><a class="reference internal" href="#function-ret-params-vararg-false"><tt class="docutils literal"><span class="pre">function(ret,</span> <span class="pre">params,</span> <span class="pre">vararg=False)</span></tt></a></li>
+<li><a class="reference internal" href="#struct-eltys-name"><tt class="docutils literal"><span class="pre">struct(eltys,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#packed-struct-eltys-name"><tt class="docutils literal"><span class="pre">packed_struct(eltys,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#array-elty-count"><tt class="docutils literal"><span class="pre">array(elty,</span> <span class="pre">count)</span></tt></a></li>
+<li><a class="reference internal" href="#pointer-pty-addrspc-0"><tt class="docutils literal"><span class="pre">pointer(pty,</span> <span class="pre">addrspc=0)</span></tt></a></li>
+<li><a class="reference internal" href="#void"><tt class="docutils literal"><span class="pre">void()</span></tt></a></li>
+<li><a class="reference internal" href="#label"><tt class="docutils literal"><span class="pre">label()</span></tt></a></li>
+<li><a class="reference internal" href="#opaque-name"><tt class="docutils literal"><span class="pre">opaque(name)</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#properties">Properties</a><ul>
+<li><a class="reference internal" href="#kind"><tt class="docutils literal"><span class="pre">kind</span></tt></a><ul>
+<li><a class="reference internal" href="#example">Example:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#automatically-generated-documentation">Automatically Generated Documentation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="llvm.core.StructType.html"
+                        title="previous chapter">llvm.core.StructType</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="llvm.core.User.html"
+                        title="next chapter">llvm.core.User # {#user}</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/doc/llvm.core.Type.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="llvm.core.User.html" title="llvm.core.User # {#user}"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="llvm.core.StructType.html" title="llvm.core.StructType"
+             >previous</a> |</li>
+        <li><a href="../index.html">llvmpy 0.12.4 documentation</a> &raquo;</li>
+          <li><a href="llvmcore.html" >llvm.core</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Mahadevan R (2008-2010), Continuum Analytics (2012-2013).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>llpython.byte_flow &mdash; llvmpy 0.12.4 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.12.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="llvmpy 0.12.4 documentation" href="../../index.html" />
+    <link rel="up" title="LLPython Module Reference" href="reference.html" />
+    <link rel="next" title="llpython.byte_translator" href="llpython.byte_translator.html" />
+    <link rel="prev" title="llpython.byte_control" href="llpython.byte_control.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="llpython.byte_translator.html" title="llpython.byte_translator"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="llpython.byte_control.html" title="llpython.byte_control"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.12.4 documentation</a> &raquo;</li>
+          <li><a href="index.html" >LLPython Documentation</a> &raquo;</li>
+          <li><a href="reference.html" accesskey="U">LLPython Module Reference</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-llpython.byte_flow">
+<span id="llpython-byte-flow"></span><h1>llpython.byte_flow<a class="headerlink" href="#module-llpython.byte_flow" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="llpython.byte_flow.BytecodeFlowBuilder">
+<em class="property">class </em><tt class="descclassname">llpython.byte_flow.</tt><tt class="descname">BytecodeFlowBuilder</tt><big>(</big><em>*args</em>, <em>**kws</em><big>)</big><a class="headerlink" href="#llpython.byte_flow.BytecodeFlowBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms a CFG into a bytecode &#8220;flow tree&#8221;.</p>
+<p>The flow tree is a Python dictionary, described loosely by the
+following set of productions:</p>
+<blockquote>
+<div><ul>
+<li><p class="first"><cite>flow_tree</cite> <tt class="docutils literal"><span class="pre">:=</span></tt> <tt class="docutils literal"><span class="pre">{</span></tt> <cite>blocks</cite> <tt class="docutils literal"><span class="pre">*</span></tt> <tt class="docutils literal"><span class="pre">}</span></tt></p>
+</li>
+<li><p class="first"><cite>blocks</cite> <tt class="docutils literal"><span class="pre">:=</span></tt> <cite>block_index</cite> <tt class="docutils literal"><span class="pre">:</span></tt> <tt class="docutils literal"><span class="pre">[</span></tt> <cite>bytecode_tree</cite> <tt class="docutils literal"><span class="pre">*</span></tt> <tt class="docutils literal"><span class="pre">]</span></tt></p>
+</li>
+<li><dl class="first docutils">
+<dt><cite>bytecode_tree</cite> <tt class="docutils literal"><span class="pre">:=</span></tt> <tt class="docutils literal"><span class="pre">(</span></tt> <cite>opcode_index</cite> <tt class="docutils literal"><span class="pre">,</span></tt> <cite>opcode</cite> <tt class="docutils literal"><span class="pre">,</span></tt></dt>
+<dd><p class="first last"><cite>opname</cite> <tt class="docutils literal"><span class="pre">,</span></tt> <cite>arg</cite> <tt class="docutils literal"><span class="pre">,</span></tt> <tt class="docutils literal"><span class="pre">[</span></tt> <cite>bytecode_tree</cite> <tt class="docutils literal"><span class="pre">*</span></tt> <tt class="docutils literal"><span class="pre">]</span></tt> <tt class="docutils literal"><span class="pre">)</span></tt></p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>The primary purpose of this transformation is to simulate the
+value stack, removing it and any stack-specific opcodes.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="llpython.byte_flow.build_flow">
+<tt class="descclassname">llpython.byte_flow.</tt><tt class="descname">build_flow</tt><big>(</big><em>func</em><big>)</big><a class="headerlink" href="#llpython.byte_flow.build_flow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a Python function, return a bytecode flow tree for that
+function.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="llpython.byte_control.html"
+                        title="previous chapter">llpython.byte_control</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="llpython.byte_translator.html"
+                        title="next chapter">llpython.byte_translator</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/doc/llpython/llpython.byte_flow.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="llpython.byte_translator.html" title="llpython.byte_translator"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="llpython.byte_control.html" title="llpython.byte_control"
+             >previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.12.4 documentation</a> &raquo;</li>
+          <li><a href="index.html" >LLPython Documentation</a> &raquo;</li>
+          <li><a href="reference.html" >LLPython Module Reference</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Mahadevan R (2008-2010), Continuum Analytics (2012-2013).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
