@@ -1,6 +1,0 @@
-========
-llpython
-========
-
-.. automodule:: llpython
-   :members:
