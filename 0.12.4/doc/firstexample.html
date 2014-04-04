@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Examples &mdash; llvmpy 0.12.4 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.12.4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="llvmpy 0.12.4 documentation" href="../index.html" />
+    <link rel="up" title="Examples and LLVM Tutorials" href="examples.html" />
+    <link rel="next" title="LLVM Tutorials" href="examples/index.html" />
+    <link rel="prev" title="Examples and LLVM Tutorials" href="examples.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="examples/index.html" title="LLVM Tutorials"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="examples.html" title="Examples and LLVM Tutorials"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">llvmpy 0.12.4 documentation</a> &raquo;</li>
+          <li><a href="examples.html" accesskey="U">Examples and LLVM Tutorials</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="a-simple-function">
+<h2>A Simple Function<a class="headerlink" href="#a-simple-function" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s create a (LLVM) module containing a single function, corresponding
+to the <tt class="docutils literal"><span class="pre">C</span></tt> function:</p>
+<div class="highlight-c"><pre>int sum(int a, int b)
+{
+    return a + b;
+}</pre>
+</div>
+<p>Here&#8217;s how it looks in llvmpy:</p>
+<div class="highlight-python"><pre>#!/usr/bin/env python
+
+# Import the llvmpy modules.
+from llvm import *
+from llvm.core import *
+
+# Create an (empty) module.
+my_module = Module.new('my_module')
+
+# All the types involved here are "int"s. This type is represented
+# by an object of the llvm.core.Type class:
+ty_int = Type.int()     # by default 32 bits
+
+# We need to represent the class of functions that accept two integers
+# and return an integer. This is represented by an object of the
+# function type (llvm.core.FunctionType):
+ty_func = Type.function(ty_int, [ty_int, ty_int])
+
+# Now we need a function named 'sum' of this type. Functions are not
+# free-standing (in llvmpy); it needs to be contained in a module.
+
+f_sum = my_module.add_function(ty_func, "sum")
+
+# Let's name the function arguments as 'a' and 'b'.
+f_sum.args[0].name = "a"
+f_sum.args[1].name = "b"
+
+# Our function needs a "basic block" -- a set of instructions that
+# end with a terminator (like return, branch etc.). By convention
+# the first block is called "entry".
+bb = f_sum.append_basic_block("entry")
+
+# Let's add instructions into the block. For this, we need an
+# instruction builder:
+builder = Builder.new(bb)
+
+# OK, now for the instructions themselves. We'll create an add
+# instruction that returns the sum as a value, which we'll use
+# a ret instruction to return.
+tmp = builder.add(f_sum.args[0], f_sum.args[1], "tmp")
+builder.ret(tmp)
+
+# We've completed the definition now! Let's see the LLVM assembly
+# language representation of what we've created:
+
+print my_module</pre>
+</div>
+<p>Here is the output:</p>
+<div class="highlight-llvm"><pre>; ModuleID = 'my_module'
+
+define i32 @sum(i32 %a, i32 %b) {
+entry:
+        %tmp = add i32 %a, %b      ; &lt;i32&gt; [#uses=1]
+        ret i32 %tmp
+}</pre>
+</div>
+</div>
+<div class="section" id="adding-jit-compilation">
+<h2>Adding JIT Compilation<a class="headerlink" href="#adding-jit-compilation" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s compile this function in-memory and run it.</p>
+<div class="highlight-python"><pre>#!/usr/bin/env python
+
+# Import the llvmpy modules.
+
+from llvm import *
+from llvm.core import *
+from llvm.ee import *                     # new import: ee = Execution Engine
+
+#Create a module, as in the previous example.
+my_module = Module.new('my_module')
+ty_int = Type.int()     # by default 32 bits
+ty_func = Type.function(ty_int, [ty_int, ty_int])
+f_sum = my_module.add_function(ty_func, "sum")
+f_sum.args[0].name = "a"
+f_sum.args[1].name = "b"
+bb = f_sum.append_basic_block("entry")
+builder = Builder.new(bb)
+tmp = builder.add(f_sum.args[0], f_sum.args[1], "tmp")
+builder.ret(tmp)
+
+# Create an execution engine object. This will create a JIT compiler
+# on platforms that support it, or an interpreter otherwise.
+ee = ExecutionEngine.new(my_module)
+
+# The arguments needs to be passed as "GenericValue" objects.
+arg1 = GenericValue.int(ty_int, 100)
+arg2 = GenericValue.int(ty_int, 42)
+
+# Now let's compile and run!
+retval = ee.run_function(f_sum, [arg1, arg2])
+
+# The return value is also GenericValue. Let's print it.
+print "returned", retval.as_int()</pre>
+</div>
+<p>And here&#8217;s the output:</p>
+<div class="highlight-python"><pre>returned 142</pre>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Examples</a><ul>
+<li><a class="reference internal" href="#a-simple-function">A Simple Function</a></li>
+<li><a class="reference internal" href="#adding-jit-compilation">Adding JIT Compilation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="examples.html"
+                        title="previous chapter">Examples and LLVM Tutorials</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="examples/index.html"
+                        title="next chapter">LLVM Tutorials</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/doc/firstexample.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="examples/index.html" title="LLVM Tutorials"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="examples.html" title="Examples and LLVM Tutorials"
+             >previous</a> |</li>
+        <li><a href="../index.html">llvmpy 0.12.4 documentation</a> &raquo;</li>
+          <li><a href="examples.html" >Examples and LLVM Tutorials</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Mahadevan R (2008-2010), Continuum Analytics (2012-2013).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
