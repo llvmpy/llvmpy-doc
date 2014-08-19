@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>llvm.core.StructType &mdash; llvmpy 0.12.7-4 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.12.7-4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="llvmpy 0.12.7-4 documentation" href="../index.html" />
+    <link rel="up" title="llvm.core" href="llvmcore.html" />
+    <link rel="next" title="llvm.core.Type" href="llvm.core.Type.html" />
+    <link rel="prev" title="llvm.core.PointerType" href="llvm.core.PointerType.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="llvm.core.Type.html" title="llvm.core.Type"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="llvm.core.PointerType.html" title="llvm.core.PointerType"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">llvmpy 0.12.7-4 documentation</a> &raquo;</li>
+          <li><a href="llvmcore.html" accesskey="U">llvm.core</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="llvm-core-structtype">
+<h1>llvm.core.StructType<a class="headerlink" href="#llvm-core-structtype" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="automatically-generated-documentation">
+<h2>Automatically Generated Documentation<a class="headerlink" href="#automatically-generated-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="llvm.core.StructType">
+<em class="property">class </em><tt class="descclassname">llvm.core.</tt><tt class="descname">StructType</tt><big>(</big><em>ptr</em><big>)</big><a class="headerlink" href="#llvm.core.StructType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Represents a structure type.</p>
+<dl class="attribute">
+<dt id="llvm.core.StructType.element_count">
+<tt class="descname">element_count</tt><a class="headerlink" href="#llvm.core.StructType.element_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of elements (members) in the structure.</p>
+<p>Same as len(obj.elements), but faster.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="llvm.core.StructType.elements">
+<tt class="descname">elements</tt><a class="headerlink" href="#llvm.core.StructType.elements" title="Permalink to this definition">¶</a></dt>
+<dd><p>An iterable that yields Type objects, representing the types of the
+elements (members) of the structure, in order.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="llvm.core.StructType.is_identified">
+<tt class="descname">is_identified</tt><a class="headerlink" href="#llvm.core.StructType.is_identified" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.StructType.is_layout_identical">
+<tt class="descname">is_layout_identical</tt><big>(</big><em>other</em><big>)</big><a class="headerlink" href="#llvm.core.StructType.is_layout_identical" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="llvm.core.StructType.is_literal">
+<tt class="descname">is_literal</tt><a class="headerlink" href="#llvm.core.StructType.is_literal" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="llvm.core.StructType.is_opaque">
+<tt class="descname">is_opaque</tt><a class="headerlink" href="#llvm.core.StructType.is_opaque" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="llvm.core.StructType.name">
+<tt class="descname">name</tt><a class="headerlink" href="#llvm.core.StructType.name" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="llvm.core.StructType.packed">
+<tt class="descname">packed</tt><a class="headerlink" href="#llvm.core.StructType.packed" title="Permalink to this definition">¶</a></dt>
+<dd><p>True if the structure is packed, False otherwise.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.StructType.set_body">
+<tt class="descname">set_body</tt><big>(</big><em>elems</em>, <em>packed=False</em><big>)</big><a class="headerlink" href="#llvm.core.StructType.set_body" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filled the body of a opaque type.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">llvm.core.StructType</a><ul>
+<li><a class="reference internal" href="#automatically-generated-documentation">Automatically Generated Documentation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="llvm.core.PointerType.html"
+                        title="previous chapter">llvm.core.PointerType</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="llvm.core.Type.html"
+                        title="next chapter">llvm.core.Type</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/doc/llvm.core.StructType.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="llvm.core.Type.html" title="llvm.core.Type"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="llvm.core.PointerType.html" title="llvm.core.PointerType"
+             >previous</a> |</li>
+        <li><a href="../index.html">llvmpy 0.12.7-4 documentation</a> &raquo;</li>
+          <li><a href="llvmcore.html" >llvm.core</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Mahadevan R (2008-2010), Continuum Analytics (2012-2013).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

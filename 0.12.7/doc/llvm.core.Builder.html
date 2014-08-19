@@ -1,0 +1,970 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>llvm.core.Builder &mdash; llvmpy 0.12.7-4 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.12.7-4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="llvmpy 0.12.7-4 documentation" href="../index.html" />
+    <link rel="up" title="llvm.core" href="llvmcore.html" />
+    <link rel="next" title="llvm.core.Constant" href="llvm.core.Constant.html" />
+    <link rel="prev" title="llvm.core.BasicBlock" href="llvm.core.BasicBlock.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="llvm.core.Constant.html" title="llvm.core.Constant"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="llvm.core.BasicBlock.html" title="llvm.core.BasicBlock"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">llvmpy 0.12.7-4 documentation</a> &raquo;</li>
+          <li><a href="llvmcore.html" accesskey="U">llvm.core</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <table border="1" class="docutils">
+<colgroup>
+<col width="100%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td>layout: page</td>
+</tr>
+<tr class="row-even"><td>title: Builder (llvm.core)</td>
+</tr>
+</tbody>
+</table>
+<p>The <tt class="docutils literal"><span class="pre">Builder</span></tt> class corresponds to the
+<a class="reference external" href="http://llvm.org/docs/doxygen/html/classllvm_1_1IRBuilder.html">IRBuilder</a>
+in C++ llvm. It provides an uniform API to populating
+<a class="reference external" href="llvm.core.BasicBlock.html">BasicBlocks</a>. Most of the methods in
+<tt class="docutils literal"><span class="pre">Builder</span></tt> correspond to the instructions in the LLVM IR. See <a class="reference external" href="http://llvm.org/docs/LangRef.html">LLVM
+documentation</a> for detail. These
+methods have the <tt class="docutils literal"><span class="pre">name</span></tt> argument for overiding the name of the result
+variable. When it is an empty string (default value), LLVM will set a
+numeric ID for the result variable.</p>
+<div class="section" id="llvm-core-builder">
+<h1>llvm.core.Builder<a class="headerlink" href="#llvm-core-builder" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li>This will become a table of contents (this text will be scraped).
+{:toc}</li>
+</ul>
+<div class="section" id="static-factor-method">
+<h2>Static Factor Method<a class="headerlink" href="#static-factor-method" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="new-basic-block">
+<h3><tt class="docutils literal"><span class="pre">new(basic_block)</span></tt><a class="headerlink" href="#new-basic-block" title="Permalink to this headline">¶</a></h3>
+<p>Create an instance of <tt class="docutils literal"><span class="pre">Builder</span></tt> at
+<a class="reference external" href="llvm.core.BasicBlock.html">BasicBlock</a>.</p>
+</div>
+</div>
+<div class="section" id="methods">
+<h2>Methods<a class="headerlink" href="#methods" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="add-self-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">add(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#add-self-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">lhs+rhs</span></tt> for integer values only.</p>
+</div>
+<div class="section" id="alloca-self-ty-name">
+<h3><tt class="docutils literal"><span class="pre">alloca(self,</span> <span class="pre">ty,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#alloca-self-ty-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that allocates stack memory for a value of type
+<tt class="docutils literal"><span class="pre">ty</span></tt>.</p>
+</div>
+<div class="section" id="alloca-array-self-ty-size-name">
+<h3><tt class="docutils literal"><span class="pre">alloca_array(self,</span> <span class="pre">ty,</span> <span class="pre">size,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#alloca-array-self-ty-size-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that allocates stack memory for a <tt class="docutils literal"><span class="pre">size</span></tt>
+elements array of type <tt class="docutils literal"><span class="pre">ty</span></tt>.</p>
+</div>
+<div class="section" id="and-self-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">and_(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#and-self-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">lhs</span> <span class="pre">&amp;</span> <span class="pre">rhs</span></tt>.</p>
+</div>
+<div class="section" id="ashr-self-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">ashr(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#ashr-self-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">lhs</span> <span class="pre">&gt;&gt;</span> <span class="pre">rhs</span></tt> using arithmetic
+shift.</p>
+</div>
+<div class="section" id="bitcast-self-value-dest-ty-name">
+<h3><tt class="docutils literal"><span class="pre">bitcast(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#bitcast-self-value-dest-ty-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that cast <tt class="docutils literal"><span class="pre">value</span></tt> to type <tt class="docutils literal"><span class="pre">dest_ty</span></tt>.</p>
+</div>
+<div class="section" id="branch-self-bblk">
+<h3><tt class="docutils literal"><span class="pre">branch(self,</span> <span class="pre">bblk)</span></tt><a class="headerlink" href="#branch-self-bblk" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that branch to basicblock <tt class="docutils literal"><span class="pre">bblk</span></tt>.</p>
+</div>
+<div class="section" id="call-self-fn-args-name">
+<h3><tt class="docutils literal"><span class="pre">call(self,</span> <span class="pre">fn,</span> <span class="pre">args,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#call-self-fn-args-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that call function <tt class="docutils literal"><span class="pre">fn</span></tt> with a iterable of
+arguments <tt class="docutils literal"><span class="pre">args</span></tt>.</p>
+</div>
+<div class="section" id="cbranch-self-if-value-then-blk-else-blk">
+<h3><tt class="docutils literal"><span class="pre">cbranch(self,</span> <span class="pre">if_value,</span> <span class="pre">then_blk,</span> <span class="pre">else_blk)</span></tt><a class="headerlink" href="#cbranch-self-if-value-then-blk-else-blk" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that conditionally branch base on the predicate
+<tt class="docutils literal"><span class="pre">if_value</span></tt>. If <tt class="docutils literal"><span class="pre">if_value</span></tt> is <tt class="docutils literal"><span class="pre">True</span></tt>, branch to <tt class="docutils literal"><span class="pre">then_blk</span></tt>;
+Otherwise, branch to <tt class="docutils literal"><span class="pre">else_blk</span></tt>.</p>
+</div>
+<div class="section" id="extract-element-self-vec-val-idx-val-name">
+<h3><tt class="docutils literal"><span class="pre">extract_element(self,</span> <span class="pre">vec_val,</span> <span class="pre">idx_val,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#extract-element-self-vec-val-idx-val-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that extracts an element from a value <tt class="docutils literal"><span class="pre">vec_val</span></tt>
+of <a class="reference external" href="llvm.core.VectorType.html">llvm.core.VectorType</a> at index
+<tt class="docutils literal"><span class="pre">idx_val</span></tt>.</p>
+</div>
+<div class="section" id="extract-value-self-retval-idx-name">
+<h3><tt class="docutils literal"><span class="pre">extract_value(self,</span> <span class="pre">retval,</span> <span class="pre">idx,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#extract-value-self-retval-idx-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that extracts an element from an aggregate value
+<tt class="docutils literal"><span class="pre">retval</span></tt> at index <tt class="docutils literal"><span class="pre">idx</span></tt>.</p>
+</div>
+<div class="section" id="fadd-self-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">fadd(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#fadd-self-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">lhs</span> <span class="pre">+</span> <span class="pre">rhs</span></tt> for floating-point
+values.</p>
+</div>
+<div class="section" id="fcmp-self-rpred-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">fcmp(self,</span> <span class="pre">rpred,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#fcmp-self-rpred-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that compares <tt class="docutils literal"><span class="pre">lhs</span></tt> and <tt class="docutils literal"><span class="pre">rhs</span></tt> using the
+comparision operation defined by <tt class="docutils literal"><span class="pre">rpred</span></tt>. See
+<a class="reference external" href="comparision.html#fcmp">here</a> for a list of comparators.</p>
+</div>
+<div class="section" id="fdiv-self-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">fdiv(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#fdiv-self-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">lhs</span> <span class="pre">/</span> <span class="pre">rhs</span></tt> for floating-point
+values.</p>
+</div>
+<div class="section" id="fmul-self-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">fmul(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#fmul-self-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">lhs</span> <span class="pre">*</span> <span class="pre">rhs</span></tt> for floating-point
+values.</p>
+</div>
+<div class="section" id="fpext-self-value-dest-ty-name">
+<h3><tt class="docutils literal"><span class="pre">fpext(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#fpext-self-value-dest-ty-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that extends <tt class="docutils literal"><span class="pre">value</span></tt> to a float type
+<tt class="docutils literal"><span class="pre">dest_ty</span></tt>.</p>
+</div>
+<div class="section" id="fptosi-self-value-dest-ty-name">
+<h3><tt class="docutils literal"><span class="pre">fptosi(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#fptosi-self-value-dest-ty-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that converts a floating-point value <tt class="docutils literal"><span class="pre">value</span></tt> to
+a signed integer type <tt class="docutils literal"><span class="pre">dest_ty</span></tt>.</p>
+</div>
+<div class="section" id="fptoui-self-value-dest-ty-name">
+<h3><tt class="docutils literal"><span class="pre">fptoui(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#fptoui-self-value-dest-ty-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that converts a floating-point value <tt class="docutils literal"><span class="pre">value</span></tt> to
+an unsigned integer type <tt class="docutils literal"><span class="pre">dest_ty</span></tt>.</p>
+</div>
+<div class="section" id="fptrunc-self-value-dest-ty-name">
+<h3><tt class="docutils literal"><span class="pre">fptrunc(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#fptrunc-self-value-dest-ty-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that truncates a floating-point value <tt class="docutils literal"><span class="pre">value</span></tt> to
+a float type <tt class="docutils literal"><span class="pre">dest_ty</span></tt>.</p>
+</div>
+<div class="section" id="free-self-ptr">
+<h3><tt class="docutils literal"><span class="pre">free(self,</span> <span class="pre">ptr)</span></tt><a class="headerlink" href="#free-self-ptr" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that call performs heap deallocation on pointer
+<tt class="docutils literal"><span class="pre">ptr</span></tt>.</p>
+</div>
+<div class="section" id="frem-self-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">frem(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#frem-self-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">lhs</span> <span class="pre">%</span> <span class="pre">rhs</span></tt> for floating-point
+values.</p>
+</div>
+<div class="section" id="fsub-self-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">fsub(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#fsub-self-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">lhs</span> <span class="pre">-</span> <span class="pre">rhs</span></tt> for floating-point
+values.</p>
+</div>
+<div class="section" id="gep-self-ptr-indices-name">
+<h3><tt class="docutils literal"><span class="pre">gep(self,</span> <span class="pre">ptr,</span> <span class="pre">indices,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#gep-self-ptr-indices-name" title="Permalink to this headline">¶</a></h3>
+<p>See <a class="reference external" href="http://llvm.org/docs/LangRef.html#i_getelementptr">GEP</a>.</p>
+</div>
+<div class="section" id="getresult-self-retval-idx-name">
+<h3><tt class="docutils literal"><span class="pre">getresult(self,</span> <span class="pre">retval,</span> <span class="pre">idx,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#getresult-self-retval-idx-name" title="Permalink to this headline">¶</a></h3>
+<p>same as <tt class="docutils literal"><span class="pre">extract_value</span></tt>.</p>
+</div>
+<div class="section" id="icmp-self-ipred-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">icmp(self,</span> <span class="pre">ipred,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#icmp-self-ipred-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that compares <tt class="docutils literal"><span class="pre">lhs</span></tt> and <tt class="docutils literal"><span class="pre">rhs</span></tt> using the
+comparision operation defined by <tt class="docutils literal"><span class="pre">ipred</span></tt>. See
+<a class="reference external" href="comparision.html#icmp">here</a> for a list of comparators.</p>
+</div>
+<div class="section" id="insert-element-self-vec-val-elt-val-idx-val-name">
+<h3><tt class="docutils literal"><span class="pre">insert_element(self,</span> <span class="pre">vec_val,</span> <span class="pre">elt_val,</span> <span class="pre">idx_val,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#insert-element-self-vec-val-elt-val-idx-val-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that inserts a value <tt class="docutils literal"><span class="pre">elt_val</span></tt> into <tt class="docutils literal"><span class="pre">vec_val</span></tt>
+of <a class="reference external" href="llvm.core.VectorType.html">llvm.core.VectorType</a> at index
+<tt class="docutils literal"><span class="pre">idx_val</span></tt>.</p>
+</div>
+<div class="section" id="inttoptr-self-value-dest-ty-name">
+<h3><tt class="docutils literal"><span class="pre">inttoptr(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#inttoptr-self-value-dest-ty-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that converts an integer <tt class="docutils literal"><span class="pre">value</span></tt> to pointer
+<tt class="docutils literal"><span class="pre">dest_ty</span></tt>.</p>
+</div>
+<div class="section" id="invoke-self-func-args-then-blk-catch-blk-name">
+<h3><tt class="docutils literal"><span class="pre">invoke(self,</span> <span class="pre">func,</span> <span class="pre">args,</span> <span class="pre">then_blk,</span> <span class="pre">catch_blk,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#invoke-self-func-args-then-blk-catch-blk-name" title="Permalink to this headline">¶</a></h3>
+<p>See <a class="reference external" href="http://llvm.org/docs/LangRef.html#i_invoke">invoke</a></p>
+</div>
+<div class="section" id="load-self-ptr-name">
+<h3><tt class="docutils literal"><span class="pre">load(self,</span> <span class="pre">ptr,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#load-self-ptr-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that loads a value at the memory pointed by
+<tt class="docutils literal"><span class="pre">ptr</span></tt>.</p>
+</div>
+<div class="section" id="lshr-self-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">lshr(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#lshr-self-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">lhs</span> <span class="pre">&gt;&gt;</span> <span class="pre">rhs</span></tt> using logical shift.</p>
+</div>
+<div class="section" id="malloc-self-ty-name">
+<h3><tt class="docutils literal"><span class="pre">malloc(self,</span> <span class="pre">ty,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#malloc-self-ty-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that allocates heap memory of type <tt class="docutils literal"><span class="pre">ty</span></tt>. The
+instruction returns a pointer that points to a value of type <tt class="docutils literal"><span class="pre">ty</span></tt>.</p>
+</div>
+<div class="section" id="malloc-array-self-ty-size-name">
+<h3><tt class="docutils literal"><span class="pre">malloc_array(self,</span> <span class="pre">ty,</span> <span class="pre">size,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#malloc-array-self-ty-size-name" title="Permalink to this headline">¶</a></h3>
+<p>Similar to <tt class="docutils literal"><span class="pre">malloc</span></tt> but allocates an array of <tt class="docutils literal"><span class="pre">size</span></tt> elements.</p>
+</div>
+<div class="section" id="mul-self-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">mul(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#mul-self-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">lhs</span> <span class="pre">*</span> <span class="pre">rhs</span></tt> for integer types.</p>
+</div>
+<div class="section" id="neg-self-val-name">
+<h3><tt class="docutils literal"><span class="pre">neg(self,</span> <span class="pre">val,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#neg-self-val-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">0</span> <span class="pre">-</span> <span class="pre">val</span></tt>.</p>
+</div>
+<div class="section" id="not-self-val-name">
+<h3><tt class="docutils literal"><span class="pre">not_(self,</span> <span class="pre">val,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#not-self-val-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes an one&#8217;s complement of <tt class="docutils literal"><span class="pre">val</span></tt>.</p>
+</div>
+<div class="section" id="or-self-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">or_(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#or-self-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">lhs</span> <span class="pre">|</span> <span class="pre">rhs</span></tt>.</p>
+</div>
+<div class="section" id="phi-self-ty-name">
+<h3><tt class="docutils literal"><span class="pre">phi(self,</span> <span class="pre">ty,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#phi-self-ty-name" title="Permalink to this headline">¶</a></h3>
+<p>Create a PHI node of type <tt class="docutils literal"><span class="pre">ty</span></tt>.</p>
+</div>
+<div class="section" id="position-at-beginning-self-bblk">
+<h3><tt class="docutils literal"><span class="pre">position_at_beginning(self,</span> <span class="pre">bblk)</span></tt><a class="headerlink" href="#position-at-beginning-self-bblk" title="Permalink to this headline">¶</a></h3>
+<p>Position the builder at the beginning of the given block. Next
+instruction inserted will be first one in the block.</p>
+</div>
+<div class="section" id="position-at-end-self-bblk">
+<h3><tt class="docutils literal"><span class="pre">position_at_end(self,</span> <span class="pre">bblk)</span></tt><a class="headerlink" href="#position-at-end-self-bblk" title="Permalink to this headline">¶</a></h3>
+<p>Position the builder at the end of the given block. Next instruction
+inserted will be last one in the block.</p>
+</div>
+<div class="section" id="position-before-self-instr">
+<h3><tt class="docutils literal"><span class="pre">position_before(self,</span> <span class="pre">instr)</span></tt><a class="headerlink" href="#position-before-self-instr" title="Permalink to this headline">¶</a></h3>
+<p>Position the builder before the given instruction. The instruction can
+belong to a basic block other than the current one.</p>
+</div>
+<div class="section" id="ptrtoint-self-value-dest-ty-name">
+<h3><tt class="docutils literal"><span class="pre">ptrtoint(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#ptrtoint-self-value-dest-ty-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that converts a pointer to an integer <tt class="docutils literal"><span class="pre">value</span></tt> of
+type <tt class="docutils literal"><span class="pre">dest_ty</span></tt>.</p>
+</div>
+<div class="section" id="ret-self-value">
+<h3><tt class="docutils literal"><span class="pre">ret(self,</span> <span class="pre">value)</span></tt><a class="headerlink" href="#ret-self-value" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that returns <tt class="docutils literal"><span class="pre">value</span></tt>.</p>
+</div>
+<div class="section" id="ret-many-self-values">
+<h3><tt class="docutils literal"><span class="pre">ret_many(self,</span> <span class="pre">values)</span></tt><a class="headerlink" href="#ret-many-self-values" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that returns <tt class="docutils literal"><span class="pre">values</span></tt> which is an iterable of
+<a class="reference external" href="llvm.core.Value.html">llvm.core.Value</a>.</p>
+</div>
+<div class="section" id="ret-void-self">
+<h3><tt class="docutils literal"><span class="pre">ret_void(self)</span></tt><a class="headerlink" href="#ret-void-self" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that returns nothing (void).</p>
+</div>
+<div class="section" id="sdiv-self-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">sdiv(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#sdiv-self-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">lhs</span> <span class="pre">/</span> <span class="pre">rhs</span></tt> for signed integers.</p>
+</div>
+<div class="section" id="select-self-cond-then-value-else-value-name">
+<h3><tt class="docutils literal"><span class="pre">select(self,</span> <span class="pre">cond,</span> <span class="pre">then_value,</span> <span class="pre">else_value,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#select-self-cond-then-value-else-value-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">cond</span> <span class="pre">?</span> <span class="pre">then_value</span> <span class="pre">:</span> <span class="pre">else_value</span></tt>.</p>
+</div>
+<div class="section" id="sext-self-value-dest-ty-name">
+<h3><tt class="docutils literal"><span class="pre">sext(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#sext-self-value-dest-ty-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that sign extends an integer <tt class="docutils literal"><span class="pre">value</span></tt> to type
+<tt class="docutils literal"><span class="pre">dest_ty</span></tt>.</p>
+</div>
+<div class="section" id="shl-self-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">shl(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#shl-self-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">lhs</span> <span class="pre">&lt;&lt;</span> <span class="pre">rhs</span></tt>.</p>
+</div>
+<div class="section" id="shuffle-vector-self-veca-vecb-mask-name">
+<h3><tt class="docutils literal"><span class="pre">shuffle_vector(self,</span> <span class="pre">vecA,</span> <span class="pre">vecB,</span> <span class="pre">mask,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#shuffle-vector-self-veca-vecb-mask-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that performs a vector shuffle base on the two
+vectors &#8211; <tt class="docutils literal"><span class="pre">vecA</span></tt> and <tt class="docutils literal"><span class="pre">vecB</span></tt>, base on a bit mask <tt class="docutils literal"><span class="pre">mask</span></tt>. The mask
+must be a constant.</p>
+<p>See <a class="reference external" href="http://llvm.org/docs/LangRef.html#i_shufflevector">LLVM document</a>
+for detail.</p>
+</div>
+<div class="section" id="sitofp-self-value-dest-ty-name">
+<h3><tt class="docutils literal"><span class="pre">sitofp(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#sitofp-self-value-dest-ty-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that converts a signed integer <tt class="docutils literal"><span class="pre">value</span></tt> to a
+floating-point type <tt class="docutils literal"><span class="pre">dest_ty</span></tt>.</p>
+</div>
+<div class="section" id="srem-self-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">srem(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#srem-self-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">lhs</span> <span class="pre">%</span> <span class="pre">rhs</span></tt> for signed integers.</p>
+</div>
+<div class="section" id="store-self-value-ptr">
+<h3><tt class="docutils literal"><span class="pre">store(self,</span> <span class="pre">value,</span> <span class="pre">ptr)</span></tt><a class="headerlink" href="#store-self-value-ptr" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that stores <tt class="docutils literal"><span class="pre">value</span></tt> into the memory pointed by
+<tt class="docutils literal"><span class="pre">ptr</span></tt>.</p>
+</div>
+<div class="section" id="sub-self-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">sub(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#sub-self-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">lhs</span> <span class="pre">-</span> <span class="pre">rhs</span></tt>.</p>
+</div>
+<div class="section" id="switch-self-value-else-blk-n-10">
+<h3><tt class="docutils literal"><span class="pre">switch(self,</span> <span class="pre">value,</span> <span class="pre">else_blk,</span> <span class="pre">n=10)</span></tt><a class="headerlink" href="#switch-self-value-else-blk-n-10" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that transfer control flow depending on the
+<tt class="docutils literal"><span class="pre">value</span></tt>. <tt class="docutils literal"><span class="pre">else_blk</span></tt> is the default case. <tt class="docutils literal"><span class="pre">n</span></tt> sets the number of
+additional cases.</p>
+<p>This method returns an instance of
+<a class="reference external" href="llvm.core.Instruction.html#switchinstr">SwitchInstruction</a> for adding
+cases to the switch.</p>
+</div>
+<div class="section" id="trunc-self-value-dest-ty-name">
+<h3><tt class="docutils literal"><span class="pre">trunc(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#trunc-self-value-dest-ty-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that truncates an integer <tt class="docutils literal"><span class="pre">value</span></tt> to the
+destination integer type <tt class="docutils literal"><span class="pre">dest_ty</span></tt>.</p>
+</div>
+<div class="section" id="udiv-self-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">udiv(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#udiv-self-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">lhs</span> <span class="pre">/</span> <span class="pre">rhs</span></tt> for unsigned integers.</p>
+</div>
+<div class="section" id="uitofp-self-value-dest-ty-name">
+<h3><tt class="docutils literal"><span class="pre">uitofp(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#uitofp-self-value-dest-ty-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that converts an unsigned integer <tt class="docutils literal"><span class="pre">value</span></tt> to a
+floating-point type <tt class="docutils literal"><span class="pre">dest_ty</span></tt>.</p>
+</div>
+<div class="section" id="unreachable-self">
+<h3><tt class="docutils literal"><span class="pre">unreachable(self)</span></tt><a class="headerlink" href="#unreachable-self" title="Permalink to this headline">¶</a></h3>
+<p>Insert an unreachabe instruction, which has no defined semantics. See
+<a class="reference external" href="http://llvm.org/docs/LangRef.html#i_unreachable">LLVM document</a> for
+detail.</p>
+</div>
+<div class="section" id="urem-self-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">urem(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#urem-self-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">lhs</span> <span class="pre">%</span> <span class="pre">rhs</span></tt> for unsigned integers.</p>
+</div>
+<div class="section" id="vaarg-self-list-val-ty-name">
+<h3><tt class="docutils literal"><span class="pre">vaarg(self,</span> <span class="pre">list_val,</span> <span class="pre">ty,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#vaarg-self-list-val-ty-name" title="Permalink to this headline">¶</a></h3>
+<p>This is used to access variable arguments given as <tt class="docutils literal"><span class="pre">list_val</span></tt> of type
+<tt class="docutils literal"><span class="pre">ty</span></tt>. see <a class="reference external" href="http://llvm.org/docs/LangRef.html#int_varargs">LLVM
+document</a> about
+variable argument intrinsics.</p>
+</div>
+<div class="section" id="xor-self-lhs-rhs-name">
+<h3><tt class="docutils literal"><span class="pre">xor(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#xor-self-lhs-rhs-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that computes <tt class="docutils literal"><span class="pre">lhs</span> <span class="pre">xor</span> <span class="pre">rhs</span></tt>.</p>
+</div>
+<div class="section" id="zext-self-value-dest-ty-name">
+<h3><tt class="docutils literal"><span class="pre">zext(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt><a class="headerlink" href="#zext-self-value-dest-ty-name" title="Permalink to this headline">¶</a></h3>
+<p>Insert an instruction that zero extends <tt class="docutils literal"><span class="pre">value</span></tt> to type <tt class="docutils literal"><span class="pre">dest_ty</span></tt>.</p>
+</div>
+</div>
+<div class="section" id="properties">
+<h2>Properties<a class="headerlink" href="#properties" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="basic-block">
+<h3><tt class="docutils literal"><span class="pre">basic_block</span></tt><a class="headerlink" href="#basic-block" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference external" href="llvm.core.BasicBlock.html">BasicBlock</a> where the builder is
+positioned.</p>
+</div>
+<div class="section" id="block">
+<h3><tt class="docutils literal"><span class="pre">block</span></tt><a class="headerlink" href="#block" title="Permalink to this headline">¶</a></h3>
+<p>Deprecated. Same as <tt class="docutils literal"><span class="pre">basic_block</span></tt></p>
+</div>
+</div>
+<div class="section" id="automatically-generated-documentation">
+<h2>Automatically Generated Documentation<a class="headerlink" href="#automatically-generated-documentation" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="llvm.core.Builder">
+<em class="property">class </em><tt class="descclassname">llvm.core.</tt><tt class="descname">Builder</tt><big>(</big><em>ptr</em><big>)</big><a class="headerlink" href="#llvm.core.Builder" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="llvm.core.Builder.add">
+<tt class="descname">add</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>name=''</em>, <em>nuw=False</em>, <em>nsw=False</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.alloca">
+<tt class="descname">alloca</tt><big>(</big><em>ty</em>, <em>size=None</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.alloca" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.alloca_array">
+<tt class="descname">alloca_array</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.alloca_array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.and_">
+<tt class="descname">and_</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.and_" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.ashr">
+<tt class="descname">ashr</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>name=''</em>, <em>exact=False</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.ashr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.atomic_add">
+<tt class="descname">atomic_add</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.atomic_add" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.atomic_and">
+<tt class="descname">atomic_and</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.atomic_and" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.atomic_cmpxchg">
+<tt class="descname">atomic_cmpxchg</tt><big>(</big><em>ptr</em>, <em>old</em>, <em>new</em>, <em>ordering</em>, <em>crossthread=True</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.atomic_cmpxchg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.atomic_load">
+<tt class="descname">atomic_load</tt><big>(</big><em>ptr</em>, <em>ordering</em>, <em>align=1</em>, <em>crossthread=True</em>, <em>volatile=False</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.atomic_load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.atomic_max">
+<tt class="descname">atomic_max</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.atomic_max" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.atomic_min">
+<tt class="descname">atomic_min</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.atomic_min" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.atomic_nand">
+<tt class="descname">atomic_nand</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.atomic_nand" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.atomic_or">
+<tt class="descname">atomic_or</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.atomic_or" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.atomic_rmw">
+<tt class="descname">atomic_rmw</tt><big>(</big><em>op</em>, <em>ptr</em>, <em>val</em>, <em>ordering</em>, <em>crossthread=True</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.atomic_rmw" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.atomic_store">
+<tt class="descname">atomic_store</tt><big>(</big><em>value</em>, <em>ptr</em>, <em>ordering</em>, <em>align=1</em>, <em>crossthread=True</em>, <em>volatile=False</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.atomic_store" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.atomic_sub">
+<tt class="descname">atomic_sub</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.atomic_sub" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.atomic_umax">
+<tt class="descname">atomic_umax</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.atomic_umax" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.atomic_umin">
+<tt class="descname">atomic_umin</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.atomic_umin" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.atomic_xchg">
+<tt class="descname">atomic_xchg</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.atomic_xchg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.atomic_xor">
+<tt class="descname">atomic_xor</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.atomic_xor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="llvm.core.Builder.basic_block">
+<tt class="descname">basic_block</tt><a class="headerlink" href="#llvm.core.Builder.basic_block" title="Permalink to this definition">¶</a></dt>
+<dd><p>The basic block where the builder is positioned.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.bitcast">
+<tt class="descname">bitcast</tt><big>(</big><em>value</em>, <em>dest_ty</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.bitcast" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.branch">
+<tt class="descname">branch</tt><big>(</big><em>bblk</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.branch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.call">
+<tt class="descname">call</tt><big>(</big><em>fn</em>, <em>args</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.call" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.cbranch">
+<tt class="descname">cbranch</tt><big>(</big><em>if_value</em>, <em>then_blk</em>, <em>else_blk</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.cbranch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.extract_element">
+<tt class="descname">extract_element</tt><big>(</big><em>vec_val</em>, <em>idx_val</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.extract_element" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.extract_value">
+<tt class="descname">extract_value</tt><big>(</big><em>retval</em>, <em>idx</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.extract_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.fadd">
+<tt class="descname">fadd</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.fadd" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.fcmp">
+<tt class="descname">fcmp</tt><big>(</big><em>rpred</em>, <em>lhs</em>, <em>rhs</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.fcmp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.fdiv">
+<tt class="descname">fdiv</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.fdiv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.fence">
+<tt class="descname">fence</tt><big>(</big><em>ordering</em>, <em>crossthread=True</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.fence" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.fmul">
+<tt class="descname">fmul</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.fmul" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.fpext">
+<tt class="descname">fpext</tt><big>(</big><em>value</em>, <em>dest_ty</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.fpext" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.fptosi">
+<tt class="descname">fptosi</tt><big>(</big><em>value</em>, <em>dest_ty</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.fptosi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.fptoui">
+<tt class="descname">fptoui</tt><big>(</big><em>value</em>, <em>dest_ty</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.fptoui" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.fptrunc">
+<tt class="descname">fptrunc</tt><big>(</big><em>value</em>, <em>dest_ty</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.fptrunc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.free">
+<tt class="descname">free</tt><big>(</big><em>ptr</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.free" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.frem">
+<tt class="descname">frem</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.frem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.fsub">
+<tt class="descname">fsub</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.fsub" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.gep">
+<tt class="descname">gep</tt><big>(</big><em>ptr</em>, <em>indices</em>, <em>name=''</em>, <em>inbounds=False</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.gep" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.getresult">
+<tt class="descname">getresult</tt><big>(</big><em>retval</em>, <em>idx</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.getresult" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.icmp">
+<tt class="descname">icmp</tt><big>(</big><em>ipred</em>, <em>lhs</em>, <em>rhs</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.icmp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.insert_element">
+<tt class="descname">insert_element</tt><big>(</big><em>vec_val</em>, <em>elt_val</em>, <em>idx_val</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.insert_element" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.insert_value">
+<tt class="descname">insert_value</tt><big>(</big><em>retval</em>, <em>rhs</em>, <em>idx</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.insert_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.inttoptr">
+<tt class="descname">inttoptr</tt><big>(</big><em>value</em>, <em>dest_ty</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.inttoptr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.invoke">
+<tt class="descname">invoke</tt><big>(</big><em>func</em>, <em>args</em>, <em>then_blk</em>, <em>catch_blk</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.invoke" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.load">
+<tt class="descname">load</tt><big>(</big><em>ptr</em>, <em>name=''</em>, <em>align=0</em>, <em>volatile=False</em>, <em>invariant=False</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.load" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.lshr">
+<tt class="descname">lshr</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>name=''</em>, <em>exact=False</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.lshr" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.malloc">
+<tt class="descname">malloc</tt><big>(</big><em>ty</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.malloc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.malloc_array">
+<tt class="descname">malloc_array</tt><big>(</big><em>ty</em>, <em>size</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.malloc_array" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.mul">
+<tt class="descname">mul</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>name=''</em>, <em>nuw=False</em>, <em>nsw=False</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.mul" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.neg">
+<tt class="descname">neg</tt><big>(</big><em>val</em>, <em>name=''</em>, <em>nuw=False</em>, <em>nsw=False</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.neg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="staticmethod">
+<dt id="llvm.core.Builder.new">
+<em class="property">static </em><tt class="descname">new</tt><big>(</big><em>basic_block</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.new" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.not_">
+<tt class="descname">not_</tt><big>(</big><em>val</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.not_" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.or_">
+<tt class="descname">or_</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.or_" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.phi">
+<tt class="descname">phi</tt><big>(</big><em>ty</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.phi" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.position_at_beginning">
+<tt class="descname">position_at_beginning</tt><big>(</big><em>bblk</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.position_at_beginning" title="Permalink to this definition">¶</a></dt>
+<dd><p>Position the builder at the beginning of the given block.</p>
+<p>Next instruction inserted will be first one in the block.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.position_at_end">
+<tt class="descname">position_at_end</tt><big>(</big><em>bblk</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.position_at_end" title="Permalink to this definition">¶</a></dt>
+<dd><p>Position the builder at the end of the given block.</p>
+<p>Next instruction inserted will be last one in the block.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.position_before">
+<tt class="descname">position_before</tt><big>(</big><em>instr</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.position_before" title="Permalink to this definition">¶</a></dt>
+<dd><p>Position the builder before the given instruction.</p>
+<p>The instruction can belong to a basic block other than the
+current one.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.ptrtoint">
+<tt class="descname">ptrtoint</tt><big>(</big><em>value</em>, <em>dest_ty</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.ptrtoint" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.ret">
+<tt class="descname">ret</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.ret" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.ret_many">
+<tt class="descname">ret_many</tt><big>(</big><em>values</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.ret_many" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.ret_void">
+<tt class="descname">ret_void</tt><big>(</big><big>)</big><a class="headerlink" href="#llvm.core.Builder.ret_void" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.sdiv">
+<tt class="descname">sdiv</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>name=''</em>, <em>exact=False</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.sdiv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.select">
+<tt class="descname">select</tt><big>(</big><em>cond</em>, <em>then_value</em>, <em>else_value</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.select" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.sext">
+<tt class="descname">sext</tt><big>(</big><em>value</em>, <em>dest_ty</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.sext" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.shl">
+<tt class="descname">shl</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>name=''</em>, <em>nuw=False</em>, <em>nsw=False</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.shl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.shuffle_vector">
+<tt class="descname">shuffle_vector</tt><big>(</big><em>vecA</em>, <em>vecB</em>, <em>mask</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.shuffle_vector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.sitofp">
+<tt class="descname">sitofp</tt><big>(</big><em>value</em>, <em>dest_ty</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.sitofp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.srem">
+<tt class="descname">srem</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.srem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.store">
+<tt class="descname">store</tt><big>(</big><em>value</em>, <em>ptr</em>, <em>align=0</em>, <em>volatile=False</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.store" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.sub">
+<tt class="descname">sub</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>name=''</em>, <em>nuw=False</em>, <em>nsw=False</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.sub" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.switch">
+<tt class="descname">switch</tt><big>(</big><em>value</em>, <em>else_blk</em>, <em>n=10</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.switch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.trunc">
+<tt class="descname">trunc</tt><big>(</big><em>value</em>, <em>dest_ty</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.trunc" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.udiv">
+<tt class="descname">udiv</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>name=''</em>, <em>exact=False</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.udiv" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.uitofp">
+<tt class="descname">uitofp</tt><big>(</big><em>value</em>, <em>dest_ty</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.uitofp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.unreachable">
+<tt class="descname">unreachable</tt><big>(</big><big>)</big><a class="headerlink" href="#llvm.core.Builder.unreachable" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.urem">
+<tt class="descname">urem</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.urem" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.vaarg">
+<tt class="descname">vaarg</tt><big>(</big><em>list_val</em>, <em>ty</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.vaarg" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.xor">
+<tt class="descname">xor</tt><big>(</big><em>lhs</em>, <em>rhs</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.xor" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="llvm.core.Builder.zext">
+<tt class="descname">zext</tt><big>(</big><em>value</em>, <em>dest_ty</em>, <em>name=''</em><big>)</big><a class="headerlink" href="#llvm.core.Builder.zext" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">llvm.core.Builder</a><ul>
+<li><a class="reference internal" href="#static-factor-method">Static Factor Method</a><ul>
+<li><a class="reference internal" href="#new-basic-block"><tt class="docutils literal"><span class="pre">new(basic_block)</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#methods">Methods</a><ul>
+<li><a class="reference internal" href="#add-self-lhs-rhs-name"><tt class="docutils literal"><span class="pre">add(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#alloca-self-ty-name"><tt class="docutils literal"><span class="pre">alloca(self,</span> <span class="pre">ty,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#alloca-array-self-ty-size-name"><tt class="docutils literal"><span class="pre">alloca_array(self,</span> <span class="pre">ty,</span> <span class="pre">size,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#and-self-lhs-rhs-name"><tt class="docutils literal"><span class="pre">and_(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#ashr-self-lhs-rhs-name"><tt class="docutils literal"><span class="pre">ashr(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#bitcast-self-value-dest-ty-name"><tt class="docutils literal"><span class="pre">bitcast(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#branch-self-bblk"><tt class="docutils literal"><span class="pre">branch(self,</span> <span class="pre">bblk)</span></tt></a></li>
+<li><a class="reference internal" href="#call-self-fn-args-name"><tt class="docutils literal"><span class="pre">call(self,</span> <span class="pre">fn,</span> <span class="pre">args,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#cbranch-self-if-value-then-blk-else-blk"><tt class="docutils literal"><span class="pre">cbranch(self,</span> <span class="pre">if_value,</span> <span class="pre">then_blk,</span> <span class="pre">else_blk)</span></tt></a></li>
+<li><a class="reference internal" href="#extract-element-self-vec-val-idx-val-name"><tt class="docutils literal"><span class="pre">extract_element(self,</span> <span class="pre">vec_val,</span> <span class="pre">idx_val,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#extract-value-self-retval-idx-name"><tt class="docutils literal"><span class="pre">extract_value(self,</span> <span class="pre">retval,</span> <span class="pre">idx,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#fadd-self-lhs-rhs-name"><tt class="docutils literal"><span class="pre">fadd(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#fcmp-self-rpred-lhs-rhs-name"><tt class="docutils literal"><span class="pre">fcmp(self,</span> <span class="pre">rpred,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#fdiv-self-lhs-rhs-name"><tt class="docutils literal"><span class="pre">fdiv(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#fmul-self-lhs-rhs-name"><tt class="docutils literal"><span class="pre">fmul(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#fpext-self-value-dest-ty-name"><tt class="docutils literal"><span class="pre">fpext(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#fptosi-self-value-dest-ty-name"><tt class="docutils literal"><span class="pre">fptosi(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#fptoui-self-value-dest-ty-name"><tt class="docutils literal"><span class="pre">fptoui(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#fptrunc-self-value-dest-ty-name"><tt class="docutils literal"><span class="pre">fptrunc(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#free-self-ptr"><tt class="docutils literal"><span class="pre">free(self,</span> <span class="pre">ptr)</span></tt></a></li>
+<li><a class="reference internal" href="#frem-self-lhs-rhs-name"><tt class="docutils literal"><span class="pre">frem(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#fsub-self-lhs-rhs-name"><tt class="docutils literal"><span class="pre">fsub(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#gep-self-ptr-indices-name"><tt class="docutils literal"><span class="pre">gep(self,</span> <span class="pre">ptr,</span> <span class="pre">indices,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#getresult-self-retval-idx-name"><tt class="docutils literal"><span class="pre">getresult(self,</span> <span class="pre">retval,</span> <span class="pre">idx,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#icmp-self-ipred-lhs-rhs-name"><tt class="docutils literal"><span class="pre">icmp(self,</span> <span class="pre">ipred,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#insert-element-self-vec-val-elt-val-idx-val-name"><tt class="docutils literal"><span class="pre">insert_element(self,</span> <span class="pre">vec_val,</span> <span class="pre">elt_val,</span> <span class="pre">idx_val,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#inttoptr-self-value-dest-ty-name"><tt class="docutils literal"><span class="pre">inttoptr(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#invoke-self-func-args-then-blk-catch-blk-name"><tt class="docutils literal"><span class="pre">invoke(self,</span> <span class="pre">func,</span> <span class="pre">args,</span> <span class="pre">then_blk,</span> <span class="pre">catch_blk,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#load-self-ptr-name"><tt class="docutils literal"><span class="pre">load(self,</span> <span class="pre">ptr,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#lshr-self-lhs-rhs-name"><tt class="docutils literal"><span class="pre">lshr(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#malloc-self-ty-name"><tt class="docutils literal"><span class="pre">malloc(self,</span> <span class="pre">ty,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#malloc-array-self-ty-size-name"><tt class="docutils literal"><span class="pre">malloc_array(self,</span> <span class="pre">ty,</span> <span class="pre">size,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#mul-self-lhs-rhs-name"><tt class="docutils literal"><span class="pre">mul(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#neg-self-val-name"><tt class="docutils literal"><span class="pre">neg(self,</span> <span class="pre">val,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#not-self-val-name"><tt class="docutils literal"><span class="pre">not_(self,</span> <span class="pre">val,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#or-self-lhs-rhs-name"><tt class="docutils literal"><span class="pre">or_(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#phi-self-ty-name"><tt class="docutils literal"><span class="pre">phi(self,</span> <span class="pre">ty,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#position-at-beginning-self-bblk"><tt class="docutils literal"><span class="pre">position_at_beginning(self,</span> <span class="pre">bblk)</span></tt></a></li>
+<li><a class="reference internal" href="#position-at-end-self-bblk"><tt class="docutils literal"><span class="pre">position_at_end(self,</span> <span class="pre">bblk)</span></tt></a></li>
+<li><a class="reference internal" href="#position-before-self-instr"><tt class="docutils literal"><span class="pre">position_before(self,</span> <span class="pre">instr)</span></tt></a></li>
+<li><a class="reference internal" href="#ptrtoint-self-value-dest-ty-name"><tt class="docutils literal"><span class="pre">ptrtoint(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#ret-self-value"><tt class="docutils literal"><span class="pre">ret(self,</span> <span class="pre">value)</span></tt></a></li>
+<li><a class="reference internal" href="#ret-many-self-values"><tt class="docutils literal"><span class="pre">ret_many(self,</span> <span class="pre">values)</span></tt></a></li>
+<li><a class="reference internal" href="#ret-void-self"><tt class="docutils literal"><span class="pre">ret_void(self)</span></tt></a></li>
+<li><a class="reference internal" href="#sdiv-self-lhs-rhs-name"><tt class="docutils literal"><span class="pre">sdiv(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#select-self-cond-then-value-else-value-name"><tt class="docutils literal"><span class="pre">select(self,</span> <span class="pre">cond,</span> <span class="pre">then_value,</span> <span class="pre">else_value,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#sext-self-value-dest-ty-name"><tt class="docutils literal"><span class="pre">sext(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#shl-self-lhs-rhs-name"><tt class="docutils literal"><span class="pre">shl(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#shuffle-vector-self-veca-vecb-mask-name"><tt class="docutils literal"><span class="pre">shuffle_vector(self,</span> <span class="pre">vecA,</span> <span class="pre">vecB,</span> <span class="pre">mask,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#sitofp-self-value-dest-ty-name"><tt class="docutils literal"><span class="pre">sitofp(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#srem-self-lhs-rhs-name"><tt class="docutils literal"><span class="pre">srem(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#store-self-value-ptr"><tt class="docutils literal"><span class="pre">store(self,</span> <span class="pre">value,</span> <span class="pre">ptr)</span></tt></a></li>
+<li><a class="reference internal" href="#sub-self-lhs-rhs-name"><tt class="docutils literal"><span class="pre">sub(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#switch-self-value-else-blk-n-10"><tt class="docutils literal"><span class="pre">switch(self,</span> <span class="pre">value,</span> <span class="pre">else_blk,</span> <span class="pre">n=10)</span></tt></a></li>
+<li><a class="reference internal" href="#trunc-self-value-dest-ty-name"><tt class="docutils literal"><span class="pre">trunc(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#udiv-self-lhs-rhs-name"><tt class="docutils literal"><span class="pre">udiv(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#uitofp-self-value-dest-ty-name"><tt class="docutils literal"><span class="pre">uitofp(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#unreachable-self"><tt class="docutils literal"><span class="pre">unreachable(self)</span></tt></a></li>
+<li><a class="reference internal" href="#urem-self-lhs-rhs-name"><tt class="docutils literal"><span class="pre">urem(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#vaarg-self-list-val-ty-name"><tt class="docutils literal"><span class="pre">vaarg(self,</span> <span class="pre">list_val,</span> <span class="pre">ty,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#xor-self-lhs-rhs-name"><tt class="docutils literal"><span class="pre">xor(self,</span> <span class="pre">lhs,</span> <span class="pre">rhs,</span> <span class="pre">name='')</span></tt></a></li>
+<li><a class="reference internal" href="#zext-self-value-dest-ty-name"><tt class="docutils literal"><span class="pre">zext(self,</span> <span class="pre">value,</span> <span class="pre">dest_ty,</span> <span class="pre">name='')</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#properties">Properties</a><ul>
+<li><a class="reference internal" href="#basic-block"><tt class="docutils literal"><span class="pre">basic_block</span></tt></a></li>
+<li><a class="reference internal" href="#block"><tt class="docutils literal"><span class="pre">block</span></tt></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#automatically-generated-documentation">Automatically Generated Documentation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="llvm.core.BasicBlock.html"
+                        title="previous chapter">llvm.core.BasicBlock</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="llvm.core.Constant.html"
+                        title="next chapter">llvm.core.Constant</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/doc/llvm.core.Builder.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="llvm.core.Constant.html" title="llvm.core.Constant"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="llvm.core.BasicBlock.html" title="llvm.core.BasicBlock"
+             >previous</a> |</li>
+        <li><a href="../index.html">llvmpy 0.12.7-4 documentation</a> &raquo;</li>
+          <li><a href="llvmcore.html" >llvm.core</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Mahadevan R (2008-2010), Continuum Analytics (2012-2013).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>

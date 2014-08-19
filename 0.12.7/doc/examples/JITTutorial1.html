@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>A First Function &mdash; llvmpy 0.12.7-4 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.12.7-4',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="llvmpy 0.12.7-4 documentation" href="../../index.html" />
+    <link rel="up" title="LLVM Tutorials" href="index.html" />
+    <link rel="next" title="A More Complicated Function" href="JITTutorial2.html" />
+    <link rel="prev" title="LLVM Tutorials" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="JITTutorial2.html" title="A More Complicated Function"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="LLVM Tutorials"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.12.7-4 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples and LLVM Tutorials</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">LLVM Tutorials</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="a-first-function">
+<h1>A First Function<a class="headerlink" href="#a-first-function" title="Permalink to this headline">¶</a></h1>
+<div class="highlight-python"><pre>#!/usr/bin/env python
+
+from llvm.core import *
+
+#create a module
+module = Module.new("tut1")
+
+#create a function type taking 3 32-bit integers, return a 32-bit integer
+ty_int = Type.int(32)
+func_type = Type.function(ty_int, (ty_int,)*3)
+
+#create a function of that type
+mul_add = Function.new (module, func_type, "mul_add")
+mul_add.calling_convention = CC_C
+x = mul_add.args[0]; x.name = "x"
+y = mul_add.args[1]; y.name = "y"
+z = mul_add.args[2]; z.name = "z"
+
+#implement the function
+
+#new block
+blk = mul_add.append_basic_block("entry")
+
+#IR builder
+bldr = Builder.new(blk)
+tmp_1 = bldr.mul(x, y, "tmp_1")
+tmp_2 = bldr.add(tmp_1, z, "tmp_2")
+
+bldr.ret(tmp_2)
+
+print module</pre>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">LLVM Tutorials</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="JITTutorial2.html"
+                        title="next chapter">A More Complicated Function</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../../_sources/doc/examples/JITTutorial1.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="JITTutorial2.html" title="A More Complicated Function"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="LLVM Tutorials"
+             >previous</a> |</li>
+        <li><a href="../../index.html">llvmpy 0.12.7-4 documentation</a> &raquo;</li>
+          <li><a href="../examples.html" >Examples and LLVM Tutorials</a> &raquo;</li>
+          <li><a href="index.html" >LLVM Tutorials</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Mahadevan R (2008-2010), Continuum Analytics (2012-2013).
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.2.
+    </div>
+  </body>
+</html>
